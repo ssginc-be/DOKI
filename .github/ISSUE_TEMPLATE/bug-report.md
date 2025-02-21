@@ -1,5 +1,5 @@
 ---
-name: "🐞Bug Report"
+name: "\U0001F41EBug Report"
 about: 버그 제보 및 패치 기록
 title: ''
 labels: bug
