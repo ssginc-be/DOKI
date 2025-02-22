@@ -35,6 +35,11 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 eureka:
   instance:
     lease-renewal-interval-in-seconds: 600 # 로그 때문에 10분으로 설정
