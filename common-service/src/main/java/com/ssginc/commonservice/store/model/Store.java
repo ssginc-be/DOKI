@@ -1,5 +1,6 @@
 package com.ssginc.commonservice.store.model;
 
+import com.ssginc.commonservice.reserve.model.Reservation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,7 +60,10 @@ public class Store {
     private List<StoreImage> storeImageList;
 
     // 팝업스토어 공지사항
-    @Column(nullable = false)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<StoreAnnouncement> storeAnnouncementList;
+
+    // 팝업스토어 예약 내역
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
+    private List<Reservation> reservationList;
 }

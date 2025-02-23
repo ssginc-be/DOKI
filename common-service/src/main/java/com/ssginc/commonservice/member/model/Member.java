@@ -1,17 +1,18 @@
 package com.ssginc.commonservice.member.model;
 
+import com.ssginc.commonservice.reserve.model.Reservation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Queue-ri
@@ -59,6 +60,10 @@ public class Member {
     @UpdateTimestamp
     @Column(name = "last_modified_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime lastModifiedAt;
+
+    // 팝업스토어 예약 내역
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Reservation> reservationList;
 
     // Enum 객체
     public enum MemberGender {
