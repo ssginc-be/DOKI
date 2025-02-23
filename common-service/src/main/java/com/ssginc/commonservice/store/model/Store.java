@@ -29,8 +29,8 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
 
-    @JsonManagedReference
     // 팝업스토어 - 카테고리 중계테이블 외래키
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<StoreCategory> storeCategoryList;
 

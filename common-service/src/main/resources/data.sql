@@ -29,7 +29,7 @@ VALUES
 
 -- 팝업스토어 카테고리 테이블
 -- 가독성을 위해 일부러 category_id도 적어놓음
-INSERT INTO category(category_id, store_category_name, store_category_desc)
+INSERT INTO category(category_id, category_name, category_desc)
 VALUES
     (1, '아티스트', '아티스트 콜라보레이션'),
     (2, '패션', '패션 브랜드 행사'),

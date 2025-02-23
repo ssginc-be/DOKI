@@ -29,8 +29,8 @@ public class Category {
     private List<StoreCategory> storeCategoryList;
 
     @Column(nullable = false, length = 20)
-    private String storeCategoryName;
+    private String categoryName;
 
     @Column(length = 100)
-    private String storeCategoryDesc;
+    private String categoryDesc;
 }
