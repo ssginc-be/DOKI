@@ -8,7 +8,7 @@ bootJar.enabled = false // 빌드시 루트 모듈(pjt3)은 bootJar 사용x
 
 allprojects { // 루트 포함 모든 모듈들에 이 설정을 적용
     group 'com.ssginc'
-    version '1.0.0-beta.1'
+    version '1.0.0-beta.3'
     sourceCompatibility = '17'
 
     repositories {
