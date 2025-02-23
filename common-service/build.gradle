@@ -48,6 +48,15 @@ dependencies {
     implementation 'org.springframework.security:spring-security-crypto:6.0.0'
 
     //***************************************************************
+    //  JWT
+    //***************************************************************
+    // io.jsonwebtoken:jjwt 외 나머지 디펜던시는 LocalDate 호환을 위함
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
+    implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+
+    //***************************************************************
     //  SMTP
     //***************************************************************
     // 비밀번호 찾기에 사용함.
@@ -62,6 +71,11 @@ dependencies {
     //  chat
     //************************************************************************
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    //***************************************************************
+    //  Redis
+    //***************************************************************
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 dependencyManagement {

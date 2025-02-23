@@ -10,13 +10,17 @@ spring:
     gateway:
       routes:
         - id: reserve-service
-          uri: http://localhost:9001
+          uri: http://localhost:9091
           predicates:
             - Path=v1/reserve/**
         - id: common-service
-          uri: http://localhost:9002
+          uri: http://localhost:9093
           predicates:
             - Path=v1/common/**
+        - id: common-service
+          uri: http://localhost:9093
+          predicates:
+            - Path=v2/auth/**
 
       filter:
         rewrite-path:
