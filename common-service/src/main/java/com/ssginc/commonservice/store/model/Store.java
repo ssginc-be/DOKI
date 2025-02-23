@@ -1,5 +1,6 @@
 package com.ssginc.commonservice.store.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ssginc.commonservice.reserve.model.Reservation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
 
+    @JsonManagedReference
     // 팝업스토어 - 카테고리 중계테이블 외래키
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<StoreCategory> storeCategoryList;
@@ -55,15 +57,18 @@ public class Store {
     private LocalDateTime createdAt;
 
     // 팝업스토어 이미지
+    @JsonManagedReference
     @Column(nullable = false)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<StoreImage> storeImageList;
 
     // 팝업스토어 공지사항
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<StoreAnnouncement> storeAnnouncementList;
 
     // 팝업스토어 예약 내역
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<Reservation> reservationList;
 }

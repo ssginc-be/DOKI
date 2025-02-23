@@ -1,5 +1,6 @@
 package com.ssginc.commonservice.reserve.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.store.model.Store;
 import jakarta.persistence.*;
@@ -28,11 +29,13 @@ public class Reservation {
     private Long reservationId;
 
     // 팝업스토어 외래키
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Store store;
     
     // 회원 외래키
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Member member;

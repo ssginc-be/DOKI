@@ -1,5 +1,6 @@
 package com.ssginc.commonservice.store.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class Category {
     private Long categoryId;
 
     // 팝업스토어 - 카테고리 중계테이블 외래키
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<StoreCategory> storeCategoryList;
 
