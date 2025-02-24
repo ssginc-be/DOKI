@@ -1,6 +1,7 @@
 package com.ssginc.commonservice.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
@@ -14,6 +15,7 @@ import java.security.cert.X509Certificate;
  * @author Queue-ri
  */
 
+@Configuration
 @EnableElasticsearchRepositories
 public class ElasticsearchConfig extends ElasticsearchConfiguration {
 
@@ -30,10 +32,17 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
                 .connectedTo(host)
-                .usingSsl(disableSslVerification(), allHostsValid())
-                .withBasicAuth(username, password)
                 .build();
     }
+
+//    @Override
+//    public ClientConfiguration clientConfiguration() {
+//        return ClientConfiguration.builder()
+//                .connectedTo(host)
+//                .usingSsl(disableSslVerification(), allHostsValid())
+//                .withBasicAuth(username, password)
+//                .build();
+//    }
 
     public static SSLContext disableSslVerification() {
         try {
