@@ -23,7 +23,7 @@ spring:
       ddl-auto: create
 
 elasticsearch:
-  host: localhost:9200
+  host: 34.47.118.187:9200
   username: elastic
   password: Abcd123!
 
@@ -36,3 +36,6 @@ cloud:
     credentials:
       accessKey: # fill out
       secretKey: # fill out
+
+jwt:
+  secret: mecha_kawa_shiochan_

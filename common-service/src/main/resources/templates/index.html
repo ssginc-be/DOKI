@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>DOKI</title>
+</head>
+<body>
+<div class="content" layout:fragment="content">
+    <div class="header">헤더애오</div>
+    <span th:if="${memberRole == null}">님 role은 없어요 로그인해라</span>
+    <span th:if="${#strings.equals(memberRole, 'MEMBER')}">님 role은 MEMBER애오</span>
+    <span th:if="${#strings.equals(memberRole, 'ADMIN')}">님 role은 ADMIN이애오</span>
+
+    <button th:if="${memberRole == null}" onclick="sign_in('qriositylog@gmail.com','Abcd123!')">로그인</button>
+    <button th:if="${memberRole != null}" onclick="sign_out()">로그아웃</button>
+</div>
+
+<th:block layout:fragment="script">
+    <!-- axios 비동기 통신용 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/js/index.js"></script>
+</th:block>
+
+</body>
+</html>

@@ -4,6 +4,11 @@ ext {
 
 dependencies {
     //***************************************************************
+    //  DOKI Common Service
+    //***************************************************************
+    implementation project(':common-service')
+
+    //***************************************************************
     //  Spring Cloud - Eureka Client
     //***************************************************************
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'

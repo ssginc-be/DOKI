@@ -38,7 +38,7 @@ dependencies {
     //***************************************************************
     //  Elasticsearch
     //***************************************************************
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch:3.4.3'
 
     //************************************************************************
     //  Spring Security
@@ -46,6 +46,15 @@ dependencies {
     // password 암호화
     // Spring Security의 Crypto 모듈
     implementation 'org.springframework.security:spring-security-crypto:6.0.0'
+
+    //***************************************************************
+    //  JWT
+    //***************************************************************
+    // io.jsonwebtoken:jjwt 외 나머지 디펜던시는 LocalDate 호환을 위함
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
+    implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
     //***************************************************************
     //  SMTP
@@ -62,6 +71,11 @@ dependencies {
     //  chat
     //************************************************************************
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    //***************************************************************
+    //  Redis
+    //***************************************************************
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 dependencyManagement {

@@ -22,6 +22,14 @@ echo -e "\n${PURPLE}** Cleanup Old Containers${NOCOLOR}"
 docker compose down
 docker rm -v $(docker ps -qa)
 
+# update compose script
+echo -e "\n${PURPLE}** Remove Old Compose Script${NOCOLOR}"
+rm compose.yml
+
+echo -e "\n${PURPLE}** Get New Compose Script${NOCOLOR}"
+wget https://raw.githubusercontent.com/ssginc-be/DOKI/main/compose.yml
+# end of update
+
 echo -e "\n${PURPLE}** Compose Latest Image${NOCOLOR}"
 docker compose up -d
 

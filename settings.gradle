@@ -1,4 +1,4 @@
-rootProject.name = 'pjt3'
+rootProject.name = 'doki'
 include 'api-gateway'
 include 'service-discovery'
 include 'reserve-service'

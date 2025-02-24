@@ -26,6 +26,7 @@ spring:
         highlight_sql: true
         use_sql_comments: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+    defer-datasource-initialization: true # data.sql 실행을 위함
 
   datasource:
     hikari:
@@ -34,6 +35,14 @@ spring:
       connection-timeout: 30000
       idle-timeout: 600000
       max-lifetime: 1800000
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+    elasticsearch:
+      repositories:
+        enabled: true # ElasticSearchRepository 사용
 
 eureka:
   instance:

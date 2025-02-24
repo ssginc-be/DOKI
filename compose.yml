@@ -1,23 +1,23 @@
 # EC2 내부에서 실행되는 스크립트
 # 루트 경로에 .env 파일 있어야 함 (Actions로 하든지 수동으로 하든지..)
 networks:
-  pjt3:
+  doki:
     driver: bridge
 
 services:
   # Service Discovery 설정
   service-discovery:
     container_name: service-discovery
-    image: qriosity/pjt3_service-discovery:latest
+    image: qriosity/doki_service-discovery:latest
     ports:
       - 8761:8761
     networks:
-      - pjt3
+      - doki
 
   # API Gateway 설정
   api-gateway:
     container_name: api-gateway
-    image: qriosity/pjt3_api-gateway:latest
+    image: qriosity/doki_api-gateway:latest
     ports:
       - 9000:9000
     environment:
@@ -25,12 +25,12 @@ services:
     depends_on: 
       - service-discovery
     networks:
-      - pjt3
+      - doki
 
   # Reserve Service 설정
   reserve-service:
     container_name: reserve-service
-    image: qriosity/pjt3_reserve-service:latest
+    image: qriosity/doki_reserve-service:latest
     ports: 
       - 9091:9091
     depends_on:
@@ -41,12 +41,12 @@ services:
       spring.jpa.hibernate.ddlAuto: update
       eureka.client.serviceUrl.defaultZone: http://service-discovery:8761/eureka
     networks:
-      - pjt3
+      - doki
 
   # Common Service 설정
   common-service:
     container_name: common-service
-    image: qriosity/pjt3_common-service:latest
+    image: qriosity/doki_common-service:latest
     ports: 
       - 9093:9093
     depends_on:
@@ -61,4 +61,4 @@ services:
       cloud.aws.credentials.secretKey: ${S3_SECRET_KEY}
       eureka.client.serviceUrl.defaultZone: http://service-discovery:8761/eureka
     networks:
-      - pjt3
+      - doki
