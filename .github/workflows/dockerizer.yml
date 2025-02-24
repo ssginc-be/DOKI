@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-modules
     env:
-      DOCKER_REPO: qriosity/pjt3
+      DOCKER_REPO: qriosity/doki
     steps:
     - uses: actions/checkout@v4
 
@@ -86,8 +86,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: docker-push
     env:
-      DOCKER_REPO: qriosity/pjt3
-      GHCR_REPO: ssginc-be/pjt3
+      DOCKER_REPO: qriosity/doki
+      GHCR_REPO: ssginc-be/doki
     steps:
     - name: Get Docker Images
       run: |
@@ -130,10 +130,11 @@ jobs:
         ssh-keyscan -H "${{ secrets.EC2_URL }}" >> ~/.ssh/known_hosts
 
     - name: Get Deployer Script
-      run: wget https://raw.githubusercontent.com/ssginc-be/pjt3/main/.github/deployer.sh
+      run: wget https://raw.githubusercontent.com/ssginc-be/DOKI/main/.github/deployer.sh
     
     - name: Run Deployer
       run: ssh -i pjt3-ec2.pem ubuntu@${{ secrets.EC2_URL }} -T sh < deployer.sh # prevent pseudo terminal
 
+    # cleanup script file
     - name: Remove Deployer Script
       run: rm deployer.sh
