@@ -71,6 +71,6 @@ public class Member {
     };
 
     public enum MemberRole {
-        MEMBER, ADMIN
+        MEMBER, MANAGER, ADMIN
     };
 }
