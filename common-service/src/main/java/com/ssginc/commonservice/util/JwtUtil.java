@@ -80,4 +80,15 @@ public class JwtUtil {
 
         return claims;
     }
+
+    // 테스트용 memberCode parser
+    public Long getMemberCode(String token) {
+        return Long.parseLong(
+                Jwts.parser()
+                        .setSigningKey(JWT_SECRET)
+                        .parseClaimsJws(token)
+                        .getBody()
+                        .getSubject()
+        );
+    }
 }

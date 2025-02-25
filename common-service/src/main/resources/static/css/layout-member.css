@@ -1,0 +1,317 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+.content {
+    margin: 0 auto;
+    width: 1280px;
+}
+
+/* navbar */
+.navbar {
+    display: flex;
+    width: 100%;
+    height: 80px;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E1E0E1;
+
+    /* to make navbar float */
+    position: fixed;
+    top: 0;
+}
+.navbar-wrapper {
+    display: flex;
+    width: 1440px;
+    margin: 0 auto;
+}
+.navbar-logo {
+    font-family: "Montserrat", serif;
+    font-weight: 600;
+    font-size: 32px;
+    letter-spacing: 3.8px;
+    color: #161616;
+    margin: auto auto auto 0;
+    cursor: pointer;
+}
+
+.navbar-searchbar {
+    width: 400px;
+    height: 40px;
+    display: flex;
+    margin: auto 54px auto auto;
+    border-bottom: 1px solid #161616;
+}
+.navbar-searchbar input {
+    width: 100%;
+    padding-left: 20px;
+    border: none;
+    outline: none; /* remove border on click */
+
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    color: #161616;
+}
+.navbar-searchbar input::placeholder {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    color: #ACACAC;
+}
+.searchbar-button {
+    display: flex;
+    padding: 11px 12px;
+    margin: auto 0 auto auto;
+    cursor: pointer;
+}
+.searchbar-button img {
+    margin: auto auto;
+}
+
+.navbar-menu {
+    display: flex;
+    margin-right: 56px;
+}
+.menu-button {
+    /* text attributes */
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+
+    /* button region attributes */
+    padding: 20px 20px;
+    margin: auto auto;
+    cursor: pointer;
+}
+.menu-border {
+    width: 1px;
+    height: 13px;
+    background-color: #D1D1D1;
+    margin: auto auto;
+}
+
+.navbar-branch {
+    display: flex;
+    padding: 24px 36px 24px 48px;
+    background-color: #232323;
+    cursor: pointer;
+}
+.branch-text {
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 18px;
+    margin: auto auto
+}
+.branch-icon {
+    margin: auto 0 auto 32px;
+}
+.branch-icon img {
+    margin: auto auto;
+}
+
+
+/* footer */
+.footer {
+    width: 100%;
+    height: 311px;
+    background-color: #232323;
+}
+.footer-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 1440px;
+    padding: 50px 0 66px 0;
+    margin: 0 auto;
+}
+
+.footer-top {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid rgba(202, 200, 199, 0.1);
+    margin-bottom: 20px;
+}
+
+.top-top {
+    display: flex;
+    flex-direction: row;
+}
+
+.footer-logo {
+    font-family: "Montserrat", serif;
+    font-weight: 600;
+    font-size: 32px;
+    letter-spacing: 3.8px;
+    color: #FFFFFF;
+    margin: 0 132px auto 0;
+}
+.footer-menu {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto auto 0;
+}
+.footer-menu-box {
+    display: flex;
+    margin-bottom: 20px;
+}
+.footer-menu-text {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #949494;
+    margin-right: 24px;
+    cursor: pointer;
+}
+.footer-menu-text-highlight {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #EBEBEB;
+    margin-right: 24px;
+}
+
+.top-bottom {
+    display: flex;
+}
+.icon-box {
+    display: flex;
+    flex-direction: row;
+    margin: auto 0 26px auto;
+}
+.icon-button {
+    display: flex;
+    margin-left: 20px;
+    cursor: pointer;
+}
+.icon-button img {
+    margin: auto auto;
+}
+
+.footer-bottom {
+    display: flex;
+    flex-direction: column;
+}
+.bottom-text {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: #949494;
+    margin-bottom: 7px;
+}
+.bottom-copyright {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: #949494;
+}
+
+/* signin overlay */
+.signin-overlay {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.5);
+
+    /* floating */
+    position: fixed;
+    top: 0;
+
+    /* effect */
+    /*transition: 1s;*/
+    /*visibility: hidden;*/
+    /*opacity: 0;*/
+    visibility: hidden;
+}
+/*.signin-overlay .show {*/
+/*    visibility: visible;*/
+/*    opacity: 1;*/
+/*}*/
+.signin-box {
+    display: flex;
+    flex-direction: row;
+    padding: 36px 48px;
+    background-color: #FFFFFF;
+    margin: auto auto;
+    border-radius: 3px;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+}
+.signin-left {
+    display: flex;
+    width: 210px;
+    border-right: 1px solid #E1E0E1;
+    margin-right: 36px;
+}
+.signin-title {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    margin: 0 auto auto 0;
+}
+.signin-right {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+}
+.signin-row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+.signin-input-title {
+    width: 60px;
+    line-height: 38px;
+    text-align: right;
+    margin: auto 16px auto auto;
+
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+.signin-input-box {
+    width: 240px;
+    height: 38px;
+    border-bottom: 1px solid #161616;
+}
+.signin-input-box input {
+    width: 100%;
+    height: 37px;
+    padding-left: 10px;
+    border: none;
+    outline: none; /* remove border on click */
+
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #161616;
+}
+.signin-input-box input::placeholder {
+    font-weight: 300;
+    font-size: 15px;
+    color: #ACACAC;
+}
+.signin-button {
+    width: 100%;
+    border: 1px solid #000000;
+    padding: 12px 0;
+    text-align: center;
+    border-radius: 6px;
+    margin-top: 24px;
+    margin-bottom: 14px;
+
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+
+    cursor: pointer;
+}
+.reset-password {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    text-decoration: underline;
+    margin: 0 auto;
+}
