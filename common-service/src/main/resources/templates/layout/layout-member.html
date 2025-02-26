@@ -25,7 +25,7 @@
 <body>
 <div class="navbar">
     <div class="navbar-wrapper">
-        <div class="navbar-logo">DOKI</div>
+        <div class="navbar-logo" th:onclick="gotoRoot()">DOKI</div>
         <div class="navbar-searchbar" th:style="${memberRole == null ? 'width: 480px;' : 'width: 400px;'}">
             <input type="text" placeholder="검색어를 입력해주세요." />
             <div class="searchbar-button"><img th:src="@{/icon/layout/search.svg}"></div>

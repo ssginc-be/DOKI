@@ -50,3 +50,8 @@ window.addEventListener('mouseup',function(event){
         overlay.style.visibility = "hidden";
     }
 });
+
+
+function gotoRoot() {
+    location.href = "/";
+}
