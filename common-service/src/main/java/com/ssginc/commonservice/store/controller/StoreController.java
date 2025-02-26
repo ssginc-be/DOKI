@@ -3,7 +3,6 @@ package com.ssginc.commonservice.store.controller;
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.store.document.StoreMetaDocument;
-import com.ssginc.commonservice.store.dto.StoreMetaDto;
 import com.ssginc.commonservice.store.model.Store;
 import com.ssginc.commonservice.store.service.StoreIndexService;
 import com.ssginc.commonservice.store.service.StoreService;
@@ -11,7 +10,6 @@ import com.ssginc.commonservice.util.JwtUtil;
 import com.ssginc.commonservice.util.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -58,9 +56,6 @@ public class StoreController {
             List<StoreMetaDocument> storeList = (List<StoreMetaDocument>) page.getData(); // downcast
             model.addAttribute("storeList", storeList);
             model.addAttribute("formatter", DateTimeFormatter.ofPattern("MM.dd(E)"));
-
-            System.out.println(page);
-            System.out.println(storeList);
 
             return "index"; // 팝업스토어 목록 페이지로 이동
         }
