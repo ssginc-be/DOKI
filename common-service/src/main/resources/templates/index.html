@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>신세계백화점 팝업스토어 행사</title>
     <link href="/css/index.css" rel="stylesheet"/>
+    <script src="/js/index.js"></script>
 </head>
 <body>
 <!-- navbar -->
@@ -30,18 +31,20 @@
         </div>
 
         <div class="store-box-top">
-            <div class="store-count">총 <hl>27</hl>개의 전체 팝업스토어</div>
+            <div class="store-count">총 <hl th:text="${page.getTotalElements()}"></hl>개의 전체 팝업스토어</div>
             <div class="reset-button">카테고리 초기화</div>
         </div>
         <div class="store-box-bottom">
             <!-- grid layout -->
             <div class="store-grid-container">
-                <th:block th:each="num : ${#numbers.sequence(1,9)}">
-                    <div class="store-meta">
-                        <div class="store-thumbnail"></div>
-                        <div class="store-name">체이싱래빗 in 신세계백화점 강남</div>
-                        <div class="store-desc">컬러풀 비건 뷰티 "체이싱래빗"의 두 번째 팝업</div>
-                        <div class="store-period">02.21(금) ~ 03.06(목)</div>
+                <th:block th:each="store : ${storeList}">
+                    <div class="store-meta" th:onclick="|goto_store_info(${store.getStoreId()})|">
+                        <div class="store-thumbnail"><img th:src="${store.getStoreMainThumbnail()}"></div>
+                        <div class="store-text-box">
+                            <div class="store-name" th:text="${store.getStoreName()}"></div>
+                            <div class="store-desc" th:text="${store.getStoreShortDesc()}"></div>
+                            <div class="store-period" th:text="${store.getStoreStart().format(formatter) + ' ~ ' + store.getStoreEnd().format(formatter)}"></div>
+                        </div>
                     </div>
                 </th:block>
 
@@ -50,8 +53,9 @@
 
         <div class="pagination-box">
             <div class="pagination-left"><img th:src="@{/icon/store/pagination_left.svg}"></div>
-            <th:block th:each="num : ${#numbers.sequence(1,5)}">
-                <div class="page-button" th:text="${num}"></div>
+            <th:block th:each="num : ${#numbers.sequence(1,page.getTotalPages())}">
+                <div class="page-button-selected" th:if="${num == page.getPageNumber()+1}" th:text="${num}"></div>
+                <div class="page-button" th:if="${num != page.getPageNumber()+1}" th:text="${num}" th:onclick="|load_page(${num})|"></div>
             </th:block>
             <div class="pagination-right"><img th:src="@{/icon/store/pagination_right.svg}"></div>
         </div>
@@ -62,8 +66,6 @@
 <div class="footer" layout:fragment="footer">
 
 </div>
-
-<script src="/js/index.js"></script>
 
 </body>
 </html>
