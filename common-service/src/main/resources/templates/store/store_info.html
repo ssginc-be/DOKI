@@ -5,6 +5,12 @@
     <title>팝업스토어 상세</title>
 </head>
 <body>
-
+<div th:text="|팝업스토어 ID: ${store.getStoreId()}|"></div>
+<div th:text="|팝업스토어명: ${store.getStoreName()}|"></div>
+<div th:text="|팝업스토어 설명: ${store.getStoreShortDesc()}|"></div>
+<div th:text="|오픈일: ${store.getStoreStart()}|"></div>
+<div th:text="|종료일: ${store.getStoreEnd()}|"></div>
+<button th:if="${memberRole != null}">예약하기</button>
+<button th:if="${memberRole == null}" disabled>로그인 후 예약하기</button>
 </body>
 </html>
