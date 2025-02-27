@@ -1,5 +1,7 @@
 package com.ssginc.commonservice.store.service;
 
+import com.ssginc.commonservice.exception.CustomException;
+import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.store.dto.CategoryNoDescDto;
 import com.ssginc.commonservice.store.dto.StoreMetaDto;
 import com.ssginc.commonservice.store.model.Store;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Queue-ri
@@ -77,5 +80,19 @@ public class StoreService {
                 .build();
 
         return ResponseEntity.ok().body(page);
+    }
+
+
+    /* 특정 팝업스토어 상세 정보 조회 */
+    // 내부에서만 사용 - API로 구현하지 않음
+    public Store getStoreInfo(Long storeId) {
+        Optional<Store> optStore = sRepo.findById(storeId);
+
+        if (optStore.isEmpty()) {
+            log.error("요청 id의 팝업스토어 조회 결과 없음");
+            return null;
+        }
+
+        return optStore.get();
     }
 }

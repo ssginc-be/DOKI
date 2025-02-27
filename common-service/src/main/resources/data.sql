@@ -1,7 +1,9 @@
 -- 회원 테이블
+-- member_pw는 Abcd123!을 인코딩한 값임.
 INSERT INTO member(member_id, member_pw, member_name, member_phone, member_birth, member_gender, member_role, created_at, last_modified_at)
 VALUES
-    ('ssginc-be@gmail.com', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '관리자', '01098765432', '1990-05-21', 'MALE', 'ADMIN', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
+    ('admin', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '관리자', '01098765432', '1990-05-21', 'MALE', 'ADMIN', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
+    ('manager', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자', '01011112222', '1994-01-17', 'FEMALE', 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
     ('qriositylog@gmail.com', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '큐리', '01012345678', '1998-07-24', 'FEMALE', 'MEMBER', '2025-02-22T22:04:44', '2025-02-22T22:04:44')
 ;
 

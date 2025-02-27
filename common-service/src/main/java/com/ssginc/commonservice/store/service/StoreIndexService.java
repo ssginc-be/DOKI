@@ -103,4 +103,31 @@ public class StoreIndexService {
 
         return ResponseEntity.ok().body(page);
     }
+
+    /* 팝업스토어 메타 데이터 인덱스 조회 - 내부에서만 사용 */
+    public PageResponse getStoreListInternal(Integer pageIdx) {
+        // 페이징 크기
+        final int FETCH_SIZE = 9;
+
+        // PageRequest 객체 생성
+        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStart").descending());
+
+        // 인덱스에서 조회 - 검색키워드 없음
+        Page<StoreMetaDocument> docPage = smdRepo.findByStoreNameContainsIgnoreCase("", pageRequest);
+
+        // 반환할 page 객체 작성
+        PageResponse<?> page = PageResponse.builder()
+                .data(docPage.getContent())
+                .first(docPage.isFirst())
+                .last(docPage.isLast())
+                .empty(docPage.isEmpty())
+                .totalElements(docPage.getTotalElements())
+                .totalPages(docPage.getTotalPages())
+                .numberOfElements(docPage.getNumberOfElements())
+                .pageSize(docPage.getSize())
+                .pageNumber(docPage.getNumber())
+                .build();
+
+        return page;
+    }
 }

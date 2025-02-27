@@ -120,7 +120,8 @@ public class AuthService {
         // 회원 정보가 조회되면
         // JWT 발급
         Long memberCode = optMember.get().getMemberCode();
-        String accessToken = jwtUtil.generateAccessToken(memberCode, "MEMBER", 1000L * 60 * 30); // 30 min
+        String memberRole = optMember.get().getMemberRole().toString();
+        String accessToken = jwtUtil.generateAccessToken(memberCode, memberRole, 1000L * 60 * 30); // 30 min
         String refreshToken = jwtUtil.generateRefreshToken(1000L * 60 * 60 * 6); // 6 hr
 
         // 헤더에 들어감
@@ -212,13 +213,15 @@ public class AuthService {
         // 모든 JWT 재발급
         Long memberCode = optToken.get().getMemberCode();
         Optional<Member> optMember = mRepo.findById(memberCode);
+        String memberRole = optMember.get().getMemberRole().toString();
 
-        if (optMember.isEmpty()) {
-            log.error("memberCode 조회 결과 없음");
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
+        // redis에 토큰이 없으면 member를 조회할 일이 없으므로 하단의 if 문은 무조건 실행되지 않음
+//        if (optMember.isEmpty()) {
+//            log.error("memberCode 조회 결과 없음");
+//            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+//        }
 
-        String accessToken = jwtUtil.generateAccessToken(memberCode, "MEMBER", 1000L * 60 * 30); // 30 min
+        String accessToken = jwtUtil.generateAccessToken(memberCode, memberRole, 1000L * 60 * 30); // 30 min
         String newRefreshToken = jwtUtil.generateRefreshToken(1000L * 60 * 60 * 6); // 6 hr
 
         // 헤더에 들어감

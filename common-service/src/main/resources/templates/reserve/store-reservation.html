@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>예약 페이지</title>
+
+    <link href="/css/store-reservation.css" rel="stylesheet"/>
+    <script src="/js/store-reservation.js"></script>
+</head>
+<body>
+<!-- navbar 없음 -->
+
+<div class="wrapper">
+    <!-- 팝업스토어 정보 (floating) -->
+    <div class="reservation-top">
+        <div class="left-arrow-button" th:onclick="goBack()"><img th:src="@{/icon/store/left_arrow.svg}"></div>
+        <div class="store-info-box">
+            <div class="store-thumbnail"></div>
+            <div class="store-info-text-box">
+                <div class="store-name-box">
+                    <div class="store-name" th:text="${store.getStoreName()}"></div>
+                    <div class="store-category-box">
+<!--                        <div class="category-chip">비건</div>-->
+<!--                        <div class="category-chip">브랜드</div>-->
+                        <th:block th:each="category : ${store.getStoreCategoryList()}">
+                            <div class="category-chip" th:text="${category.getCategory().getCategoryName()}"></div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="store-desc" th:text="${store.getStoreShortDesc()}"></div>
+                <div class="store-period" th:text="${store.getStoreStart()}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 구분 영역 -->
+    <div class="border"></div>
+
+    <!-- 예약 정보 -->
+    <div class="reservation-bottom">
+
+        <div class="reserve-info-title">예약자 기본 정보</div>
+        <div class="reserve-info-input-container">
+            <div class="reserve-input-box">
+                <div class="reserve-input-title">예약자명</div>
+                <input type="text" class="reserve-input" id="client-name" th:placeholder="${member.getMemberName()}" readonly>
+            </div>
+            <div class="reserve-input-box">
+                <div class="reserve-input-title">연락처</div>
+                <input type="text" class="reserve-input" id="client-phone" th:placeholder="${member.getMemberPhone()}" readonly>
+            </div>
+        </div>
+
+
+        <div class="reserve-info-title">예약 일정</div>
+
+        <div class="reserve-info-datetime-container">
+            <div class="reserve-info-subtitle">날짜 선택</div>
+            <div class="reserve-calendar-box">
+                <!--  각종 일자 버튼 -->
+                <div class="reserve-month-box">
+                    <div class="reserve-month-title"><span>2월</span></div> <!-- 2월, 3월 ... -->
+                    <div class="reserve-date-box">
+                        <div class="reserve-date-button"><span>21</span></div>
+                        <div class="reserve-date-button"><span>22</span></div>
+                        <div class="reserve-date-button"><span>23</span></div>
+                        <div class="reserve-date-button"><span>24</span></div>
+                        <div class="reserve-date-button"><span>25</span></div>
+                        <div class="reserve-date-button"><span>26</span></div>
+                        <div class="reserve-date-button"><span>27</span></div>
+                        <div class="reserve-date-button"><span>28</span></div>
+                    </div>
+                </div>
+                <div class="reserve-month-box">
+                    <div class="reserve-month-title"><span>3월</span></div> <!-- 2월, 3월 ... -->
+                    <div class="reserve-date-box">
+                        <div class="reserve-date-button"><span>1</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="reserve-info-datetime-container">
+            <div class="reserve-info-subtitle">시간 선택</div>
+            <div class="reserve-time-box">
+                <!--  각종 시간 버튼 -->
+                <div class="reserve-time-button"><span>12:30</span></div>
+                <div class="reserve-time-button"><span>13:00</span></div>
+                <div class="reserve-time-button"><span>13:30</span></div>
+                <div class="reserve-time-button"><span>14:00</span></div>
+                <div class="reserve-time-button"><span>14:30</span></div>
+                <div class="reserve-time-button"><span>15:00</span></div>
+                <div class="reserve-time-button"><span>15:30</span></div>
+                <div class="reserve-time-button"><span>16:00</span></div>
+                <div class="reserve-time-button"><span>16:30</span></div>
+                <div class="reserve-time-button"><span>17:00</span></div>
+                <div class="reserve-time-button"><span>17:30</span></div>
+            </div>
+        </div>
+
+        <!-- 예약 정보 확인 및 신청 버튼 (floating) -->
+        <div class="reservation-info-box">
+            <div class="reservation-info-box-top">
+                <div class="reservation-info-box-title">예약 정보 확인</div>
+
+                <div class="reservation-info-box-subtitle">팝업스토어명</div>
+                <div class="reservation-info-box-content" th:text="${store.getStoreName()}"></div>
+                <div class="reservation-info-box-subtitle">팝업스토어 위치</div>
+                <div class="reservation-info-box-content" th:text="${store.getStoreAt()}"></div>
+
+                <div class="reservation-info-box-subtitle">예약자명</div>
+                <div class="reservation-info-box-content" th:text="${member.getMemberName()}">안규리</div>
+                <div class="reservation-info-box-subtitle">예약자 연락처</div>
+                <div class="reservation-info-box-content" th:text="${member.getMemberPhone()}">010-1234-5678</div>
+                <div class="reservation-info-box-subtitle">예약 날짜</div>
+                <div class="reservation-info-box-content">2015-02-25</div>
+                <div class="reservation-info-box-subtitle">예약 시간</div>
+                <div class="reservation-info-box-content">14:30</div>
+            </div>
+            <div class="reservation-info-box-bottom">
+                <div class="reserve-button" th:onclick="reserve()">예약하기</div>
+                <div class="back-button" th:onclick="goBack()">작성 취소</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- footer 없음 -->
+
+</body>
+</html>
