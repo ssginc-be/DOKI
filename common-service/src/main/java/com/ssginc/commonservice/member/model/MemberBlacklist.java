@@ -1,13 +1,11 @@
-package com.ssginc.commonservice.store.model;
+package com.ssginc.commonservice.member.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -22,28 +20,19 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreAnnouncement {
+public class MemberBlacklist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long announcementId;
+    private Long blacklistId;
 
-    // 팝업스토어
-    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private Store store;
-
-    @Column(nullable = false, length = 100)
-    private String title;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    private Member blockedMemberCode;
 
     @CreationTimestamp
     @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdAt;
+    private LocalDateTime blockStart; // 제재 시작일
 
-    @UpdateTimestamp
     @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime lastModifiedAt;
+    private LocalDateTime blockEnd; // 제재 종료일, null은 영구정지
 }

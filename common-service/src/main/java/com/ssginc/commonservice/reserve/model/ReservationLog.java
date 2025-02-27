@@ -25,28 +25,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation {
+public class ReservationLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reservationId;
+    private Long reservationLogId;
 
-    // 팝업스토어 외래키
+    // 예약 내역 외래키
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private Store store;
-    
-    // 회원 외래키
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Member member;
-
-    @Column(nullable = false, columnDefinition = "DATETIME")
-    private LocalDateTime reservedDateTime; // 예약 일시 -> 타임스탬프 아님
-
-    @Column(nullable = false)
-    private Integer headcount; // 예약 인원
+    private Reservation reservation;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -54,13 +42,8 @@ public class Reservation {
 
     @CreationTimestamp
     @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdAt; // 내역 생성일시 타임스탬프
+    private LocalDateTime reservationStatusTimestamp; // status 변경시마다 찍히는 타임스탬프
     
-    // 예약 로그
-    @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "reservation")
-    private List<ReservationLog> reservationLogList;
-
     // 예약대기 - 예약확정 - 취소대기 - 취소완료
     public enum ReservationStatus {
         RESERVE_PENDING, CONFIRMED, CANCEL_PENDING, CANCELED
