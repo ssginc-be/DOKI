@@ -1,6 +1,7 @@
 package com.ssginc.commonservice.member.model;
 
 import com.ssginc.commonservice.reserve.model.Reservation;
+import com.ssginc.commonservice.store.model.Store;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -53,6 +54,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
+    // 팝업스토어에 귀속된 계정
+    @OneToOne(mappedBy = "member")
+    private Store store;
+
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
@@ -68,9 +73,9 @@ public class Member {
     // Enum 객체
     public enum MemberGender {
         MALE, FEMALE, NOT_SPECIFIED
-    };
+    }
 
     public enum MemberRole {
         MEMBER, MANAGER, ADMIN
-    };
+    }
 }

@@ -1,6 +1,7 @@
 package com.ssginc.commonservice.store.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.reserve.model.Reservation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,18 +30,21 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
 
+    @Column(nullable = false, length = 100)
+    private String storeName;
+
     // 팝업스토어 - 카테고리 중계테이블 외래키
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<StoreCategory> storeCategoryList;
 
     @Column(nullable = false, length = 100)
-    private String storeName;
-
-    @Column(nullable = false, length = 50)
-    private String storeAt;
+    private String storeBranch;
 
     @Column(nullable = false, length = 200)
+    private String storeAt;
+
+    @Column(nullable = false, length = 300)
     private String storeShortDesc;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -56,19 +60,37 @@ public class Store {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StoreStatus storeStatus;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StoreReserveMethod storeReserveMethod;
+
     // 팝업스토어 이미지
     @JsonManagedReference
     @Column(nullable = false)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<StoreImage> storeImageList;
 
-    // 팝업스토어 공지사항
-    @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
-    private List<StoreAnnouncement> storeAnnouncementList;
+    // 팝업스토어 계정
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Member member;
 
     // 팝업스토어 예약 내역
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<Reservation> reservationList;
+
+
+    // enum 객체
+    public enum StoreStatus {
+        ACTIVE, HIDDEN
+    }
+    
+    public enum StoreReserveMethod {
+        V1, V2 // V2는 Kafka 사용
+    }
 }
