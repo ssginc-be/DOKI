@@ -8,6 +8,11 @@ dependencies {
     //***************************************************************
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
+    //***************************************************************
+    //  Spring Cloud - Feign Client
+    //***************************************************************
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     //************************************************************************
     //  Spring Boot core
     //************************************************************************
