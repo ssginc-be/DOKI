@@ -40,13 +40,13 @@ public class Member {
     @Column(name = "member_name", nullable = false, length = 50)
     private String memberName;
 
-    @Column(name = "member_phone", nullable = false)
+    @Column(name = "member_phone")
     private String memberPhone;
 
-    @Column(name = "member_birth", nullable = false)
+    @Column(name = "member_birth")
     private LocalDate memberBirth;
 
-    @Column(name = "member_gender", nullable = false)
+    @Column(name = "member_gender")
     @Enumerated(EnumType.STRING)
     private MemberGender memberGender;
 
@@ -54,8 +54,9 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
-    // 팝업스토어에 귀속된 계정
-    @OneToOne(mappedBy = "member")
+    // MANAGER 권한 계정은 팝업스토어 외래키가 존재함.
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn
     private Store store;
 
     @CreationTimestamp

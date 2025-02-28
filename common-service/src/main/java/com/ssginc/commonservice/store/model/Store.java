@@ -75,8 +75,7 @@ public class Store {
     private List<StoreImage> storeImageList;
 
     // 팝업스토어 계정
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @OneToOne(mappedBy = "store")
     private Member member;
 
     // 팝업스토어 예약 내역
