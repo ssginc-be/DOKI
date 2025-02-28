@@ -2,6 +2,9 @@ package com.ssginc.commonservice.store.controller;
 
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
+import com.ssginc.commonservice.member.service.MemberService;
+import com.ssginc.commonservice.reserve.model.Reservation;
+import com.ssginc.commonservice.reserve.service.ReserveService;
 import com.ssginc.commonservice.store.document.StoreMetaDocument;
 import com.ssginc.commonservice.store.model.Store;
 import com.ssginc.commonservice.store.service.StoreIndexService;
@@ -27,11 +30,13 @@ import java.util.List;
 @RequestMapping("/") // root 경로가 곧 팝업스토어 목록 조회 페이지
 public class StoreController {
     /*
-        store list, store info
+        store list, store info, store reservation page
     */
     private final JwtUtil jwtUtil;
     private final StoreService storeService;
+    private final ReserveService reserveService;
     private final StoreIndexService storeIndexService; // Elasticsearch
+    private final MemberService memberService;
 
     @GetMapping
     public String viewStoreList(
@@ -85,5 +90,29 @@ public class StoreController {
         model.addAttribute("store", store);
 
         return "store/store_info";
+    }
+
+
+    @GetMapping("/store/reserve")
+    public String viewStoreReservationPage(
+            @RequestHeader(value="x-gateway-member-role", required=false) String memberRole,
+            @CookieValue(value="accessToken", required=false) String accessToken,
+            Model model
+    ) {
+        //  temp: API Gateway 임시 대체
+        // 운영자 페이지이므로 role은 무조건 MANAGER여야 함
+        String role = jwtUtil.getClaims(accessToken).get("role").toString();
+        Long code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+
+        log.info("requested role: {}", role);
+        model.addAttribute("memberRole", role);
+
+        Store store = memberService.getMemberInfo(code).getStore();
+        model.addAttribute("store", store);
+
+        List<Reservation> reservationList = reserveService.getStoreReservations(store.getStoreId());
+        model.addAttribute("reservationList", reservationList);
+
+        return "store/store_reservation";
     }
 }

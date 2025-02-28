@@ -24,4 +24,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Optional<List<Reservation>> findPreviousReservation(@Param("entryId") Long entryId, @Param("memberCode") Long memberCode, @Param("storeId")Long storeId);
 
     List<Reservation> findByMember_MemberCode(Long memberCode);
+
+    List<Reservation> findByStore_StoreId(Long storeId);
 }
