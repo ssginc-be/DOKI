@@ -43,9 +43,6 @@ public class MemberController {
         log.info("requested role: {}", role);
         model.addAttribute("memberRole", role);
 
-        log.info("requested role: {}", role);
-        model.addAttribute("memberRole", role);
-
         /* 이용자의 reservation 목록 가져오기 */
         Member member = memberService.getMemberInfo(code);
         model.addAttribute("member", member);
