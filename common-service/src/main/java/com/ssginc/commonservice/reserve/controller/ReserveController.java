@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/reserve")
-public class ReservationController {
+public class ReserveController {
     /*
         view reservation page
     */

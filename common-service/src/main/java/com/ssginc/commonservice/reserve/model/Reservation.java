@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.store.model.Store;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,6 +20,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reservation {
@@ -41,6 +39,12 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Member member;
+
+    // 예약 엔트리 외래키
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private ReservationEntry reservationEntry;
 
     @Column(nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime reservedDateTime; // 예약 일시 -> 타임스탬프 아님

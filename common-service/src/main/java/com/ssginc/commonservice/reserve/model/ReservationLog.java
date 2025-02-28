@@ -1,14 +1,8 @@
 package com.ssginc.commonservice.reserve.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.ssginc.commonservice.member.model.Member;
-import com.ssginc.commonservice.store.model.Store;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,6 +17,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationLog {
@@ -38,6 +33,10 @@ public class ReservationLog {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    private ReserveMethod reserveMethod;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
     @CreationTimestamp
@@ -48,4 +47,8 @@ public class ReservationLog {
     public enum ReservationStatus {
         RESERVE_PENDING, CONFIRMED, CANCEL_PENDING, CANCELED
     };
+
+    public enum ReserveMethod {
+        V1, V2 // V2는 Kafka 사용
+    }
 }
