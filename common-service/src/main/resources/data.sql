@@ -128,15 +128,15 @@ VALUES
 -- 부하 테스트는 3번 엔트리
 -- v1 테스트는 4번 엔트리: 전체 status 변경 flow 테스트용
 -- v2 테스트는 5번 엔트리
-INSERT INTO reservation_entry(reservation_entry_id, store_store_id, entry_date, entry_time, capacity, entry_status)
+INSERT INTO reservation_entry(reservation_entry_id, store_store_id, entry_date, entry_time, capacity, entry_status, reserved_count)
 VALUES
-    (1,1, '2025-02-24', '12:00:00', 1, 'OPEN'),
-    (2,1, '2025-02-25', '14:00:00', 2, 'OPEN'),
-    (3,1, '2025-02-25', '14:30:00', 10000, 'OPEN'),
-    (4,1, '2025-02-26', '17:00:00', 1000, 'OPEN'),
-    (5,1, '2025-02-26', '17:30:00', 1000, 'OPEN'),
-    (6,1, '2025-02-25', '23:00:00', 1000, 'CLOSED'),
-    (7,2, '2025-02-28', '10:00:00', 1, 'OPEN')
+    (1,1, '2025-02-24', '12:00:00', 1, 'OPEN', 0),
+    (2,1, '2025-02-25', '14:00:00', 2, 'OPEN', 0),
+    (3,1, '2025-02-25', '14:30:00', 10000, 'OPEN', 0),
+    (4,1, '2025-02-26', '17:00:00', 1000, 'OPEN', 0),
+    (5,1, '2025-02-26', '17:30:00', 1000, 'OPEN', 1),
+    (6,1, '2025-02-25', '23:00:00', 1000, 'CLOSED', 0),
+    (7,2, '2025-02-28', '10:00:00', 1, 'OPEN', 0)
 ;
 
 
