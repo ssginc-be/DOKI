@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout-member}">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 예약</title>
+    <link href="/css/my_reservation.css" rel="stylesheet"/>
+    <script src="/js/my_reservation.js"></script>
+</head>
+<body>
+<!-- navbar -->
+<div class="navbar" layout:fragment="navbar">
+
+</div>
+
+<div class="content" layout:fragment="content">
+    <div>나의 예약</div>
+    <div th:text="|전체 ${reservationList.size()}건의 예약이 있습니다.|"></div>
+
+    <th:block th:each="r : ${reservationList}">
+        <div>
+            <div th:text="${r.getStore().getStoreName()}"></div>
+            <div th:text="${r.getReservedDateTime()}"></div>
+            <div th:text="${r.getReservationStatus()}"></div>
+            <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}">예약 취소</button>
+            <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}">예약 취소</button>
+            <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 취소</button>
+            <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>예약 취소</button>
+        </div>
+    </th:block>
+
+</div>
+
+<!-- footer -->
+<div class="footer" layout:fragment="footer">
+
+</div>
+
+</body>
+</html>

@@ -55,3 +55,7 @@ window.addEventListener('mouseup',function(event){
 function gotoRoot() {
     location.href = "/";
 }
+
+function gotoMyReservationPage() {
+    location.href = "http://localhost:9093/member/reserve";
+}
