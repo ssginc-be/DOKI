@@ -33,9 +33,13 @@
                     <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}">예약 거절</button>
                     <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}" disabled>예약 취소</button>
                     <!-- CONFIRMED 상태에서의 버튼 -->
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}" disabled>예약 승인</button>
+                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}" disabled>승인 완료</button>
                     <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}" disabled>예약 거절</button>
                     <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}">예약 취소</button>
+                    <!-- REFUSED 상태에서의 버튼 -->
+                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>예약 승인</button>
+                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>거절 완료</button>
+                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>예약 취소</button>
                     <!-- CANCEL_PENDING 상태에서의 버튼 -->
                     <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 승인</button>
                     <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 거절</button>
