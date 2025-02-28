@@ -67,6 +67,6 @@ public class Reservation {
 
     // 예약대기 - 예약확정 - 취소대기 - 취소완료
     public enum ReservationStatus {
-        RESERVE_PENDING, CONFIRMED, CANCEL_PENDING, CANCELED
+        RESERVE_PENDING, CONFIRMED, REFUSED, CANCEL_PENDING, CANCELED
     };
 }

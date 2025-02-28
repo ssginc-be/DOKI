@@ -18,6 +18,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author Queue-ri
  */
@@ -108,5 +110,17 @@ public class ReserveService {
         // headcount만큼 예약한 엔트리의 예약자 수 업데이트
         entry.setReservedCount(entry.getReservedCount() + dto.getHeadcount());
         reRepo.save(entry);
+    }
+
+
+    /* 이용자의 예약 내역 조회 - API로 구현하지 않음 */
+    public List<Reservation> getMemberReservations(Long memberCode) {
+        return rRepo.findByMember_MemberCode(memberCode);
+    }
+
+    /* 특정 팝업스토어 예약 내역 조회 */
+    // 내부에서만 사용 - API로 구현하지 않음
+    public List<Reservation> getStoreReservations(Long storeId) {
+        return rRepo.findByStore_StoreId(storeId);
     }
 }

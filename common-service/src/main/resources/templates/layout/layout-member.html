@@ -31,7 +31,7 @@
             <div class="searchbar-button"><img th:src="@{/icon/layout/search.svg}"></div>
         </div>
         <div class="navbar-menu">
-            <div class="menu-button" th:if="${memberRole != null}">나의 예약</div>
+            <div class="menu-button" th:if="${memberRole != null}" th:onclick="|gotoMyReservationPage()|">나의 예약</div>
             <div class="menu-border" th:if="${memberRole != null}"></div>
             <div class="menu-button" th:if="${memberRole != null}">마이페이지</div>
             <div class="menu-border" th:if="${memberRole != null}"></div>
