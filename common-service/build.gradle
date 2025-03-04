@@ -8,6 +8,11 @@ dependencies {
     //***************************************************************
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
+    //***************************************************************
+    //  Spring Cloud - Feign Client
+    //***************************************************************
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     //************************************************************************
     //  Spring Boot core
     //************************************************************************
@@ -71,6 +76,11 @@ dependencies {
     //  chat
     //************************************************************************
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    //***************************************************************
+    //  Kafka
+    //***************************************************************
+    implementation 'org.springframework.kafka:spring-kafka'
 
     //***************************************************************
     //  Redis

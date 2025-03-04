@@ -18,3 +18,11 @@ async function sign_out() {
         console.log(error);
     }
 }
+
+function load_page(idx) {
+    location.href = `http://localhost:9093?page=${idx-1}`;
+}
+
+function goto_store_info(id) {
+    location.href = `http://localhost:9093/store?id=${id}`;
+}

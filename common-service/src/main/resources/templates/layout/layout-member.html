@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head layout:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- font cdn -->
+    <!-- Pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdnjs.cloudflare.com/ajax/libs/pretendard/1.3.9/static/pretendard.min.css" />
+    <!-- Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <!-- global css -->
+    <link href="/css/layout-member.css" rel="stylesheet"/>
+
+    <!-- global js (pre) -->
+    <script src="/js/layout-member.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-wrapper">
+        <div class="navbar-logo" th:onclick="gotoRoot()">DOKI</div>
+        <div class="navbar-searchbar" th:style="${memberRole == null ? 'width: 480px;' : 'width: 400px;'}">
+            <input type="text" placeholder="검색어를 입력해주세요." />
+            <div class="searchbar-button"><img th:src="@{/icon/layout/search.svg}"></div>
+        </div>
+        <div class="navbar-menu">
+            <div class="menu-button" th:if="${memberRole != null}" th:onclick="|gotoMyReservationPage()|">나의 예약</div>
+            <div class="menu-border" th:if="${memberRole != null}"></div>
+            <div class="menu-button" th:if="${memberRole != null}">마이페이지</div>
+            <div class="menu-border" th:if="${memberRole != null}"></div>
+            <div class="menu-button" th:if="${memberRole == null}" onclick="alert('회원가입 이동')">회원가입</div>
+            <div class="menu-border" th:if="${memberRole == null}"></div>
+            <div class="menu-button" th:if="${memberRole == null}" onclick="showOverlay()">로그인</div>
+            <div class="menu-button" th:if="${memberRole != null}" onclick="signOut()">로그아웃</div>
+
+
+            <!--    <span th:if="${memberRole == null}">님 role은 없어요 로그인해라</span>-->
+            <!--    <span th:if="${#strings.equals(memberRole, 'MEMBER')}">님 role은 MEMBER애오</span>-->
+            <!--    <span th:if="${#strings.equals(memberRole, 'ADMIN')}">님 role은 ADMIN이애오</span>-->
+
+            <!--    <button th:if="${memberRole == null}" onclick="sign_in('qriositylog@gmail.com','Abcd123!')">로그인</button>-->
+            <!--    <button th:if="${memberRole != null}" onclick="sign_out()">로그아웃</button>-->
+        </div>
+        <div class="navbar-branch">
+            <div class="branch-text">신세계백화점 강남점</div>
+            <div class="branch-icon"><img th:src="@{/icon/layout/branch_arrow.svg}"></div>
+        </div>
+    </div>
+</div>
+
+<div class="content" layout:fragment="content">
+    <!-- 권한에 따라 다른 렌더링 필요 -->
+    내용이애오
+</div>
+
+<div class="footer">
+    <div class="footer-wrapper">
+        <div class="footer-top">
+            <div class="top-top">
+                <div class="footer-logo">DOKI</div>
+                <div class="footer-menu">
+                    <div class="footer-menu-box">
+                        <div class="footer-menu-text">회사소개</div>
+                        <div class="footer-menu-text">법인영업</div>
+                        <div class="footer-menu-text">백화점 신문고</div>
+                        <div class="footer-menu-text">사이트맵</div>
+                    </div>
+                    <div class="footer-menu-box">
+                        <div class="footer-menu-text-highlight">개인정보처리방침</div>
+                        <div class="footer-menu-text-highlight">영상정보처리기기 운영·관리방침</div>
+                        <div class="footer-menu-text">이용약관</div>
+                        <div class="footer-menu-text">신백멤버스 회원약관</div>
+                        <div class="footer-menu-text">신세계포인트 이용약관</div>
+                    </div>
+                </div>
+            </div>
+            <div class="top-bottom">
+                <div class="icon-box">
+                    <div class="icon-button"><img th:src="@{/icon/layout/naver.svg}"></div>
+                    <div class="icon-button"><img th:src="@{/icon/layout/facebook.svg}"></div>
+                    <div class="icon-button"><img th:src="@{/icon/layout/instagram.svg}"></div>
+                    <div class="icon-button"><img th:src="@{/icon/layout/youtube.svg}"></div>
+                    <div class="icon-button"><img th:src="@{/icon/layout/github.svg}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="bottom-text">(주)신세계 대표이사 : 박주형 &nbsp;&nbsp;|&nbsp;&nbsp;주소 : 서울특별시 중구 소공로 63(충무로 1가)&nbsp;&nbsp;|&nbsp;&nbsp;개인정보보호책임자 : 이성환 상무</div>
+            <div class="bottom-text">대표전화 : 1588-1234 (유료)&nbsp;&nbsp;|&nbsp;&nbsp;사업자등록번호 : 201-81-32195&nbsp;&nbsp;|&nbsp;&nbsp;통신판매업신고번호 : 1996-서울중구-0291</div>
+            <div class="bottom-copyright">COPYRIGHT © 2019 SHINSEGAE. ALL RIGHTS RESERVED.</div>
+        </div>
+    </div>
+</div>
+
+<!-- 로그인 버튼 클릭 시에만 등장하는 오버레이 -->
+<div class="signin-overlay" id="signin-overlay">
+    <div class="signin-box" id="signin-box">
+        <div class="signin-left">
+            <div class="signin-title">Sign In</div>
+        </div>
+        <div class="signin-right">
+            <div class="signin-row">
+                <div class="signin-input-title">아이디</div>
+                <div class="signin-input-box"><input type="text" id="signin_id" placeholder="이메일" /></div>
+            </div>
+            <div class="signin-row">
+                <div class="signin-input-title">패스워드</div>
+                <div class="signin-input-box"><input type="password" id="signin_pw" placeholder="비밀번호" /></div>
+            </div>
+            <div class="signin-button" onclick="signIn()">로그인</div>
+            <div class="reset-password">비밀번호를 잊어버리셨나요?</div>
+        </div>
+    </div>
+</div>
+<!-- jQuery는 사용하지 않는 것을 목표로 함 -->
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.ssginc.commonservice.member.model;
 
 import com.ssginc.commonservice.reserve.model.Reservation;
+import com.ssginc.commonservice.store.model.Store;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,19 +40,24 @@ public class Member {
     @Column(name = "member_name", nullable = false, length = 50)
     private String memberName;
 
-    @Column(name = "member_phone", nullable = false)
+    @Column(name = "member_phone")
     private String memberPhone;
 
-    @Column(name = "member_birth", nullable = false)
+    @Column(name = "member_birth")
     private LocalDate memberBirth;
 
-    @Column(name = "member_gender", nullable = false)
+    @Column(name = "member_gender")
     @Enumerated(EnumType.STRING)
     private MemberGender memberGender;
 
     @Column(name = "member_role", nullable = false)
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
+
+    // MANAGER 권한 계정은 팝업스토어 외래키가 존재함.
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Store store;
 
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
@@ -68,9 +74,9 @@ public class Member {
     // Enum 객체
     public enum MemberGender {
         MALE, FEMALE, NOT_SPECIFIED
-    };
+    }
 
     public enum MemberRole {
-        MEMBER, ADMIN
-    };
+        MEMBER, MANAGER, ADMIN
+    }
 }
