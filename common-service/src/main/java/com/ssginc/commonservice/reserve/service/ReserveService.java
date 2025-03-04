@@ -5,6 +5,7 @@ import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.member.model.MemberRepository;
+import com.ssginc.commonservice.notification.service.NotificationService;
 import com.ssginc.commonservice.reserve.dto.ReserveRequestDto;
 import com.ssginc.commonservice.reserve.model.*;
 import com.ssginc.commonservice.store.model.Store;
@@ -37,6 +38,8 @@ public class ReserveService {
 
     private final EntityManager entityManager;
 
+    private final NotificationService notificationService;
+
     /* 내부 예약 등록 서비스 - API로 구현하지 않음 */
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE) // 다른 트랜잭션에서 읽기, 쓰기, 삭제 방지
@@ -62,6 +65,8 @@ public class ReserveService {
         if (reservedCount + headcount > capacity) {
             log.warn("예약이 마감되었습니다.");
             // throw new CustomException(ErrorCode.RESERVATION_ALREADY_END); // V2라서 200 뜸
+            // 이용자에게 예약 결과 전송
+            notificationService.notifyFailureToMember(dto.getMemberCode(), dto.getStoreId());
             return;
         };
         
@@ -110,6 +115,10 @@ public class ReserveService {
         // headcount만큼 예약한 엔트리의 예약자 수 업데이트
         entry.setReservedCount(entry.getReservedCount() + dto.getHeadcount());
         reRepo.save(entry);
+
+        // 이용자에게 예약 결과 전송
+        // 예약 성공했으므로 reservation 엔티티가 생성되었고, 따라서 sid가 아닌 rid를 넘겨주는 것이 맞음.
+        notificationService.notifyReserveResultToMember(reservation.getReservationId(), "CONFIRMED");
     }
 
 
