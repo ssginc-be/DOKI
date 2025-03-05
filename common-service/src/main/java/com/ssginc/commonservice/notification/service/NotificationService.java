@@ -1,5 +1,7 @@
 package com.ssginc.commonservice.notification.service;
 
+import com.ssginc.commonservice.exception.CustomException;
+import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.notification.controller.NotificationController;
 import com.ssginc.commonservice.notification.domain.Notification;
 import com.ssginc.commonservice.notification.domain.NotificationRepository;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -78,10 +82,14 @@ public class NotificationService {
                 else if (resultStatus.equals("CANCELED")) resultStr = "예약이 취소되었습니다.";
                 else resultStr = "ERROR: 관리자에게 문의 바랍니다.";
 
-                sseEmitter.send(SseEmitter.event().name("RESERVE_RESULT").data("[" + storeName + "] " + resultStr));
+                String message = "[" + storeName + "] " + resultStr;
+                log.info("memberCode: {} | message: {}", memberCode, message);
+                sseEmitter.send(SseEmitter.event().name("RESERVE_RESULT").data(message));
 
             } catch (Exception e) {
+                log.error("SSE 알림 전송 실패");
                 NotificationController.sseEmitters.remove(memberCode);
+                throw new CustomException(ErrorCode.SOMETHING_WENT_WRONG);
             }
         }
     }
@@ -99,10 +107,40 @@ public class NotificationService {
                 String storeName = store.getStoreName(); // 이용자가 예약 관련 요청을 보낸 팝업스토어명
                 String resultStr = "예약 정원이 마감되었습니다.";
 
-                sseEmitter.send(SseEmitter.event().name("RESERVE_RESULT").data("[" + storeName + "] " + resultStr));
+                String message = "[" + storeName + "] " + resultStr;
+                log.info("memberCode: {} | message: {}", memberCode, message);
+                sseEmitter.send(SseEmitter.event().name("RESERVE_RESULT").data(message));
 
             } catch (Exception e) {
+                log.error("SSE 알림 전송 실패");
                 NotificationController.sseEmitters.remove(memberCode);
+                throw new CustomException(ErrorCode.SOMETHING_WENT_WRONG);
+            }
+        }
+    }
+
+
+    /* [INTERNAL] 예약 요청 알림 - 이용자 to 운영자 */
+    public void notifyReserveRequestToManager(Long memberCode, LocalDateTime dateTime, String requestType) {
+        // view 구현 방향 상 당장은 reservation id가 여기에 필요하지 않을 듯
+        // 허전하다 싶으면 rid 추가될 수도 있음
+        if (NotificationController.sseEmitters.containsKey(memberCode)) {
+            SseEmitter sseEmitter = NotificationController.sseEmitters.get(memberCode);
+            try {
+                String requestTypeStr = "";
+                if (requestType.equals("CONFIRM_REQUEST")) requestTypeStr = "새로운 예약 신청이 있습니다.";
+                else if (requestType.equals("CANCEL_REQUEST")) requestTypeStr = "새로운 예약 취소 요청이 있습니다.";
+                else if (requestType.equals("AUTO_CONFIRMED")) requestTypeStr = "예약이 자동 승인되었습니다."; // V2는 자동 예약 확정
+                else requestTypeStr = "ERROR: 관리자에게 문의 바랍니다.";
+
+                String message = "[" + LocalDate.from(dateTime) + "] " + requestTypeStr;
+                log.info("memberCode: {} | message: {}", memberCode, message);
+                sseEmitter.send(SseEmitter.event().name("RESERVE_REQUEST").data(message));
+
+            } catch (Exception e) {
+                log.error("SSE 알림 전송 실패");
+                NotificationController.sseEmitters.remove(memberCode);
+                throw new CustomException(ErrorCode.SOMETHING_WENT_WRONG);
             }
         }
     }

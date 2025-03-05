@@ -116,9 +116,13 @@ public class ReserveService {
         entry.setReservedCount(entry.getReservedCount() + dto.getHeadcount());
         reRepo.save(entry);
 
-        // 이용자에게 예약 결과 전송
+        // 운영자 -> 이용자에게 예약 확정 알림
         // 예약 성공했으므로 reservation 엔티티가 생성되었고, 따라서 sid가 아닌 rid를 넘겨주는 것이 맞음.
         notificationService.notifyReserveResultToMember(reservation.getReservationId(), "CONFIRMED");
+
+        // 이용자 -> 운영자에게 예약 자동 승인 알림
+        // 예약 V2는 자동 승인됨.
+        notificationService.notifyReserveRequestToManager(store.getMember().getMemberCode(), dto.getReservedDateTime(), "AUTO_CONFIRMED");
     }
 
 

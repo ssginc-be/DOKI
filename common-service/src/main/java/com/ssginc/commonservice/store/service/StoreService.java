@@ -2,6 +2,7 @@ package com.ssginc.commonservice.store.service;
 
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
+import com.ssginc.commonservice.notification.service.NotificationService;
 import com.ssginc.commonservice.reserve.model.Reservation;
 import com.ssginc.commonservice.reserve.model.ReservationLog;
 import com.ssginc.commonservice.reserve.model.ReservationLogRepository;
@@ -41,6 +42,8 @@ public class StoreService {
     private final StoreRepository sRepo;
     private final ReservationRepository rRepo;
     private final ReservationLogRepository rlRepo;
+
+    private final NotificationService notificationService;
 
 
     /* 팝업스토어 목록 조회 */
@@ -140,6 +143,10 @@ public class StoreService {
                 .build();
         rlRepo.save(rlog);
 
+        // 운영자 -> 이용자에게 예약 확정 알림
+        // 예약 성공했으므로 reservation 엔티티가 생성되었고, 따라서 sid가 아닌 rid를 넘겨주는 것이 맞음.
+        notificationService.notifyReserveResultToMember(reservation.getReservationId(), "CONFIRMED");
+
         return ResponseEntity.ok().build();
     }
 
@@ -163,6 +170,10 @@ public class StoreService {
                 .reservationStatus(ReservationLog.ReservationStatus.REFUSED)
                 .build();
         rlRepo.save(rlog);
+
+        // 운영자 -> 이용자에게 예약 거절 알림
+        // 예약 성공했으므로 reservation 엔티티가 생성되었고, 따라서 sid가 아닌 rid를 넘겨주는 것이 맞음.
+        notificationService.notifyReserveResultToMember(reservation.getReservationId(), "REFUSED");
 
         return ResponseEntity.ok().build();
     }
@@ -193,6 +204,10 @@ public class StoreService {
                 .reservationStatus(ReservationLog.ReservationStatus.CANCELED)
                 .build();
         rlRepo.save(rlog);
+
+        // 운영자 -> 이용자에게 예약 취소 알림
+        // 예약 성공했으므로 reservation 엔티티가 생성되었고, 따라서 sid가 아닌 rid를 넘겨주는 것이 맞음.
+        notificationService.notifyReserveResultToMember(reservation.getReservationId(), "CANCELED");
 
         return ResponseEntity.ok().build();
     }

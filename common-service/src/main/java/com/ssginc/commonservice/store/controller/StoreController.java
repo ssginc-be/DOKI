@@ -64,7 +64,13 @@ public class StoreController {
 
             return "index"; // 팝업스토어 목록 페이지로 이동
         }
-        else if (role.equals("MANAGER")) return "layout/layout-manager"; // 운영자 페이지로 이동
+        else if (role.equals("MANAGER")) {
+            Long code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+            log.info("memberCode: {}", code);
+            model.addAttribute("memberCode", code);
+
+            return "manager/manager_store_info"; // 운영자 페이지의 첫 메뉴로 이동
+        }
         else if (role.equals("ADMIN")) return "layout/layout-admin"; // 관리자 페이지로 이동
         else {
             log.error("알 수 없는 오류");
