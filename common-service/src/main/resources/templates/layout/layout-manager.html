@@ -23,6 +23,9 @@
     <!-- global js (pre) -->
     <script src="/js/layout-manager.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script th:inline="javascript">
+        let memberCode = [[${memberCode}]];
+    </script>
 </head>
 <body>
 <div class="navbar">
@@ -30,8 +33,8 @@
         <div class="navbar-logo" th:onclick="gotoRoot()">DOKI</div>
         <div class="navbar-sub-logo">MANAGER</div>
 
-        <div class="navbar-bell-box"><img th:src="@{/icon/layout/bell_on_dark.svg}"></div>
-        <div class="navbar-alert-box">확인하지 않은 알림이 1건 있습니다.</div>
+        <div class="navbar-bell-box"><img id="navbar-bell-icon" th:src="@{/icon/layout/bell_off_dark.svg}"></div>
+        <div class="navbar-alert-box" id="navbar-alert-box">새로운 알림이 없습니다.</div>
 
         <div class="navbar-menu">
             <div class="navbar-menu-button" th:if="${memberRole != null}" onclick="signOut()">로그아웃</div>
