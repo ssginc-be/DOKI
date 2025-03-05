@@ -62,4 +62,18 @@ public class NotificationController {
 
         return notificationService.deleteNotification(nid, code);
     }
+
+    /* 요청 member의 전체 알림 삭제 */
+    // member는 MANAGER 또는 ADMIN
+    // 알림창 toggle해서 알림 확인하면 전체 알림을 읽음 처리
+    @DeleteMapping("/all")
+    public ResponseEntity<?> deleteAllNotifications(
+            @CookieValue(value="accessToken", required=false) String accessToken
+    ) throws IOException {
+        // temp: API Gateway 임시 대체
+        // 해당 API 호출 시점에서 role은 무조건 null이 아님
+        Long code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+
+        return notificationService.deleteAllNotifications(code);
+    }
 }
