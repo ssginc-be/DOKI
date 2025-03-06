@@ -126,7 +126,6 @@ function addSingleElementToAlarmList(message, dateTime) {
 
     const alertElementTimeDiv = document.createElement("div")
     alertElementTimeDiv.classList.add('navbar-alert-element-time');
-
     alertElementTimeDiv.appendChild(document.createTextNode(dateTime));
 
     alertElementDiv.appendChild(alertElementDataDiv);
