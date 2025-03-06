@@ -39,7 +39,7 @@
             <div class="menu-border" th:if="${memberRole != null}"></div>
             <div class="menu-button" th:if="${memberRole != null}">마이페이지</div>
             <div class="menu-border" th:if="${memberRole != null}"></div>
-            <div class="menu-button" th:if="${memberRole == null}" onclick="alert('회원가입 이동')">회원가입</div>
+            <div class="menu-button" th:if="${memberRole == null}" onclick="signUp()">회원가입</div>
             <div class="menu-border" th:if="${memberRole == null}"></div>
             <div class="menu-button" th:if="${memberRole == null}" onclick="showOverlay()">로그인</div>
             <div class="menu-button" th:if="${memberRole != null}" onclick="signOut()">로그아웃</div>

@@ -34,6 +34,10 @@ function signOut() {
     }
 }
 
+function signUp() {
+    location.href = "http://localhost:9093/auth/sign-up";
+}
+
 function showOverlay() {
     // 로그인 오버레이
     const overlay = document.getElementById('signin-overlay');
