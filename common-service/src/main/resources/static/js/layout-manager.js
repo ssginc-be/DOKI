@@ -34,8 +34,19 @@ function gotoRoot() {
     location.href = "/";
 }
 
-function gotoStoreReservationPage() {
-    location.href = "http://localhost:9093/store/reserve";
+/* sidebar 메뉴 클릭시 페이지 이동하는 용도 */
+function gotoPage(idx) {
+    switch (idx) {
+        case 0: location.href = "http://localhost:9093"; break;
+        case 1: location.href = "http://localhost:9093"; break;
+        case 2: location.href = "http://localhost:9093"; break;
+        case 3: location.href = "http://localhost:9093/store/reserve"; break;
+        case 4: location.href = "http://localhost:9093"; break;
+        case 5: location.href = "http://localhost:9093"; break;
+        case 6: location.href = "http://localhost:9093"; break;
+        case 7: location.href = "http://localhost:9093"; break;
+        default: alert("잘못된 접근입니다."); break;
+    }
 }
 
 /* 알림 버튼 클릭시 동작하는 함수 */

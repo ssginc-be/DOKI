@@ -69,6 +69,7 @@ public class StoreController {
             return "index"; // 팝업스토어 목록 페이지로 이동
         }
         else if (role.equals("MANAGER")) {
+            model.addAttribute("menuIdx", 0);
             return "manager/manager_store_info"; // 운영자 페이지의 첫 메뉴로 이동
         }
         else if (role.equals("ADMIN")) return "layout/layout-admin"; // 관리자 페이지로 이동
@@ -119,6 +120,8 @@ public class StoreController {
         List<Reservation> reservationList = reserveService.getStoreReservations(store.getStoreId());
         model.addAttribute("reservationList", reservationList);
 
-        return "store/store_reservation";
+        model.addAttribute("menuIdx", 3);
+
+        return "manager/manager_store_reservation";
     }
 }
