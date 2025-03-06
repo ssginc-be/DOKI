@@ -76,6 +76,44 @@ body {
     border-radius: 6px;
 }
 
+/* navbar alert list */
+.navbar-alert-list-box {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    top: 80px;
+    left: calc(calc(100% - 1760px) / 2 + 328px);
+    width: 320px;
+    height: 280px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #FFFFFF;
+    border: 1px solid #E1E0E1;
+    border-top: none;
+    visibility: hidden;
+}
+.navbar-alert-element {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+    padding: 18px 24px;
+    border-bottom: 1px solid #E1E0E1;
+}
+.navbar-alert-element-data {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #131313;
+    margin-bottom: 8px;
+}
+.navbar-alert-element-time {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    color: #C2C2C2;
+}
+
+/* navbar menu */
 .navbar-menu {
     display: flex;
     margin-right: 56px;

@@ -45,12 +45,16 @@ public class StoreController {
             @RequestParam(value="page", required = false) Integer pageIdx,
             Model model
     ) {
-        //  temp: API Gateway 임시 대체
+        // temp: API Gateway 임시 대체
         String role = null;
         if (accessToken != null) role = jwtUtil.getClaims(accessToken).get("role").toString();
-
         log.info("requested role: {}", role);
         model.addAttribute("memberRole", role);
+
+        Long code = null;
+        if (accessToken != null) code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+        log.info("requested code: {}", code);
+        model.addAttribute("memberCode", code);
 
         if (role == null || role.equals("MEMBER")) { // 비회원이거나 로그인한 이용자 (null 체크가 맨 위에 있어야 함)
             // role.equals("MEMBER")
@@ -64,7 +68,9 @@ public class StoreController {
 
             return "index"; // 팝업스토어 목록 페이지로 이동
         }
-        else if (role.equals("MANAGER")) return "layout/layout-manager"; // 운영자 페이지로 이동
+        else if (role.equals("MANAGER")) {
+            return "manager/manager_store_info"; // 운영자 페이지의 첫 메뉴로 이동
+        }
         else if (role.equals("ADMIN")) return "layout/layout-admin"; // 관리자 페이지로 이동
         else {
             log.error("알 수 없는 오류");
