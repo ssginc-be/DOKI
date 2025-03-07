@@ -163,6 +163,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 300px;
+    min-width: 300px;
     height: calc(100vh - 81px);
     padding: 32px 0;
     border-right: 1px solid #E1E0E1;
