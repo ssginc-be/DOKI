@@ -125,3 +125,6 @@ if (memberCode != null) { // 로그인 상태에서만 SSE 수신
         }, 5000)
     }
 }
+else {
+    console.warn("memberCode를 가져올 수 없습니다.");
+}
