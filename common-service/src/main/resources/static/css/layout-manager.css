@@ -17,11 +17,13 @@ body {
 .content-wrapper {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 .content {
     display: flex;
     flex-direction: column;
     padding: 32px 48px 0 48px;
+    width: 100%
 }
 
 /* navbar */
@@ -143,6 +145,7 @@ body {
     margin-right: 0;
 }
 .branch-text {
+    font-family: "Pretendard", sans-serif;
     color: #FFFFFF;
     font-weight: 600;
     font-size: 18px;
