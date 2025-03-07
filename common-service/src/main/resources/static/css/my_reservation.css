@@ -1,0 +1,149 @@
+.content-title {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 36px;
+    margin: 152px 0 98px 0;
+    text-align: center;
+}
+.content-subtitle {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 24px;
+    margin-bottom: 32px;
+}
+
+.table-area {
+    margin-bottom: 132px;
+}
+.table-meta {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 16px;
+}
+.table-meta-size {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 500;
+    font-size: 16px;
+    margin: auto auto auto 0;
+}
+.table-meta-size hl {
+    font-family: "Pretendard", sans-serif;
+    color: #F8434E;
+    font-weight: 500;
+    font-size: 16px;
+}
+.table-meta-pagination {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px;
+    margin: auto 0 auto auto;
+}
+.table-pagination-button-area {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    margin: auto 16px auto 48px;
+}
+.table-pagination-button {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #E2E2E9;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+.table-pagination-button svg {
+    margin: auto auto;
+}
+
+/* table css reset */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    margin-bottom: 48px;
+}
+/* end of table css reset */
+
+tr:not(:first-child) { /* 헤더만 제외 */
+    border-bottom: 1px solid #E2E2E9;
+}
+th {
+    font-family: "Pretendard", sans-serif;
+    color: #6C6C71;
+    background-color: #FCFCFC;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 13px 16px;
+    text-align: left;
+}
+th:first-child {
+    border-top-left-radius: 6px;
+    box-shadow: 0 0 0 1px #E2E2E9;
+}
+th:last-child {
+    border-top-right-radius: 6px;
+    box-shadow: 0 0 0 1px #E2E2E9;
+}
+th:not(:last-child) {
+    border-right: 1px solid #E2E2E9;
+}
+th:not(:first-child):not(:last-child) {
+    box-shadow: 0 -1px 0 #E2E2E9, 0 1px 0 #E2E2E9;
+}
+
+td {
+    font-family: "Pretendard", sans-serif;
+    color: #131313;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    padding: 7px 16px;
+}
+.no-button { /* td but there's no button */
+    font-family: "Pretendard", sans-serif;
+    color: #131313;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    padding: 15.5px 16px;
+}
+td:first-child {
+    width: 83px;
+}
+td:nth-child(2) {
+    width: 398px;
+}
+td:nth-child(3), td:nth-child(4) {
+    width: 153px;
+}
+td:last-child:not(.no-button) {
+    /* 버튼 들어간 마지막 칸에만 적용 */
+    /* no-button class면 적용 안됨 */
+    width: 169px;
+    text-align: center;
+}
+td:not(:last-child) {
+    border-right: 1px solid #E2E2E9;
+}
+
+.reserve-cancel-button {
+    width: 113px;
+    padding: 8px 0;
+    background-color: #FFF2F3;
+    border: 1px solid #FA6F77;
+    border-radius: 4px;
+
+    font-family: "Pretendard", sans-serif;
+    color: #FA6F77;
+    font-weight: 600;
+    font-size: 14px;
+
+    cursor: pointer;
+}
