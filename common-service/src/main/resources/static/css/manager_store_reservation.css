@@ -1,0 +1,199 @@
+.r-table-row {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.content-title {
+    font-family: "Pretendard", sans-serif;
+    color: #949494;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+.content-title hl{
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 700;
+    font-size: 14px;
+}
+.content-subtitle {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-area {
+    display: flex;
+    flex-direction: row;
+    height: 130px;
+    max-height: 130px;
+    margin-bottom: 87px;
+}
+.metric-box {
+    position: relative;
+    width: 332px;
+    max-width: 332px;
+    display: flex;
+    margin-right: 29px;
+}
+.metric-title {
+    position: absolute;
+    top: 26px;
+    right: 42px;
+    font-family: "Pretendard", sans-serif;
+    color: #131313;
+    font-weight: 600;
+    font-size: 14px;
+}
+.metric-data {
+    position: absolute;
+    top: 61px;
+    right: 42px;
+    font-family: "Pretendard", sans-serif;
+    color: #131313;
+    font-weight: 600;
+    font-size: 32px;
+}
+
+.table-meta {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 16px;
+}
+.table-meta-size {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 16px;
+    margin: auto auto auto 0;
+}
+.table-meta-pagination {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px;
+    margin: auto 0 auto auto;
+}
+.table-pagination-button-area {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    margin: auto 16px auto 48px;
+}
+.table-pagination-button {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #E2E2E9;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+.table-pagination-button svg {
+    margin: auto auto;
+}
+
+/* table css reset */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    margin-bottom: 48px;
+}
+/* end of table css reset */
+
+tr:not(:first-child) { /* 헤더만 제외 */
+    border-bottom: 1px solid #E2E2E9;
+}
+th {
+    font-family: "Pretendard", sans-serif;
+    color: #6C6C71;
+    background-color: #FCFCFC;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 13px 16px;
+    text-align: left;
+}
+th:first-child {
+    border-top-left-radius: 6px;
+    box-shadow: 0 0 0 1px #E2E2E9;
+}
+th:last-child {
+    border-top-right-radius: 6px;
+    box-shadow: 0 0 0 1px #E2E2E9;
+}
+th:not(:last-child) {
+    border-right: 1px solid #E2E2E9;
+}
+th:not(:first-child):not(:last-child) {
+    box-shadow: 0 -1px 0 #E2E2E9, 0 1px 0 #E2E2E9;
+}
+
+td {
+    font-family: "Pretendard", sans-serif;
+    color: #131313;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    padding: 8px 16px;
+}
+td:first-child {
+    width: 83px;
+}
+td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+    width: 153px;
+}
+td:nth-child(6), td:nth-child(7), td:nth-child(8) {
+    width: 169px;
+    text-align: center;
+}
+td:not(:last-child) {
+    border-right: 1px solid #E2E2E9;
+}
+
+.reserve-confirm-button {
+    width: 113px;
+    padding: 8px 0;
+    background-color: #EAEEFF;
+    border: 1px solid #134CFF;
+    border-radius: 4px;
+
+    font-family: "Pretendard", sans-serif;
+    color: #134CFF;
+    font-weight: 600;
+    font-size: 14px;
+
+    cursor: pointer;
+}
+.reserve-refuse-button {
+    width: 113px;
+    padding: 8px 0;
+    background-color: #FFF8EE;
+    border: 1px solid #FFA425;
+    border-radius: 4px;
+
+    font-family: "Pretendard", sans-serif;
+    color: #FFA425;
+    font-weight: 600;
+    font-size: 14px;
+
+    cursor: pointer;
+}
+.reserve-cancel-button {
+    width: 113px;
+    padding: 8px 0;
+    background-color: #FFF2F3;
+    border: 1px solid #FA6F77;
+    border-radius: 4px;
+
+    font-family: "Pretendard", sans-serif;
+    color: #FA6F77;
+    font-weight: 600;
+    font-size: 14px;
+
+    cursor: pointer;
+}
