@@ -72,7 +72,10 @@ public class StoreController {
             model.addAttribute("menuIdx", 0);
             return "manager/manager_store_info"; // 운영자 페이지의 첫 메뉴로 이동
         }
-        else if (role.equals("ADMIN")) return "layout/layout-admin"; // 관리자 페이지로 이동
+        else if (role.equals("ADMIN")) {
+            model.addAttribute("menuIdx", 0);
+            return "admin/admin_store_registration"; // 관리자 페이지의 첫 메뉴로 이동
+        }
         else {
             log.error("알 수 없는 오류");
             throw new CustomException(ErrorCode.SOMETHING_WENT_WRONG);

@@ -1,22 +1,17 @@
-function signIn() {
-    // 로그인 오버레이
-    const overlay = document.getElementById('signin-overlay');
+function gotoRoot() {
+    location.href = "/";
+}
 
-    // 로그인 입력 정보
-    const memberId = document.getElementById('signin_id').value;
-    const memberPw = document.getElementById('signin_pw').value;
-
-    axios.post("http://localhost:9093/v2/auth/sign-in", {
-        member_id: memberId,
-        member_pw: memberPw
-    }).then(function (response) {
-        console.log(response);
-        overlay.style.visibility = "hidden";
-        location.replace("http://localhost:9093");
-    }).catch(function (error) {
-        console.log(error);
-        alert("서버와의 통신에 실패했습니다.");
-    });
+/* sidebar 메뉴 클릭시 페이지 이동하는 용도 */
+function gotoPage(idx) {
+    switch (idx) {
+        case 0: location.href = "http://localhost:9093"; break;
+        case 1: location.href = "http://localhost:9093"; break;
+        case 2: location.href = "http://localhost:9093"; break;
+        case 3: location.href = "http://localhost:9093"; break;
+        case 4: location.href = "http://localhost:9093"; break;
+        default: alert("잘못된 접근입니다."); break;
+    }
 }
 
 function signOut() {
