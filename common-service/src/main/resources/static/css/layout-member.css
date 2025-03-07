@@ -117,6 +117,7 @@ body {
 
 /* noti toast */
 .noti-toast-viewbox {
+    position: absolute;
     height: 100vh;
     overflow: hidden;
 }
