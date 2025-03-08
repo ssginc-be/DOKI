@@ -3,11 +3,9 @@ package com.ssginc.commonservice.store.service;
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.notification.service.NotificationService;
-import com.ssginc.commonservice.reserve.model.Reservation;
-import com.ssginc.commonservice.reserve.model.ReservationLog;
-import com.ssginc.commonservice.reserve.model.ReservationLogRepository;
-import com.ssginc.commonservice.reserve.model.ReservationRepository;
+import com.ssginc.commonservice.reserve.model.*;
 import com.ssginc.commonservice.store.dto.CategoryNoDescDto;
+import com.ssginc.commonservice.store.dto.ReservationEntryResponseDto;
 import com.ssginc.commonservice.store.dto.StoreMetaDto;
 import com.ssginc.commonservice.store.model.Store;
 import com.ssginc.commonservice.store.model.StoreCategory;
@@ -24,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,11 +36,12 @@ import java.util.Optional;
 @Service
 public class StoreService {
     /*
-        팝업스토어 목록 조회, 예약 승인/거절/취소
+        팝업스토어 목록 조회, 예약 승인/거절/취소, 예약 엔트리 조회
     */
     private final StoreRepository sRepo;
     private final ReservationRepository rRepo;
     private final ReservationLogRepository rlRepo;
+    private final ReservationEntryRepository reRepo;
 
     private final NotificationService notificationService;
 
@@ -210,5 +210,24 @@ public class StoreService {
         notificationService.notifyReserveResultToMember(reservation.getReservationId(), "CANCELED");
 
         return ResponseEntity.ok().build();
+    }
+
+    /* 특정 팝업스토어의 선택한 날짜에 대한 예약 엔트리 조회 */
+    public ResponseEntity<?> getEntriesOfSpecificDate(Long sid, LocalDate date) {
+        List<ReservationEntry> reList = reRepo.findAllByStore_StoreIdAndEntryDate(sid, date);
+
+        // entity -> dto 변환
+        List<ReservationEntryResponseDto> dtoList = new ArrayList<>();
+        for (ReservationEntry entry : reList) {
+            ReservationEntryResponseDto dto = ReservationEntryResponseDto.builder()
+                    .reservationEntryId(entry.getReservationEntryId())
+                    .entryTime(entry.getEntryTime())
+                    .entryStatus(entry.getEntryStatus())
+                    .build();
+
+            dtoList.add(dto);
+        }
+
+        return ResponseEntity.ok().body(dtoList);
     }
 }

@@ -1,0 +1,381 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    display: flex;
+    background-color: #F5F6FA;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 990px;
+    min-height: 100vh;
+    background-color: #FFFFFF;
+    margin: 0 auto;
+}
+
+/* 최상단 작은 네비게이션 바 영역 */
+.reservation-top {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: inherit;
+    background-color: #FFFFFF;
+    z-index: 999;
+}
+.tiny-navbar {
+    display: flex;
+    flex-direction: row;
+    height: 72px;
+}
+.left-arrow-button {
+    position: fixed;
+    margin: 20px auto auto 20px;
+    cursor: pointer;
+}
+.navbar-page-title {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    margin: auto auto;
+}
+
+
+/* 상단 팝업스토어 정보 영역 */
+.store-info-box {
+    display: flex;
+    flex-direction: row;
+}
+.store-thumbnail {
+    width: 174px;
+    height: 174px;
+    background-color: #c4c4c4;
+}
+.store-thumbnail img {
+    object-fit: cover;
+    width: 100%;
+    min-height: 100%;
+}
+.store-info-text-box {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 48px;
+}
+.store-name-box {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.store-name {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+}
+.store-category-box {
+    display: flex;
+    flex-direction: row;
+    margin: auto auto auto 0;
+}
+.category-chip {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #131313;
+    border: 1px solid #131313;
+    border-radius: 16px;
+    padding: 5px 12px;
+    margin: auto 8px auto 0;
+}
+.store-desc {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+}
+.store-period {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #323232;
+    margin: auto auto 0 0;
+}
+
+/* 구분 선 */
+.border {
+    width: 100%;
+    height: 15px;
+    min-height: 15px;
+    max-height: 15px;
+    background-color: #FAFAFA;
+}
+
+/* 예약 기입 정보 */
+.reservation-info-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 32px calc(409px + 68px) 32px 42px;
+    margin-top: calc(246px + 15px);
+    margin-right: 409px;
+}
+
+.reserve-info-title {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 32px;
+}
+.reserve-info-input-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 16px;
+    margin-bottom: 90px;
+    gap: 16px;
+}
+.reserve-info-datetime-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 16px;
+    margin-bottom: 90px;
+}
+
+/* input 컨테이너 */
+.reserve-input-box {
+    display: flex;
+    flex-direction: row;
+}
+.reserve-input-label {
+    width: 72px;
+    margin: auto auto auto 0;
+
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+.reserve-input {
+    flex: 1;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #7C7C7C;
+
+    padding: 12px 20px;
+    border: 0.5px solid #959595;
+    border-radius: 6px;
+}
+
+/* reservation date */
+.reserve-info-subtitle {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+.reserve-month-box:not(:last-child) {
+    margin-bottom: 24px;
+}
+.reserve-month-title {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 14px;
+}
+
+.reserve-date-box {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+.reserve-date-button {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    background-color: #FFFFFF;
+    border: 0.5px solid #C2C2C2;
+    border-radius: 100px;
+    cursor: pointer;
+}
+.reserve-date-button.selected {
+    border: 1px solid #ED3C3C;
+    background-color: #FFF3F3;
+}
+.reserve-date-button span {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #000000;
+    margin: auto auto;
+}
+.reserve-date-button.selected span {
+    color: #ED3C3C;
+    font-weight: 700;
+}
+
+/* reservation time */
+.reserve-time-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 308px;
+}
+.reserve-time-nobutton {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+}
+.reserve-time-button {
+    display: flex;
+    width: 96px;
+    height: 39px;
+    background-color: #FFFFFF;
+    border: 0.5px solid #C2C2C2;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.reserve-time-button.selected {
+    background-color: #FFF3F3;
+    border: 1px solid #ED3C3C;
+}
+.reserve-time-button.closed {
+    background-color: #F4F6F4;
+    border: 0.5px solid #E3E6E5;
+    cursor: not-allowed;
+}
+
+.reserve-time-button span {
+    margin: auto auto;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+}
+.reserve-time-button.selected span {
+    color: #ED3C3C;
+    font-weight: 700;
+}
+.reserve-time-button.closed span {
+    color: #C6C6C6;
+    font-weight: 600;
+}
+
+/* 예약 기입 정보 확인창 - right side floating area */
+.info-check-container {
+    position: fixed;
+    top: 0;
+    margin-top: calc(246px + 15px);
+    margin-left: calc(581px - 42px);
+    padding: 32px 0;
+    display: flex;
+    flex-direction: column;
+    width: 409px;
+    height: calc(100vh - 261px);
+    background-color: #FFFFFF;
+    border-left: 0.5px solid #DCDCDC;
+}
+.info-check-title {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    padding-left: 42px;
+    margin-bottom: 28px;
+}
+
+.info-check-box-top {
+    margin-bottom: auto;
+}
+
+.info-check-group {
+    margin-bottom: 36px;
+}
+.info-check-subtitle {
+    width: 161px;
+    padding: 12px 0 11px 26px;
+    margin-bottom: 15px;
+    background-color: #FFF3F3;
+    border-radius: 0px 8px 8px 0px;
+
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #ED3C3C;
+}
+.info-check-element {
+    display: flex;
+    flex-direction: row;
+    padding-left: 42px;
+}
+.info-check-element:not(:last-child) {
+    margin-bottom: 13px;
+}
+.check-label {
+    width: 113px;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333333;
+    margin: auto 0;
+}
+.check-data {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    color: #333333;
+}
+
+/* 하단 예약하기 버튼 놓인 영역 */
+.info-check-box-bottom {
+    display: flex;
+    flex-direction: row;
+    height: 45px;
+    padding: 0 42px;
+    margin-bottom: 10px;
+    gap: 9px;
+}
+.reserve-button {
+    width: 184px;
+    padding: 13px 0;
+    text-align: center;
+    background: linear-gradient(93.73deg, #E73A3A 0%, #FF5151 100%);
+    border: 1px solid #FFFFFF;
+    box-shadow: 0px 0px 8px 1px rgba(230, 0, 0, 0.08);
+    border-radius: 6px;
+
+    font-family: "Pretendard", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+
+    cursor: pointer;
+}
+.back-button {
+    width: 132px;
+    padding: 13px 0;
+    text-align: center;
+    background-color: #FFFFFF;
+    border: 0.5px solid #C2C2C2;
+    box-shadow: 0px 0px 8px 1px rgba(230, 0, 0, 0.08);
+    border-radius: 6px;
+
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #333333;
+
+    cursor: pointer;
+}
+
+/* flatpickr styling */
+.flatpickr-calendar {
+    font-family: "Pretendard", sans-serif;
+    box-shadow: none !important;
+}
+
+.flatpickr-input {
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
