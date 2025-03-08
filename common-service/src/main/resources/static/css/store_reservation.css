@@ -221,6 +221,12 @@ body {
     gap: 10px;
     width: 308px;
 }
+.reserve-time-nobutton {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+}
 .reserve-time-button {
     display: flex;
     width: 96px;

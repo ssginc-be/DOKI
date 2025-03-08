@@ -7,12 +7,20 @@
 
     <link href="/css/store_reservation.css" rel="stylesheet"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <!-- flatpickr: date picker script -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script> <!-- 언어 설정 -->
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_red.css"> <!-- 테마 설정 -->
     <!-- end of date picker -->
+
+    <script th:inline="javascript">
+        const storeId = [[${store.getStoreId()}]];
+        const storeStart = [[${store.getStoreStart()}]];
+        const storeEnd = [[${store.getStoreEnd()}]];
+    </script>
 
     <script src="/js/store_reservation.js"></script>
 </head>
@@ -100,17 +108,18 @@
             </div>
         </div>
 
-        <div class="reserve-info-datetime-container">
+        <div class="reserve-info-datetime-container" id="reserve-time-container">
             <div class="reserve-info-subtitle">시간 선택</div>
-            <div class="reserve-time-box">
+            <div class="reserve-time-nobutton" id="reserve-time-nobutton">예약 일자를 선택해주세요.</div>
+            <div class="reserve-time-box" id="reserve-time-box">
                 <!--  각종 시간 버튼 -->
-                <div class="reserve-time-button" data-value="12:30" onclick="setReservationTime(this)"><span>12:30</span></div>
-                <div class="reserve-time-button closed"><span>13:00</span></div>
-                <div class="reserve-time-button" data-value="13:30" onclick="setReservationTime(this)"><span>13:30</span></div>
-                <div class="reserve-time-button" data-value="14:00" onclick="setReservationTime(this)"><span>14:00</span></div>
-                <div class="reserve-time-button" data-value="14:30" onclick="setReservationTime(this)"><span>14:30</span></div>
-                <div class="reserve-time-button" data-value="15:00" onclick="setReservationTime(this)"><span>15:00</span></div>
-                <div class="reserve-time-button" data-value="15:30" onclick="setReservationTime(this)"><span>15:30</span></div>
+<!--                <div class="reserve-time-button" data-value="12:30" onclick="setReservationTime(this)"><span>12:30</span></div>-->
+<!--                <div class="reserve-time-button closed"><span>13:00</span></div>-->
+<!--                <div class="reserve-time-button" data-value="13:30" onclick="setReservationTime(this)"><span>13:30</span></div>-->
+<!--                <div class="reserve-time-button" data-value="14:00" onclick="setReservationTime(this)"><span>14:00</span></div>-->
+<!--                <div class="reserve-time-button" data-value="14:30" onclick="setReservationTime(this)"><span>14:30</span></div>-->
+<!--                <div class="reserve-time-button" data-value="15:00" onclick="setReservationTime(this)"><span>15:00</span></div>-->
+<!--                <div class="reserve-time-button" data-value="15:30" onclick="setReservationTime(this)"><span>15:30</span></div>-->
             </div>
         </div>
 

@@ -9,8 +9,8 @@ flatpickrConfig = {
     enableTime: false, // 시간 속성 사용 여부
     dateFormat: "Y-m-d", // 달력 입력 포맷
     local: 'ko', // 언어 설정
-    minDate: today, // 최소 선택 가능 날짜
-    maxDate: '2025-03-23', // 최대 선택 가능 날짜
+    minDate: storeStart, // 최소 선택 가능 날짜
+    maxDate: storeEnd, // 최대 선택 가능 날짜
     inline: true
 };
 
@@ -21,7 +21,55 @@ function showEntryDates(event) {
     const checkDiv = document.getElementById("check-data-date");
     checkDiv.innerText = selectedDate;
 
+    // 해당 일자에 대한 예약 가능 시간 버튼 표시
+    showEntryTimes(storeId, selectedDate);
+
     console.log('selected date:', selectedDate); // logging
+}
+
+// 특정 예약 가능 일자 선택 시 하단에 예약 가능 시간 버튼 표시하는 함수
+async function showEntryTimes(storeId, selectedDate) {
+    // 선택한 일자에 대한 예약 가능 시간 조회
+    const entryTimeList = await getRequest(`http://localhost:9093/v1/store/entry?id=${storeId}&date=${selectedDate}`);
+    console.log(entryTimeList);
+
+    // 기존의 '예약 일자를 선택해주세요.' or '예약 가능한 시간이 없습니다.' 텍스트 div 제거
+    const noButtonDiv = document.getElementById('reserve-time-nobutton');
+    if (noButtonDiv != null) noButtonDiv.remove();
+
+    if (entryTimeList.length === 0) { // A. 예약 가능 시간이 없을 경우
+        // 기존에 렌더링된 버튼이 있으면 제거
+        const boxDiv = document.getElementById('reserve-time-box');
+        boxDiv.innerHTML = '';
+
+        // 예약 시간 컨테이너 div
+        const reserveTimeContainerDiv = document.getElementById('reserve-time-container');
+
+        // '예약 가능한 시간이 없습니다.' 텍스트 div 생성
+        const newNoButtonDiv = document.createElement("div");
+        newNoButtonDiv.classList.add('reserve-time-nobutton');
+        newNoButtonDiv.id = 'reserve-time-nobutton';
+        newNoButtonDiv.innerText = '예약 가능한 시간이 없습니다.';
+        reserveTimeContainerDiv.appendChild(newNoButtonDiv);
+
+    }
+    else { // B. 예약 가능 시간이 있을 경우 - 예약 가능 시간 버튼 표시
+
+        // 예약 가능 시간 버튼 생성
+        // reserve-time-box div
+        const boxDiv = document.getElementById('reserve-time-box');
+
+        // createElement로 처리하면 설정할게 많아서 코드가 길어질 것 같아 innerHTML로 처리
+        let buttonHTML = '';
+        entryTimeList.forEach(entry => {
+            let newButtonDiv = entry.entryStatus === 'OPEN' ?
+                `<div class="reserve-time-button" data-value="${entry.entryTime}" onclick="setReservationTime(this)"><span>${entry.entryTime}</span></div>`
+                :
+                `<div class="reserve-time-button closed"><span>${entry.entryTime}</span></div>`;
+            buttonHTML += newButtonDiv;
+        });
+        boxDiv.innerHTML = buttonHTML;
+    }
 }
 
 // 예약 날짜 버튼 클릭 시 작동하는 함수 - legacy 방식, 현 버전에서 사용하지 않음.
@@ -96,4 +144,17 @@ function reserve() {
 function goBack() {
     const ok = confirm("작성을 취소하고 뒤로 가시겠습니까?");
     if (ok) history.back();
+}
+
+
+/* axios request */
+async function getRequest(endpoint) {
+    try {
+        const response = await axios.get(endpoint);
+        console.log(response);
+        return response.data;
+    } catch(error) {
+        console.error(error);
+        alert("서버와의 통신에 실패했습니다.");
+    }
 }
