@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>팝업스토어 예약하기</title>
+
+    <link href="/css/store_reservation.css" rel="stylesheet"/>
+
+    <!-- flatpickr: date picker script -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script> <!-- 언어 설정 -->
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_red.css"> <!-- 테마 설정 -->
+    <!-- end of date picker -->
+
+    <script src="/js/store_reservation.js"></script>
+</head>
+<body>
+<!-- navbar 없음 -->
+
+<div class="wrapper">
+    <!-- 팝업스토어 정보 (floating) -->
+    <div class="reservation-top">
+        <div class="tiny-navbar">
+            <div class="left-arrow-button" th:onclick="goBack()"><img th:src="@{/icon/store/left_arrow.svg}"></div>
+            <div class="navbar-page-title" th:text="${store.getStoreName()}"></div>
+        </div>
+        <div class="store-info-box">
+            <div class="store-thumbnail"><img th:src="${thumbnailLink}"></div>
+            <div class="store-info-text-box">
+                <div class="store-name-box">
+                    <div class="store-name" th:text="${store.getStoreName()}"></div>
+                    <div class="store-category-box">
+<!--                        <div class="category-chip">비건</div>-->
+<!--                        <div class="category-chip">브랜드</div>-->
+                        <th:block th:each="category : ${store.getStoreCategoryList()}">
+                            <div class="category-chip" th:text="${category.getCategory().getCategoryName()}"></div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="store-desc" th:text="${store.getStoreShortDesc()}"></div>
+                <div class="store-period"
+                     th:text="${#temporals.format(store.getStoreStart(), 'MM.dd(E)') +
+                     ' ~ ' +
+                     #temporals.format(store.getStoreEnd(), 'MM.dd(E)')}"
+                >
+                </div>
+            </div>
+        </div>
+
+        <!-- 구분 영역 -->
+        <div class="border"></div>
+    </div>
+
+    <!-- 예약 정보 -->
+    <div class="reservation-info-content">
+
+        <div class="reserve-info-title">예약자 기본 정보</div>
+        <div class="reserve-info-input-container">
+            <div class="reserve-input-box">
+                <div class="reserve-input-label">예약자명</div>
+                <input type="text" class="reserve-input" id="client-name" th:placeholder="${member.getMemberName()}" readonly>
+            </div>
+            <div class="reserve-input-box">
+                <div class="reserve-input-label">연락처</div>
+                <input type="text" class="reserve-input" id="client-phone" th:placeholder="${member.getMemberPhone()}" readonly>
+            </div>
+        </div>
+
+
+        <div class="reserve-info-title">예약 일정</div>
+
+        <div class="reserve-info-datetime-container">
+            <div class="reserve-info-subtitle">날짜 선택</div>
+            <div class="reserve-calendar-box">
+                <!-- 예약 날짜를 date picker로 입력 받음 -->
+                <input class="reserve-input" id="date-picker" type="date" onInput="showEntryDates(this)" required />
+
+<!--                &lt;!&ndash;  각종 일자 버튼 &ndash;&gt;-->
+<!--                <div class="reserve-month-box">-->
+<!--                    <div class="reserve-month-title"><span>2월</span></div> &lt;!&ndash; 2월, 3월 ... &ndash;&gt;-->
+<!--                    <div class="reserve-date-box">-->
+<!--                        <div class="reserve-date-button" data-value="2025-02-21" onclick="setReservationDate(this)"><span>21</span></div>-->
+<!--                        <div class="reserve-date-button" data-value="2025-02-22" onclick="setReservationDate(this)"><span>22</span></div>-->
+<!--                        <div class="reserve-date-button" data-value="2025-02-23" onclick="setReservationDate(this)"><span>23</span></div>-->
+<!--                        <div class="reserve-date-button" data-value="2025-02-24" onclick="setReservationDate(this)"><span>24</span></div>-->
+<!--                        <div class="reserve-date-button" data-value="2025-02-25" onclick="setReservationDate(this)"><span>25</span></div>-->
+<!--                        <div class="reserve-date-button" data-value="2025-02-26" onclick="setReservationDate(this)"><span>26</span></div>-->
+<!--                        <div class="reserve-date-button" data-value="2025-02-27" onclick="setReservationDate(this)"><span>27</span></div>-->
+<!--                        <div class="reserve-date-button" data-value="2025-02-28" onclick="setReservationDate(this)"><span>28</span></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="reserve-month-box">-->
+<!--                    <div class="reserve-month-title"><span>3월</span></div> &lt;!&ndash; 2월, 3월 ... &ndash;&gt;-->
+<!--                    <div class="reserve-date-box">-->
+<!--                        <div class="reserve-date-button" data-value="2025-03-01" onclick="setReservationDate(this)"><span>1</span></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+
+        <div class="reserve-info-datetime-container">
+            <div class="reserve-info-subtitle">시간 선택</div>
+            <div class="reserve-time-box">
+                <!--  각종 시간 버튼 -->
+                <div class="reserve-time-button" data-value="12:30" onclick="setReservationTime(this)"><span>12:30</span></div>
+                <div class="reserve-time-button closed"><span>13:00</span></div>
+                <div class="reserve-time-button" data-value="13:30" onclick="setReservationTime(this)"><span>13:30</span></div>
+                <div class="reserve-time-button" data-value="14:00" onclick="setReservationTime(this)"><span>14:00</span></div>
+                <div class="reserve-time-button" data-value="14:30" onclick="setReservationTime(this)"><span>14:30</span></div>
+                <div class="reserve-time-button" data-value="15:00" onclick="setReservationTime(this)"><span>15:00</span></div>
+                <div class="reserve-time-button" data-value="15:30" onclick="setReservationTime(this)"><span>15:30</span></div>
+            </div>
+        </div>
+
+        <div class="reserve-info-title">예약 인원</div>
+        <div class="reserve-info-input-container">
+            <div class="reserve-input-box">
+                <div class="reserve-input-label">인원 수</div>
+                <input type="number" class="reserve-input" id="client-headcount" onInput="setHeadCount(this)">
+            </div>
+        </div>
+
+        <!-- 예약 정보 확인 및 신청 버튼 (floating) -->
+        <div class="info-check-container">
+            <div class="info-check-title">예약 기입 정보 확인</div>
+
+            <div class="info-check-box-top">
+
+                <!---------------------- 예약자 기본 정보 ---------------------->
+                <div class="info-check-group">
+                    <div class="info-check-subtitle">예약자 기본 정보</div>
+                    <div class="info-check-element">
+                        <div class="check-label">예약자명</div>
+                        <div class="check-data" th:text="${member.getMemberName()}"></div>
+                    </div>
+                    <div class="info-check-element">
+                        <div class="check-label">연락처</div>
+                        <div class="check-data" th:text="${member.getMemberPhone()}"></div>
+                    </div>
+                </div>
+                <!---------------------- 예약 일정 ---------------------->
+                <div class="info-check-group">
+                    <div class="info-check-subtitle">예약 일정</div>
+                    <div class="info-check-element">
+                        <div class="check-label">예약 일자</div>
+                        <div class="check-data" id="check-data-date">-</div>
+                    </div>
+                    <div class="info-check-element">
+                        <div class="check-label">예약 시간</div>
+                        <div class="check-data" id="check-data-time">-</div>
+                    </div>
+                </div>
+                <!---------------------- 예약 인원 ---------------------->
+                <div class="info-check-group">
+                    <div class="info-check-subtitle">예약 인원</div>
+                    <div class="info-check-element">
+                        <div class="check-label">인원 수</div>
+                        <div class="check-data" id="check-data-headcount">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-check-box-bottom">
+                <div class="reserve-button" th:onclick="reserve()">예약하기</div>
+                <div class="back-button" th:onclick="goBack()">작성 취소</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- footer 없음 -->
+
+<!-- DOM 노드가 존재해야 instantiating이 가능하므로, 하단의 스크립트는 header에 들어가면 안됨 -->
+<script>
+    flatpickr("#date-picker", flatpickrConfig);
+</script>
+
+</body>
+</html>
