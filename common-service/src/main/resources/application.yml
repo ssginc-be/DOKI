@@ -44,6 +44,12 @@ spring:
       repositories:
         enabled: true # ElasticSearchRepository 사용
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 15MB
+      max-request-size: 60MB
+
 eureka:
   instance:
     lease-renewal-interval-in-seconds: 600 # 로그 때문에 10분으로 설정
@@ -52,7 +58,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+      defaultZone: http://43.203.83.252:8761/eureka
     registry-fetch-interval-seconds: 1800 # 로그 때문에 30분으로 설정
 
 management:
