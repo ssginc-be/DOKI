@@ -24,19 +24,57 @@ exports.handler = async (event, context, callback) => {
 
     // 원본 이미지 호출, 리사이징
     const originalImage = await s3.getObject({ Bucket: bucket, Key: key }).promise();
-    let resizedImage;
-    try {
-        resizedImage = await sharp(originalImage.Body)
-            .resize(400, 400, {fit: 'inside'})
-            .toFormat(formatType)
-            .toBuffer();
-    } catch (error) {
-        console.log(error);
+    let resizedImage_400; // MAIN_THUMBNAIL
+    let resizedImage_174; // SUB_THUMBNAIL
+    let resizedImage_450; // CONTENT_DETAIL
+
+    if (key.includes('thumb')) {
+        try {
+            resizedImage_400 = await sharp(originalImage.Body)
+                .resize(400, 400, {fit: 'inside'})
+                .jpeg({ quality: 100 })
+                .toBuffer();
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+        const newKey_400 = key.replace('original/', 'resize/').replace('thumb/', 'thumb/400/');
+        await saveImage(newKey_400, resizedImage_400, bucket, 'jpeg');
+
+        try {
+            resizedImage_174 = await sharp(originalImage.Body)
+                .resize(174, 174, {fit: 'inside'})
+                .toFormat(formatType)
+                .toBuffer();
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+        const newKey_174 = key.replace('original/', 'resize/').replace('thumb/', 'thumb/174/');
+        await saveImage(newKey_174, resizedImage_174, bucket, formatType);
+    }
+    else if (key.includes('content')) {
+        try {
+            resizedImage_450 = await sharp(originalImage.Body)
+                .resize(450, 450, {fit: 'inside'})
+                .jpeg({ quality: 80 })
+                .toBuffer();
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+        const newKey_450 = key.replace('original/', 'resize/').replace('content/', 'content/450/');
+        await saveImage(newKey_450, resizedImage_450, bucket, 'jpeg');
+    }
+    else {
+        console.log(`* * * key does not include 'thumb' or 'content'.`);
         return;
     }
-    
+
+};
+
+async function saveImage(newKey, resizedImage, bucket, formatType) {
     // 결과 파일 저장
-    const newKey = key.replace('original/', 'resize/');
     try {
         await s3.putObject({
             Bucket: bucket,
@@ -48,6 +86,6 @@ exports.handler = async (event, context, callback) => {
         console.log(error);
         return;
     }
-    
+
     console.log(`Successfully Image resized and uploaded to: ${newKey}`);
-};
+}
