@@ -87,6 +87,11 @@ dependencies {
     //  Redis
     //***************************************************************
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    //***************************************************************
+    //  CoolSMS API
+    //***************************************************************
+    implementation 'net.nurigo:sdk:4.3.0'
 }
 
 dependencyManagement {
