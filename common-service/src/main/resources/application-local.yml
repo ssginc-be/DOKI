@@ -29,6 +29,8 @@ elasticsearch:
 
 cloud:
   aws:
+    cloudfront:
+      domain: https://dy5ta30ib886x.cloudfront.net
     s3:
       bucket: pjt3
     stack.auto: false

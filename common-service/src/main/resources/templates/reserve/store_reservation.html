@@ -18,8 +18,8 @@
 
     <script th:inline="javascript">
         const storeId = [[${store.getStoreId()}]];
-        const storeStart = [[${store.getStoreStart()}]];
-        const storeEnd = [[${store.getStoreEnd()}]];
+        const storeStartDate = [[${store.getStoreStartDate()}]];
+        const storeEndDate = [[${store.getStoreEndDate()}]];
     </script>
 
     <script src="/js/store_reservation.js"></script>
@@ -49,9 +49,9 @@
                 </div>
                 <div class="store-desc" th:text="${store.getStoreShortDesc()}"></div>
                 <div class="store-period"
-                     th:text="${#temporals.format(store.getStoreStart(), 'MM.dd(E)') +
+                     th:text="${#temporals.format(store.getStoreStartDate(), 'MM.dd(E)') +
                      ' ~ ' +
-                     #temporals.format(store.getStoreEnd(), 'MM.dd(E)')}"
+                     #temporals.format(store.getStoreEndDate(), 'MM.dd(E)')}"
                 >
                 </div>
             </div>

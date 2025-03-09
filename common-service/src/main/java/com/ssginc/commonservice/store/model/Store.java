@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.reserve.model.Reservation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -23,6 +21,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store {
@@ -39,7 +38,7 @@ public class Store {
     private List<StoreCategory> storeCategoryList;
 
     @Column(nullable = false, length = 100)
-    private String storeBranch;
+    private String storeBranch; // 추후 Long branchId로 리팩토링 필요
 
     @Column(nullable = false, length = 200)
     private String storeAt;
@@ -51,10 +50,16 @@ public class Store {
     private String storeLongDesc;
 
     @Column(nullable = false)
-    private LocalDate storeStart;
+    private LocalDate storeStartDate;
 
     @Column(nullable = false)
-    private LocalDate storeEnd;
+    private LocalDate storeEndDate;
+
+    @Column(nullable = false)
+    private LocalTime storeStartTime;
+
+    @Column(nullable = false)
+    private LocalTime storeEndTime;
 
     @CreationTimestamp
     @Column(columnDefinition = "TIMESTAMP")

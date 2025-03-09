@@ -43,7 +43,7 @@
                         <div class="store-text-box">
                             <div class="store-name" th:text="${store.getStoreName()}"></div>
                             <div class="store-desc" th:text="${store.getStoreShortDesc()}"></div>
-                            <div class="store-period" th:text="${store.getStoreStart().format(formatter) + ' ~ ' + store.getStoreEnd().format(formatter)}"></div>
+                            <div class="store-period" th:text="${store.getStoreStartDate().format(formatter) + ' ~ ' + store.getStoreEndDate().format(formatter)}"></div>
                         </div>
                     </div>
                 </th:block>

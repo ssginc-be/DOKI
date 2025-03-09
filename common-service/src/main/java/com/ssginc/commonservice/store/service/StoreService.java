@@ -7,13 +7,15 @@ import com.ssginc.commonservice.reserve.model.*;
 import com.ssginc.commonservice.store.dto.CategoryNoDescDto;
 import com.ssginc.commonservice.store.dto.ReservationEntryResponseDto;
 import com.ssginc.commonservice.store.dto.StoreMetaDto;
-import com.ssginc.commonservice.store.model.Store;
-import com.ssginc.commonservice.store.model.StoreCategory;
-import com.ssginc.commonservice.store.model.StoreRepository;
+import com.ssginc.commonservice.store.dto.StoreSaveRequestDto;
+import com.ssginc.commonservice.store.model.*;
 import com.ssginc.commonservice.util.PageResponse;
+import com.ssginc.commonservice.util.S3Uploader;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,8 +23,11 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,14 +41,24 @@ import java.util.Optional;
 @Service
 public class StoreService {
     /*
-        팝업스토어 목록 조회, 예약 승인/거절/취소, 예약 엔트리 조회
+        팝업스토어 목록 조회, 예약 승인/거절/취소, 예약 엔트리 조회, 팝업스토어 등록
     */
     private final StoreRepository sRepo;
+    private final CategoryRepository cRepo;
+    private final StoreImageRepository siRepo;
     private final ReservationRepository rRepo;
     private final ReservationLogRepository rlRepo;
     private final ReservationEntryRepository reRepo;
 
     private final NotificationService notificationService;
+    private final StoreIndexService storeIndexService;
+
+    private final S3Uploader s3Uploader;
+
+    private final EntityManager entityManager;
+
+    @Value("${cloud.aws.cloudfront.domain}")
+    private String cloudFrontDomain;
 
 
     /* 팝업스토어 목록 조회 */
@@ -70,8 +85,8 @@ public class StoreService {
                             .categoryList(dtoList)
                             .storeName(store.getStoreName())
                             .storeShortDesc(store.getStoreShortDesc())
-                            .storeStart(store.getStoreStart())
-                            .storeEnd(store.getStoreEnd())
+                            .storeStartDate(store.getStoreStartDate())
+                            .storeEndDate(store.getStoreEndDate())
                             .storeMainThumbnail(store.getStoreImageList().stream()
                                     .filter(img -> img.getStoreImageTag().equals("MAIN_THUMBNAIL")).toList().get(0).getStoreImageLink())
                             .build()
@@ -229,5 +244,135 @@ public class StoreService {
         }
 
         return ResponseEntity.ok().body(dtoList);
+    }
+
+    /* 팝업스토어 등록 */
+    @Transactional
+    public ResponseEntity<?> registerStore(StoreSaveRequestDto dto, List<MultipartFile> mfiles) {
+        // 1. Store 엔티티 생성
+        // ES 인덱싱때문에 일단 setter로 따로 주입하는데, 주입을 안해도 되는지는 나중에 알아봐야 할 듯
+        Store store = Store.builder()
+                .storeName(dto.getStoreName())
+                //.storeCategoryList(storeCategoryList) // 하단에서 setter로 주입
+                .storeBranch(dto.getStoreBranch())
+                .storeAt(dto.getStoreAt())
+                .storeShortDesc(dto.getStoreShortDesc())
+                .storeLongDesc(dto.getStoreLongDesc())
+                .storeStartDate(dto.getStoreStartDate())
+                .storeEndDate(dto.getStoreEndDate())
+                .storeStartTime(dto.getStoreStartTime())
+                .storeEndTime(dto.getStoreEndTime())
+                .storeReserveMethod(Store.StoreReserveMethod.valueOf(dto.getReserveMethod()))
+                .storeStatus(Store.StoreStatus.valueOf("ACTIVE"))
+                //.storeImageList(storeImageList) // 하단에서 setter로 주입
+                .build();
+
+        entityManager.persist(store); // 영속화 -> 이 시점부터 store의 id 값을 알 수 있음.
+
+
+        // 2. 팝업스토어 이미지를 S3에 업로드
+        // S3에 업로드 시 자동으로 resize -> 파일명을 convention에 맞게 지정해서 S3에 재업 -> CloudFront에서 배포하는 방식
+        // [400x400] MAIN_THUMBNAIL / [174x174] SUB_THUMBNAIL / [450xauto] CONTENT_DETAIL
+        // 파일명 convention: 파일명_사이즈 - 추후 리팩토링이 필요한 부분
+
+        // DB에 저장할 최종 이미지 CDN url
+        List<String> thumbUrlList = new ArrayList<>();
+        List<String> contentUrlList = new ArrayList<>();
+
+        // 파일 이미지 리스트에서 대표 이미지 파일을 추출
+        MultipartFile thumbFile = mfiles.get(dto.getThumbIdx());
+
+        String publicThumbUrl1 = cloudFrontDomain + "/resize/thumb/400/";
+        String publicThumbUrl2 = cloudFrontDomain + "/resize/thumb/174/";
+        String publicContentUrl = cloudFrontDomain + "/resize/content/450/";
+
+        
+        // 이미지 업로드
+        // MAIN_THUMBNAIL, SUB_THUMBNAIL, CONTENT_DETAIL 생성
+        try {
+            s3Uploader.uploadStoreMainImage(thumbFile); // MAIN_THUMBNAIL, SUB_THUMBNAIL 생성
+            s3Uploader.uploadStoreImages(mfiles); // CONTENT_DETAIL 생성
+        } catch (IOException e) {
+            log.error("S3 업로드 실패");
+            throw new CustomException(ErrorCode.CANNOT_UPLOAD_IMAGE);
+        }
+
+        // 3. StoreImage 엔티티 생성
+        // 리스트에 CDN public url 추가 -> DB 저장용
+        String thumbFileName = thumbFile.getOriginalFilename();
+        thumbUrlList.add(publicThumbUrl1 + thumbFileName);
+        thumbUrlList.add(publicThumbUrl2 + thumbFileName);
+
+        for (MultipartFile mfile : mfiles) {
+            contentUrlList.add(publicContentUrl + mfile.getOriginalFilename());
+        }
+        
+        // 썸네일 2장
+        List<StoreImage> storeImageList = new ArrayList<>();
+        storeImageList.add(StoreImage.builder()
+                .store(store)
+                .storeImageTag("MAIN_THUMBNAIL")
+                .storeImageLink(thumbUrlList.get(0))
+                .build()
+        );
+        storeImageList.add(StoreImage.builder()
+                .store(store)
+                .storeImageTag("SUB_THUMBNAIL")
+                .storeImageLink(thumbUrlList.get(1))
+                .build()
+        );
+        // 나머지 1 ~ 최대 5장 (대표로 지정된 이미지 포함)
+        for (String url : contentUrlList) {
+            storeImageList.add(StoreImage.builder()
+                    .store(store)
+                    .storeImageTag("CONTENT_DETAIL")
+                    .storeImageLink(url)
+                    .build()
+            );
+        }
+        store.setStoreImageList(storeImageList); // setter 주입
+        siRepo.saveAll(storeImageList);
+
+        // 4. List<StoreCategory> 생성
+        List<Category> categoryList = cRepo.findAllByCategoryIdList(dto.getCategoryList()); // 카테고리 엔티티 리스트
+        List<StoreCategory> storeCategoryList = new ArrayList<>(); // 팝업스토어 - 카테고리 중계 테이블 엔티티 리스트
+        for (Category category : categoryList) {
+            storeCategoryList.add(StoreCategory.builder()
+                    .store(store)
+                    .category(category)
+                    .build()
+            );
+        }
+        store.setStoreCategoryList(storeCategoryList); // setter 주입
+
+        // 5. ReservationEntry 생성
+        List<ReservationEntry> reList = new ArrayList<>();
+        LocalDate endDate = dto.getStoreEndDate();
+        LocalTime endTime = dto.getStoreEndTime();
+
+        int reserveGap = dto.getReserveGap();
+        int capacity = dto.getCapacity();
+        for (LocalDate curDate = dto.getStoreStartDate(); !curDate.isAfter(endDate); curDate = curDate.plusDays(1)) {
+            for (LocalTime curTime = dto.getStoreStartTime(); curTime.isBefore(endTime); curTime = curTime.plusMinutes(reserveGap)) {
+                reList.add(ReservationEntry.builder()
+                        .store(store)
+                        .entryDate(curDate)
+                        .entryTime(curTime)
+                        .reservedCount(0) // 이 부분 없애고 발생하는 에러 디버깅 필요 (@DynamicInsert, @DynamicUpdate 안먹히는 문제)
+                        .capacity(capacity)
+                        .entryStatus(ReservationEntry.EntryStatus.OPEN)
+                        .build()
+                );
+            }
+        }
+        reRepo.saveAll(reList);
+
+        // @Transactional 어노테이션으로 transaction.commit() 구문을 대체함.
+        // sRepo.save(store);
+
+        // 6. Elasticsearch 인덱스에 추가
+        storeIndexService.save(store);
+
+        return ResponseEntity.ok().build();
     }
 }

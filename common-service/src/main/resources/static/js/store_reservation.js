@@ -9,8 +9,8 @@ flatpickrConfig = {
     enableTime: false, // 시간 속성 사용 여부
     dateFormat: "Y-m-d", // 달력 입력 포맷
     local: 'ko', // 언어 설정
-    minDate: storeStart, // 최소 선택 가능 날짜
-    maxDate: storeEnd, // 최대 선택 가능 날짜
+    minDate: storeStartDate, // 최소 선택 가능 날짜
+    maxDate: storeEndDate, // 최대 선택 가능 날짜
     inline: true
 };
 
