@@ -78,8 +78,10 @@
     margin-bottom: 24px;
 }
 .store-thumbnail img {
+    display: flex;
     width: 400px;
     height: 400px;
+    object-fit: cover;
 }
 .store-text-box {
     display: flex;

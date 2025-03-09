@@ -49,9 +49,11 @@ body {
     flex-direction: row;
 }
 .store-thumbnail {
+    display: flex;
     width: 174px;
     height: 174px;
     background-color: #c4c4c4;
+    overflow: hidden;
 }
 .store-thumbnail img {
     object-fit: cover;
