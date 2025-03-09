@@ -57,7 +57,7 @@ public class ReserveController {
         
         // 팝업스토어 썸네일 이미지 가져오기
         Optional<StoreImage> optImage = store.getStoreImageList().stream()
-                .filter(img -> "MAIN_THUMBNAIL".equals(img.getStoreImageTag())).findFirst();
+                .filter(img -> "SUB_THUMBNAIL".equals(img.getStoreImageTag())).findFirst();
 
         String thumbnailLink = "";
         if (optImage.isPresent()) {
