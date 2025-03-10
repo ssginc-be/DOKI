@@ -2,15 +2,13 @@ package com.ssginc.commonservice.auth.service;
 
 import com.ssginc.commonservice.auth.dto.SignInRequestDto;
 import com.ssginc.commonservice.auth.dto.SignUpRequestDto;
-import com.ssginc.commonservice.auth.model.PhoneCodeRedisRepository;
-import com.ssginc.commonservice.auth.model.RedisPhoneValidationCode;
-import com.ssginc.commonservice.auth.model.RedisRefreshToken;
-import com.ssginc.commonservice.auth.model.TokenRedisRepository;
+import com.ssginc.commonservice.auth.model.*;
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.member.model.MemberRepository;
 import com.ssginc.commonservice.util.CookieUtil;
+import com.ssginc.commonservice.util.EmailUtil;
 import com.ssginc.commonservice.util.JwtUtil;
 import com.ssginc.commonservice.util.SmsUtil;
 import io.jsonwebtoken.Claims;
@@ -38,14 +36,17 @@ public class AuthService {
         sign up, sign in, sign out, validate + parse, refresh
     */
     /*
-        [이용자] 회원가입 휴대폰 인증코드 발송, 휴대폰 인증코드 확인
+        [이용자] 회원가입 휴대폰 인증코드 발송, 휴대폰 인증코드 확인,
+        [이용자] 회원가입 이메일 인증코드 발송, 이메일 인증코드 확인
     */
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
     private final SmsUtil smsUtil;
+    private final EmailUtil emailUtil;
 
     private final TokenRedisRepository tRedisRepo;
     private final PhoneCodeRedisRepository pcRedisRepo;
+    private final EmailCodeRedisRepository ecRedisRepo;
     private final MemberRepository mRepo;
 
     private final PasswordEncoder passwordEncoder;  // BCrypt 인코더 사용
@@ -307,6 +308,50 @@ public class AuthService {
 
         // 휴대폰 번호 인증 성공
         pcRedisRepo.deleteById(code);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /* [이용자] 회원가입 이메일 인증코드 발송 */
+    public ResponseEntity<?> sendEmailValidationCode(String email) {
+        // 인증번호 생성
+        String generatedKey = emailUtil.createEmailAuthKey();
+
+        // Redis 저장 - 30분 후에 만료
+        ecRedisRepo.save(RedisEmailValidationCode.builder()
+                .validationCode(generatedKey)
+                .email(email)
+                .build()
+        );
+
+        // 이메일 발송
+        try {
+            emailUtil.sendEmailWithAuthCode(email, generatedKey);
+        } catch (Exception e) {
+            log.error("이메일 발송 실패");
+            throw new CustomException(ErrorCode.CANNOT_SEND_EMAIL);
+        }
+        
+        return ResponseEntity.ok().build();
+    }
+
+    /* [이용자] 회원가입 이메일 인증코드 확인 */
+    public ResponseEntity<?> validateEmailCode(String email, String code) {
+        Optional<RedisEmailValidationCode> optRedisCode = ecRedisRepo.findById(code);
+
+        if (optRedisCode.isEmpty()) {
+            log.warn("인증코드 조회 결과 없음.");
+            throw new CustomException(ErrorCode.INVALID_CODE);
+        }
+
+        RedisEmailValidationCode redisCode = optRedisCode.get();
+        if (!email.equals(redisCode.getEmail())) {
+            log.warn("유효하지 않은 인증코드");
+            throw new CustomException(ErrorCode.INVALID_CODE);
+        }
+
+        // 이메일 인증 성공
+        ecRedisRepo.deleteById(code);
 
         return ResponseEntity.ok().build();
     }

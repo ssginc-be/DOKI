@@ -21,6 +21,7 @@ public class AuthRestControllerV2 {
     */
     /*
         [이용자] 회원가입 휴대폰 인증코드 발송, 휴대폰 인증코드 확인
+        [이용자] 회원가입 이메일 인증코드 발송, 이메일 인증코드 확인
     */
     private final JwtUtil jwtUtil;
     private final AuthService authService;
@@ -68,5 +69,17 @@ public class AuthRestControllerV2 {
     @GetMapping("/phone/validation")
     public ResponseEntity<?> validatePhoneCode(@RequestParam("phone") String phoneNum, @RequestParam("code") String code) {
         return authService.validatePhoneCode(phoneNum, code);
+    }
+
+    /* [이용자] 회원가입 이메일 인증코드 발송 */
+    @GetMapping("/email/code")
+    public ResponseEntity<?> sendEmailValidationCode(@RequestParam("to") String email) {
+        return authService.sendEmailValidationCode(email);
+    }
+
+    /* [이용자] 회원가입 이메일 인증코드 확인 */
+    @GetMapping("/email/validation")
+    public ResponseEntity<?> validateEmailCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+        return authService.validateEmailCode(email, code);
     }
 }
