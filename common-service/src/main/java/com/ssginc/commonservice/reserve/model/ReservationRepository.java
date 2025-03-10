@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
+    /* 이전에 해당 엔트리로 예약 이력 있었는지 검사하는 용도 */
     @Query(
             "SELECT r " +
             "FROM Reservation r " +
@@ -24,6 +25,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Optional<List<Reservation>> findPreviousReservation(@Param("entryId") Long entryId, @Param("memberCode") Long memberCode, @Param("storeId")Long storeId);
 
     List<Reservation> findByMember_MemberCode(Long memberCode);
+
+    /* 나의 예약 최근 예약 순 목록 조회 */
+    List<Reservation> findByMember_MemberCodeOrderByCreatedAtDesc(Long memberCode);
 
     List<Reservation> findByStore_StoreId(Long storeId);
 }
