@@ -33,4 +33,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     /* [운영자] 예약 내역 목록 조회 */
     List<Reservation> findAllByStore_StoreId(Long storeId);
+
+    /* [운영자] 예약 현황 카운터 조회 - 전체 예약 승인/거절/취소 수 */
+    Long countByStore_StoreIdAndReservationStatus(Long storeId, Reservation.ReservationStatus reservationStatus);
 }
