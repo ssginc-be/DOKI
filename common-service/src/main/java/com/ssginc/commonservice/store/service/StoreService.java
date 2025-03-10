@@ -41,7 +41,7 @@ import java.util.Optional;
 @Service
 public class StoreService {
     /*
-        팝업스토어 목록 조회, 예약 승인/거절/취소, 예약 엔트리 조회, 팝업스토어 등록
+        팝업스토어 목록 조회, 팝업스토어 카테고리 목록 조회, 예약 승인/거절/취소, 예약 엔트리 조회, 팝업스토어 등록
     */
     private final StoreRepository sRepo;
     private final CategoryRepository cRepo;
@@ -67,11 +67,36 @@ public class StoreService {
         final int FETCH_SIZE = 9;
 
         // PageRequest 객체 생성
-        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStart").descending());
+        if (pageIdx > 0) pageIdx -= 1; // 사용자의 1페이지 == 서버의 0페이지
+        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStartDate").descending());
 
         // 테이블에서 조회
         Page<Store> storePage = sRepo.findAll(pageRequest);
+        // 조회 결과를 response dto로 변환
+        PageResponse<?> page = convertStorePageToMetaDtoPage(storePage);
 
+        return ResponseEntity.ok().body(page);
+    }
+
+    /* 팝업스토어 카테고리 목록 조회 */
+    public ResponseEntity<?> getStoreListOfSelectedCategory(Long categoryId, Integer pageIdx) {
+        // 페이징 크기
+        final int FETCH_SIZE = 9;
+
+        // PageRequest 객체 생성
+        if (pageIdx > 0) pageIdx -= 1; // 사용자의 1페이지 == 서버의 0페이지
+        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStartDate").descending());
+
+        // 테이블에서 조회
+        Page<Store> storePage = sRepo.findAllByStoreCategoryList_Category_CategoryId(categoryId, pageRequest);
+        // 조회 결과를 response dto로 변환
+        PageResponse<?> page = convertStorePageToMetaDtoPage(storePage);
+
+        return ResponseEntity.ok().body(page);
+    }
+
+    /* 팝업스토어 테이블 조회 결과를 목록 조회용 dto response로 변환하는 함수 */
+    private PageResponse<?> convertStorePageToMetaDtoPage(Page<Store> storePage) {
         // store -> dto 및 category -> dto 변환
         List<StoreMetaDto> data = new ArrayList<>();
         for (Store store : storePage.getContent()) {
@@ -106,7 +131,7 @@ public class StoreService {
                 .pageNumber(storePage.getNumber())
                 .build();
 
-        return ResponseEntity.ok().body(page);
+        return page;
     }
 
 
