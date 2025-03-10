@@ -22,7 +22,7 @@
     <div class="content-subtitle">다가오는 예약</div>
     <div class="table-area">
         <div class="table-meta">
-            <div class="table-meta-size">총 <hl th:text="${reservationList.size()}"></hl>건의 예약 결과가 있습니다.</div>
+            <div class="table-meta-size" id="upcoming-table-meta-size">총 <hl th:text="${reservationList.size()}"></hl>건의 예약 결과가 있습니다.</div>
             <div class="table-meta-pagination">1 / 1</div>
             <div class="table-pagination-button-area">
                 <div class="table-pagination-button">
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <table>
+        <table id="upcoming-reservation">
             <tr> <!-- table header -->
                 <th>예약 ID</th>
                 <th>예약한 팝업스토어</th>
@@ -65,7 +65,7 @@
     <div class="content-subtitle">지난 예약</div>
     <div class="table-area">
         <div class="table-meta">
-            <div class="table-meta-size">총 <hl th:text="${reservationList.size()}"></hl>건의 예약 결과가 있습니다.</div>
+            <div class="table-meta-size" id="past-table-meta-size">총 <hl th:text="${reservationList.size()}"></hl>건의 예약 결과가 있습니다.</div>
             <div class="table-meta-pagination">1 / 1</div>
             <div class="table-pagination-button-area">
                 <div class="table-pagination-button">
@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <table>
+        <table id="past-reservation">
             <tr> <!-- table header -->
                 <th>예약 ID</th>
                 <th>예약한 팝업스토어</th>
@@ -103,27 +103,30 @@
     </div>
 
     <!------------------ 38선 ------------------>
-    <div>나의 예약</div>
-    <div th:text="|전체 ${reservationList.size()}건의 예약이 있습니다.|"></div>
+<!--    <div>나의 예약</div>-->
+<!--    <div th:text="|전체 ${reservationList.size()}건의 예약이 있습니다.|"></div>-->
 
-    <th:block th:each="r : ${reservationList}">
-        <div>
-            <div th:text="${r.getStore().getStoreName()}"></div>
-            <div th:text="${r.getReservedDateTime()}"></div>
-            <div th:text="${r.getReservationStatus()}"></div>
-            <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}">예약 취소</button>
-            <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}">예약 취소</button>
-            <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 취소</button>
-            <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>예약 취소</button>
-        </div>
-    </th:block>
-
+<!--    <th:block th:each="r : ${reservationList}">-->
+<!--        <div>-->
+<!--            <div th:text="${r.getStore().getStoreName()}"></div>-->
+<!--            <div th:text="${r.getReservedDateTime()}"></div>-->
+<!--            <div th:text="${r.getReservationStatus()}"></div>-->
+<!--            <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}">예약 취소</button>-->
+<!--            <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}">예약 취소</button>-->
+<!--            <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 취소</button>-->
+<!--            <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>예약 취소</button>-->
+<!--        </div>-->
+<!--    </th:block>-->
 </div>
 
 <!-- footer -->
 <div class="footer" layout:fragment="footer">
 
 </div>
+
+<script layout:fragment="script">
+    updateView();
+</script>
 
 </body>
 </html>
