@@ -38,10 +38,10 @@ public class StoreMetaDocument {
     private String storeShortDesc;
 
     @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd")
-    private LocalDate storeStart;
+    private LocalDate storeStartDate;
 
     @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd")
-    private LocalDate storeEnd;
+    private LocalDate storeEndDate;
 
     private String storeMainThumbnail; // 목록에서 보여질 대표 이미지 1장
 
@@ -54,8 +54,8 @@ public class StoreMetaDocument {
                 .categoryList(dtoList)
                 .storeName(store.getStoreName())
                 .storeShortDesc(store.getStoreShortDesc())
-                .storeStart(store.getStoreStart())
-                .storeEnd(store.getStoreEnd())
+                .storeStartDate(store.getStoreStartDate())
+                .storeEndDate(store.getStoreEndDate())
                 .storeMainThumbnail(store.getStoreImageList().stream()
                         .filter(img -> img.getStoreImageTag().equals("MAIN_THUMBNAIL")).toList().get(0).getStoreImageLink())
                 .build();

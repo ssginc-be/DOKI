@@ -115,6 +115,49 @@ body {
 }
 
 
+/* noti toast */
+.noti-toast-viewbox {
+    position: absolute;
+    height: 100vh;
+    overflow: hidden;
+}
+.noti-toast-box {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 42px;
+    /*bottom: 48px;*/
+    bottom: -100px;
+
+    /* x-axis: align center */
+    left: 50%;
+    transform: translateX(-50%);
+
+    background-color: #FEFEFE;
+    border-radius: 8px;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.25, 1.35);
+}
+.noti-toast-box.active {
+    /* bottom: -100px로 내려놓은거 다시 올리고 48px만큼 추가로 올린 위치 */
+    transform: translate(-50%, calc(-100px - 48px));
+}
+.noti-toast-data {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: #131313;
+    margin-bottom: 10px;
+}
+.noti-toast-datetime {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    color: #C2C2C2;
+}
+
+
 /* footer */
 .footer {
     width: 100%;

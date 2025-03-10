@@ -64,13 +64,14 @@ dependencies {
     //***************************************************************
     //  SMTP
     //***************************************************************
-    // 비밀번호 찾기에 사용함.
+    // 회원가입 이메일 인증 및 비밀번호 찾기에 사용함.
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     //***************************************************************
     //  AWS S3
     //***************************************************************
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    implementation 'com.amazonaws:aws-java-sdk-s3'
 
     //************************************************************************
     //  chat
@@ -86,6 +87,11 @@ dependencies {
     //  Redis
     //***************************************************************
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    //***************************************************************
+    //  CoolSMS API
+    //***************************************************************
+    implementation 'net.nurigo:sdk:4.3.0'
 }
 
 dependencyManagement {

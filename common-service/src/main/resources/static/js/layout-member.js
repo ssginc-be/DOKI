@@ -34,6 +34,10 @@ function signOut() {
     }
 }
 
+function signUp() {
+    location.href = "http://localhost:9093/auth/sign-up";
+}
+
 function showOverlay() {
     // 로그인 오버레이
     const overlay = document.getElementById('signin-overlay');
@@ -58,4 +62,69 @@ function gotoRoot() {
 
 function gotoMyReservationPage() {
     location.href = "http://localhost:9093/member/reserve";
+}
+
+
+/*
+    SSE 알림
+*/
+if (memberCode != null) { // 로그인 상태에서만 SSE 수신
+    const eventSource = new EventSource('http://localhost:9093/noti/subscribe');
+
+    // SSE 최초 연결시
+    eventSource.onopen = function () {
+        console.log('SSE 연결 성공');
+        console.log('memberCode:', memberCode);
+    };
+
+    // SSE 이벤트 발생시마다 --> custom type 용
+    // 이용자는 RESERVE_RESULT type에 대한 이벤트만 수신함.
+    eventSource.addEventListener("RESERVE_RESULT", (event) => {
+        // const message = event.data;
+        console.log('Received message:', event.data); // logging
+
+        // 토스트 뷰 처리
+        const message = event.data;
+        const dateTime = moment(event.start).format('YYYY-MM-DD HH:mm:ss'); // moment는 cdn으로 로드됨
+
+        showAlarmToast(message, dateTime);
+    });
+
+    // 토스트 뷰 컨트롤
+    function showAlarmToast(message, dateTime) {
+        console.log('show toast'); // logging
+        // parent div (toast box)
+        const notiToastBoxDiv = document.getElementById('noti-toast-box');
+
+        // old div
+        const notiToastDataDiv = document.getElementById('noti-toast-data');
+        const notiToastDatetimeDiv = document.getElementById('noti-toast-datetime');
+
+        // new div
+        const newDataDiv = document.createElement("div");
+        newDataDiv.classList.add('noti-toast-data');
+        newDataDiv.id = 'noti-toast-data';
+        newDataDiv.appendChild(document.createTextNode(message));
+
+        const newDatetimeDiv = document.createElement("div");
+        newDatetimeDiv.classList.add('noti-toast-datetime');
+        newDatetimeDiv.id = 'noti-toast-datetime';
+        newDatetimeDiv.appendChild(document.createTextNode(dateTime));
+
+        // div 교체
+        notiToastDataDiv.replaceWith(newDataDiv);
+        notiToastDatetimeDiv.replaceWith(newDatetimeDiv);
+
+        // 토스트 박스 보여주기
+        notiToastBoxDiv.classList.add("active");
+
+        // 5초 후 토스트 박스 숨기기
+        setTimeout(() =>{
+            console.log('hide toast'); // logging
+            notiToastBoxDiv.classList.remove("active");
+        }, 5000)
+    }
+}
+else {
+    console.warn("memberCode를 가져올 수 없습니다.");
 }

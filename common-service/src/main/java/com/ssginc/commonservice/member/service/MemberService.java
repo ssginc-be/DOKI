@@ -4,6 +4,7 @@ import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.member.model.MemberRepository;
+import com.ssginc.commonservice.notification.service.NotificationService;
 import com.ssginc.commonservice.reserve.model.Reservation;
 import com.ssginc.commonservice.reserve.model.ReservationLog;
 import com.ssginc.commonservice.reserve.model.ReservationLogRepository;
@@ -29,6 +30,7 @@ public class MemberService {
     private final MemberRepository mRepo;
     private final ReservationRepository rRepo;
     private final ReservationLogRepository rlRepo;
+    private final NotificationService notificationService;
 
 
     /* 회원 정보 조회 - 내부에서만 사용하고 API는 없음 */
@@ -62,6 +64,13 @@ public class MemberService {
                 .reservationStatus(ReservationLog.ReservationStatus.CANCEL_PENDING)
                 .build();
         rlRepo.save(rlog);
+
+        // 이용자 -> 운영자 예약 취소 요청 SSE 알림
+        notificationService.notifyReserveRequestToManager(
+                reservation.getStore().getMember().getMemberCode(),
+                reservation.getReservedDateTime(),
+                "CANCEL_REQUEST"
+        );
 
         return ResponseEntity.ok().build();
     }

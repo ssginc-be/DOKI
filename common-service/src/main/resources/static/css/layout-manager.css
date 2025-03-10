@@ -17,11 +17,13 @@ body {
 .content-wrapper {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 .content {
     display: flex;
     flex-direction: column;
     padding: 32px 48px 0 48px;
+    width: 100%
 }
 
 /* navbar */
@@ -76,6 +78,44 @@ body {
     border-radius: 6px;
 }
 
+/* navbar alert list */
+.navbar-alert-list-box {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    top: 80px;
+    left: calc(calc(100% - 1760px) / 2 + 328px);
+    width: 320px;
+    height: 280px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #FFFFFF;
+    border: 1px solid #E1E0E1;
+    border-top: none;
+    visibility: hidden;
+}
+.navbar-alert-element {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+    padding: 18px 24px;
+    border-bottom: 1px solid #E1E0E1;
+}
+.navbar-alert-element-data {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #131313;
+    margin-bottom: 8px;
+}
+.navbar-alert-element-time {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    color: #C2C2C2;
+}
+
+/* navbar menu */
 .navbar-menu {
     display: flex;
     margin-right: 56px;
@@ -105,6 +145,7 @@ body {
     margin-right: 0;
 }
 .branch-text {
+    font-family: "Pretendard", sans-serif;
     color: #FFFFFF;
     font-weight: 600;
     font-size: 18px;
@@ -122,8 +163,9 @@ body {
     display: flex;
     flex-direction: column;
     width: 300px;
+    min-width: 300px;
     height: calc(100vh - 81px);
-    padding: 32px;
+    padding: 32px 0;
     border-right: 1px solid #E1E0E1;
 }
 .menu-group {
@@ -136,18 +178,33 @@ body {
     color: #A09F9F;
     font-weight: 500;
     font-size: 12px;
+    margin-left: 32px;
     margin-bottom: 8px;
 }
 .menu-button {
     display: flex;
     flex-direction: row;
-    height: 35px;
-    padding: 6px 0;
-    margin: 4px auto 4px 0;
-}
-.menu-button:hover {
+    /*height: 35px;*/
+    padding: 14px 0 14px 32px;
+    /*margin: 4px auto 4px 0;*/
     cursor: pointer;
 }
+.menu-button:hover {
+    background-color: #FFF2F3;
+}
+
+/* css of selected menu-button */
+.menu-button.selected {
+    background-color: #FFF2F3;
+}
+.menu-button.selected svg {
+    color: #F8434E;
+}
+.menu-button.selected .menu-text {
+    color: #F8434E;
+}
+/* end of selected menu-button css */
+
 .menu-button:hover svg {
     color: #F8434E;
 }

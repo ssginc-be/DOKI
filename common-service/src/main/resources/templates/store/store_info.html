@@ -10,8 +10,8 @@
 <div th:text="|팝업스토어 ID: ${store.getStoreId()}|"></div>
 <div th:text="|팝업스토어명: ${store.getStoreName()}|"></div>
 <div th:text="|팝업스토어 설명: ${store.getStoreShortDesc()}|"></div>
-<div th:text="|오픈일: ${store.getStoreStart()}|"></div>
-<div th:text="|종료일: ${store.getStoreEnd()}|"></div>
+<div th:text="|오픈일: ${store.getStoreStartDate()}|"></div>
+<div th:text="|종료일: ${store.getStoreEndDate()}|"></div>
 <button th:if="${memberRole != null}" th:onclick="|goto_reservation_page(${store.getStoreId()})|">예약하기</button>
 <button th:if="${memberRole == null}" disabled>로그인 후 예약하기</button>
 </body>

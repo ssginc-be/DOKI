@@ -2,17 +2,19 @@ package com.ssginc.commonservice.auth.service;
 
 import com.ssginc.commonservice.auth.dto.SignInRequestDto;
 import com.ssginc.commonservice.auth.dto.SignUpRequestDto;
-import com.ssginc.commonservice.auth.model.RedisRefreshToken;
-import com.ssginc.commonservice.auth.model.TokenRedisRepository;
+import com.ssginc.commonservice.auth.model.*;
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.member.model.MemberRepository;
 import com.ssginc.commonservice.util.CookieUtil;
+import com.ssginc.commonservice.util.EmailUtil;
 import com.ssginc.commonservice.util.JwtUtil;
+import com.ssginc.commonservice.util.SmsUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -33,10 +35,20 @@ public class AuthService {
     /*
         sign up, sign in, sign out, validate + parse, refresh
     */
+    /*
+        [이용자] 회원가입 휴대폰 인증코드 발송, 휴대폰 인증코드 확인,
+        [이용자] 회원가입 이메일 인증코드 발송, 이메일 인증코드 확인
+    */
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
-    private final TokenRedisRepository redis;
+    private final SmsUtil smsUtil;
+    private final EmailUtil emailUtil;
+
+    private final TokenRedisRepository tRedisRepo;
+    private final PhoneCodeRedisRepository pcRedisRepo;
+    private final EmailCodeRedisRepository ecRedisRepo;
     private final MemberRepository mRepo;
+
     private final PasswordEncoder passwordEncoder;  // BCrypt 인코더 사용
 
 
@@ -135,7 +147,7 @@ public class AuthService {
         headers.add(HttpHeaders.SET_COOKIE, cookie2.toString());
 
         // redis에 RT 등록
-        redis.save(RedisRefreshToken.builder()
+        tRedisRepo.save(RedisRefreshToken.builder()
                 .memberCode(memberCode)
                 .refreshToken(refreshToken)
                 .expiration(jwtUtil.getExpirationTime(refreshToken))
@@ -160,7 +172,7 @@ public class AuthService {
 
         // Redis에서 member code에 매칭되는 RT 삭제
         try {
-            redis.deleteById(memberCode);
+            tRedisRepo.deleteById(memberCode);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,7 +213,7 @@ public class AuthService {
     /* AT, RT 재발급 */
     public ResponseEntity<?> refreshAccessToken(String refreshToken) {
         // redis에서 해당 토큰의 member code 조회
-        Optional<RedisRefreshToken> optToken = redis.findByRefreshToken(refreshToken);
+        Optional<RedisRefreshToken> optToken = tRedisRepo.findByRefreshToken(refreshToken);
 
         // 조회된 RT 없으면
         if (optToken.isEmpty()) {
@@ -236,7 +248,7 @@ public class AuthService {
 
         // redis에서 기존 RT 삭제
         try {
-            redis.deleteById(memberCode);
+            tRedisRepo.deleteById(memberCode);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -244,7 +256,7 @@ public class AuthService {
         }
 
         // redis에 RT 등록
-        redis.save(RedisRefreshToken.builder()
+        tRedisRepo.save(RedisRefreshToken.builder()
                 .memberCode(memberCode)
                 .refreshToken(newRefreshToken)
                 .expiration(jwtUtil.getExpirationTime(newRefreshToken))
@@ -254,5 +266,93 @@ public class AuthService {
         return ResponseEntity.status(HttpStatus.OK)
                 .headers(headers)
                 .build();
+    }
+
+
+    /* [이용자] 회원가입 휴대폰 인증코드 발송 */
+    public ResponseEntity<?> sendPhoneValidationCode(String receiverPhoneNum) {
+        // 인증번호 생성
+        String generatedKey = smsUtil.createSmsAuthKey();
+        
+        // Redis 저장 - 5분 후에 만료
+        pcRedisRepo.save(RedisPhoneValidationCode.builder()
+                .validationCode(generatedKey)
+                .phoneNum(receiverPhoneNum)
+                .build()
+        );
+        
+        SingleMessageSentResponse response = smsUtil.sendSmsAuthMessage(receiverPhoneNum, generatedKey);
+
+//        if (!response.getStatusCode().equals("200")) {
+//            log.error("문자 전송 실패");
+//            throw new CustomException(ErrorCode.CANNOT_SEND_MESSAGE);
+//        }
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    /* [이용자] 회원가입 휴대폰 인증코드 확인 */
+    public ResponseEntity<?> validatePhoneCode(String phoneNum, String code) {
+        Optional<RedisPhoneValidationCode> optRedisCode = pcRedisRepo.findById(code);
+        
+        if (optRedisCode.isEmpty()) {
+            log.warn("인증코드 조회 결과 없음.");
+            throw new CustomException(ErrorCode.INVALID_CODE);
+        }
+
+        RedisPhoneValidationCode redisCode = optRedisCode.get();
+        if (!phoneNum.equals(redisCode.getPhoneNum())) {
+            log.warn("유효하지 않은 인증코드");
+            throw new CustomException(ErrorCode.INVALID_CODE);
+        }
+
+        // 휴대폰 번호 인증 성공
+        pcRedisRepo.deleteById(code);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /* [이용자] 회원가입 이메일 인증코드 발송 */
+    public ResponseEntity<?> sendEmailValidationCode(String email) {
+        // 인증번호 생성
+        String generatedKey = emailUtil.createEmailAuthKey();
+
+        // Redis 저장 - 30분 후에 만료
+        ecRedisRepo.save(RedisEmailValidationCode.builder()
+                .validationCode(generatedKey)
+                .email(email)
+                .build()
+        );
+
+        // 이메일 발송
+        try {
+            emailUtil.sendEmailWithAuthCode(email, generatedKey);
+        } catch (Exception e) {
+            log.error("이메일 발송 실패");
+            throw new CustomException(ErrorCode.CANNOT_SEND_EMAIL);
+        }
+        
+        return ResponseEntity.ok().build();
+    }
+
+    /* [이용자] 회원가입 이메일 인증코드 확인 */
+    public ResponseEntity<?> validateEmailCode(String email, String code) {
+        Optional<RedisEmailValidationCode> optRedisCode = ecRedisRepo.findById(code);
+
+        if (optRedisCode.isEmpty()) {
+            log.warn("인증코드 조회 결과 없음.");
+            throw new CustomException(ErrorCode.INVALID_CODE);
+        }
+
+        RedisEmailValidationCode redisCode = optRedisCode.get();
+        if (!email.equals(redisCode.getEmail())) {
+            log.warn("유효하지 않은 인증코드");
+            throw new CustomException(ErrorCode.INVALID_CODE);
+        }
+
+        // 이메일 인증 성공
+        ecRedisRepo.deleteById(code);
+
+        return ResponseEntity.ok().build();
     }
 }

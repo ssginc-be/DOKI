@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOKI 회원가입</title>
+    <link href="/css/sign_up.css" rel="stylesheet"/>
+    <script src="/js/sign_up.js"></script>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="signup-top">
+        <div class="left-arrow-button" th:onclick="goBack()"><img th:src="@{/icon/store/left_arrow.svg}"></div>
+    </div>
+    <div class="signup-logo-area"><img th:src="@{/img/signup_logo.png}"></div>
+    <div class="signup-title">회원가입</div>
+
+    <div class="signup-group">
+        <div class="group-title">로그인 정보</div>
+        <div class="group-content-box">
+            <div class="group-content-label">이메일</div>
+            <input type="text" placeholder="example@doki.com" />
+            <button class="signup-check-button">이메일 인증</button>
+        </div>
+        <div class="group-content-box">
+            <div class="group-content-label">비밀번호</div>
+            <input type="password" placeholder="8~12자 내외의 영소문자 포함 어쩌고" />
+        </div>
+        <div class="group-content-box">
+            <div class="group-content-label">비밀번호 확인</div>
+            <input type="password" placeholder="비밀번호 재입력" />
+            <div class="pw-check-default">비밀번호 불일치</div>
+            <div class="pw-check-ok">비밀번호 일치</div>
+        </div>
+
+    </div>
+
+    <div class="signup-group">
+        <div class="group-title">회원 기본 정보</div>
+
+        <div class="group-content-box">
+            <div class="group-content-label">휴대폰 번호</div>
+            <select name="phone-prefix-select" id="phone-prefix">
+                <option value="none" selected>선택</option>
+                <option value="010">010</option>
+                <option value="011">011</option>
+                <option value="016">016</option>
+                <option value="017">017</option>
+                <option value="018">018</option>
+                <option value="019">019</option>
+            </select>
+            <input type="text" placeholder="'-'를 제외한 8자리 숫자 입력" />
+            <button class="signup-check-button">휴대폰 인증</button>
+        </div>
+        <div class="group-content-box">
+            <div class="group-content-label">이름</div>
+            <input type="text" placeholder="이름은 예약자명에 사용됩니다." />
+        </div>
+        <div class="group-content-box">
+            <div class="group-content-label">성별</div>
+            <button class="gender-button">남자</button>
+            <button class="gender-button">여자</button>
+        </div>
+        <div class="group-content-box">
+            <div class="group-content-label">생년월일</div>
+            <input type="date" />
+        </div>
+    </div>
+
+    <div class="signup-bottom">
+        <button class="signup-confirm-button">가입하기</button>
+        <button class="signup-cancel-button" onclick="goBack()">작성 취소</button>
+    </div>
+</div>
+
+</body>
+</html>

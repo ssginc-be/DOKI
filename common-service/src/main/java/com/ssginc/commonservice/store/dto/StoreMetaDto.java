@@ -28,9 +28,9 @@ public class StoreMetaDto {
 
     private String storeShortDesc;
 
-    private LocalDate storeStart;
+    private LocalDate storeStartDate;
 
-    private LocalDate storeEnd;
+    private LocalDate storeEndDate;
 
     private String storeMainThumbnail; // 목록에서 보여질 대표 이미지 1장
 }
