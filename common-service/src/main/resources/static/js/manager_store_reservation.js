@@ -4,9 +4,17 @@ async function updateView() {
     console.log("update view");
     // 1. 데이터 가져오기
     const dtoList = await getStoreReservation(); // 테이블 데이터
-    //const metricDto = await getStoreMetric(); // 메트릭 데이터
+    const metricDto = await getStoreMetric(); // 메트릭 데이터 (counter)
 
-    // 2. 테이블 뷰 업데이트
+    // 2. 메트릭 뷰 업데이트
+    const confirmedMetric = document.getElementById('metric-confirmed');
+    const refusedMetric = document.getElementById('metric-refused');
+    const canceledMetric = document.getElementById('metric-canceled');
+    confirmedMetric.innerText = metricDto.confirmed + '건';
+    refusedMetric.innerText = metricDto.refused + '건';
+    canceledMetric.innerText = metricDto.canceled + '건';
+
+    // 3. 테이블 뷰 업데이트
     const metaSizeDiv = document.getElementById('table-meta-size');
     const reservationTable = document.getElementById('store-reservation-table');
 
@@ -98,7 +106,7 @@ async function getStoreReservation() {
     return response.data; // dto list
 }
 async function getStoreMetric() {
-    const response = await getRequest("http://localhost:9093/v1/store/reserve/metric");
+    const response = await getRequest("http://localhost:9093/v1/store/reserve/counter");
     console.log(response);
 
     return response.data; // dto
