@@ -83,7 +83,8 @@ public class StoreIndexService {
         final int FETCH_SIZE = 9;
 
         // PageRequest 객체 생성
-        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStart").descending());
+        if (pageIdx > 0) pageIdx -= 1; // 사용자의 1페이지 == 서버의 0페이지
+        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStartDate").descending());
 
         // 인덱스에서 조회
         Page<StoreMetaDocument> docPage = smdRepo.findByStoreNameContainsIgnoreCase(keyword, pageRequest);
@@ -110,7 +111,8 @@ public class StoreIndexService {
         final int FETCH_SIZE = 9;
 
         // PageRequest 객체 생성
-        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStart").descending());
+        if (pageIdx > 0) pageIdx -= 1; // 사용자의 1페이지 == 서버의 0페이지
+        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStartDate").descending());
 
         // 인덱스에서 조회 - 검색키워드 없음
         Page<StoreMetaDocument> docPage = smdRepo.findByStoreNameContainsIgnoreCase("", pageRequest);

@@ -17,26 +17,26 @@
 
 <div class="content" layout:fragment="content">
     <div class="content-wrapper">
-        <div class="category-title">전체 팝업스토어</div>
+        <div class="category-title" id="category-title">전체 팝업스토어</div>
         <div class="category-box">
-            <div class="category-button">아티스트</div>
-            <div class="category-button">패션</div>
-            <div class="category-button">뷰티</div>
-            <div class="category-button">캐릭터</div>
-            <div class="category-button">키덜트</div>
-            <div class="category-button">푸드</div>
-            <div class="category-button">비건</div>
-            <div class="category-button">브랜드</div>
-            <div class="category-button">기타</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 1, 1)">아티스트</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 2, 1)">패션</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 3, 1)">뷰티</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 4, 1)">캐릭터</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 5, 1)">키덜트</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 6, 1)">푸드</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 7, 1)">비건</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 8, 1)">브랜드</div>
+            <div class="category-button" onclick="updateCategoryView(this.innerText, 9, 1)">기타</div>
         </div>
 
         <div class="store-box-top">
-            <div class="store-count">총 <hl th:text="${page.getTotalElements()}"></hl>개의 전체 팝업스토어</div>
-            <div class="reset-button">카테고리 초기화</div>
+            <div class="store-count" id="store-count">총 <hl th:text="${page.getTotalElements()}"></hl>개의 전체 팝업스토어</div>
+            <div class="reset-button" onclick="remove_filter()">카테고리 초기화</div>
         </div>
         <div class="store-box-bottom">
             <!-- grid layout -->
-            <div class="store-grid-container">
+            <div class="store-grid-container" id="store-grid-container">
                 <th:block th:each="store : ${storeList}">
                     <div class="store-meta" th:onclick="|goto_store_info(${store.getStoreId()})|">
                         <div class="store-thumbnail"><img th:src="${store.getStoreMainThumbnail()}"></div>
@@ -51,12 +51,14 @@
             </div>
         </div>
 
-        <div class="pagination-box">
+        <div class="pagination-box" id="pagination-box">
             <div class="pagination-left"><img th:src="@{/icon/store/pagination_left.svg}"></div>
-            <th:block th:each="num : ${#numbers.sequence(1,page.getTotalPages())}">
-                <div class="page-button-selected" th:if="${num == page.getPageNumber()+1}" th:text="${num}"></div>
-                <div class="page-button" th:if="${num != page.getPageNumber()+1}" th:text="${num}" th:onclick="|load_page(${num})|"></div>
-            </th:block>
+            <div class="page-button-box" id="page-button-box">
+                <th:block th:each="num : ${#numbers.sequence(1,page.getTotalPages())}">
+                    <div class="page-button-selected" th:if="${num == page.getPageNumber()+1}" th:text="${num}"></div>
+                    <div class="page-button" th:if="${num != page.getPageNumber()+1}" th:text="${num}" th:onclick="|load_page(${num})|"></div>
+                </th:block>
+            </div>
             <div class="pagination-right"><img th:src="@{/icon/store/pagination_right.svg}"></div>
         </div>
     </div>
