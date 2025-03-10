@@ -41,3 +41,9 @@ cloud:
 
 jwt:
   secret: mecha_kawa_shiochan_
+
+coolsms:
+  apiKey: # fill out
+  secret: # fill out
+  sender: # fill out # 발신 번호
+  enable: false # false로 설정 시 문자 전송 로직을 스킵함

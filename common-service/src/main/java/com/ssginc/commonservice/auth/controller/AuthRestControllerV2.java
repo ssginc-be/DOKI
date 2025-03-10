@@ -17,10 +17,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v2/auth")
 public class AuthRestControllerV2 {
     /*
-        sign up, sign in, sign out, validate + parse, refresh
+        JWT - sign up, sign in, sign out, validate + parse, refresh
+    */
+    /*
+        [이용자] 회원가입 휴대폰 인증코드 발송, 휴대폰 인증코드 확인
     */
     private final JwtUtil jwtUtil;
     private final AuthService authService;
+
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto dto) {
@@ -51,5 +55,18 @@ public class AuthRestControllerV2 {
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(@CookieValue("refreshToken") String refreshToken) {
         return authService.refreshAccessToken(refreshToken);
+    }
+
+
+    /* [이용자] 회원가입 휴대폰 인증코드 발송 */
+    @GetMapping("/phone/code")
+    public ResponseEntity<?> sendPhoneValidationCode(@RequestParam("to") String receiverPhoneNum) {
+        return authService.sendPhoneValidationCode(receiverPhoneNum);
+    }
+
+    /* [이용자] 회원가입 휴대폰 인증코드 확인 */
+    @GetMapping("/phone/validation")
+    public ResponseEntity<?> validatePhoneCode(@RequestParam("phone") String phoneNum, @RequestParam("code") String code) {
+        return authService.validatePhoneCode(phoneNum, code);
     }
 }
