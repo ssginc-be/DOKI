@@ -24,10 +24,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     )
     Optional<List<Reservation>> findPreviousReservation(@Param("entryId") Long entryId, @Param("memberCode") Long memberCode, @Param("storeId")Long storeId);
 
-    List<Reservation> findByMember_MemberCode(Long memberCode);
+    List<Reservation> findByMember_MemberCode(Long memberCode); // Internal
 
     /* 나의 예약 최근 예약 순 목록 조회 */
     List<Reservation> findByMember_MemberCodeOrderByCreatedAtDesc(Long memberCode);
 
-    List<Reservation> findByStore_StoreId(Long storeId);
+    List<Reservation> findByStore_StoreId(Long storeId); // Internal
+
+    /* [운영자] 예약 내역 목록 조회 */
+    List<Reservation> findAllByStore_StoreId(Long storeId);
 }

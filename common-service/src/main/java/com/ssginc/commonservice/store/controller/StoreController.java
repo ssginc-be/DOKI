@@ -70,6 +70,8 @@ public class StoreController {
         }
         else if (role.equals("MANAGER")) {
             model.addAttribute("menuIdx", 0);
+            Store store = memberService.getMemberInfo(code).getStore();
+            model.addAttribute("storeName", store.getStoreName());
             return "manager/manager_store_info"; // 운영자 페이지의 첫 메뉴로 이동
         }
         else if (role.equals("ADMIN")) {
@@ -118,10 +120,10 @@ public class StoreController {
         model.addAttribute("memberRole", role);
 
         Store store = memberService.getMemberInfo(code).getStore();
-        model.addAttribute("store", store);
+        model.addAttribute("storeName", store.getStoreName());
 
-        List<Reservation> reservationList = reserveService.getStoreReservations(store.getStoreId());
-        model.addAttribute("reservationList", reservationList);
+//        List<Reservation> reservationList = reserveService.getStoreReservations(store.getStoreId());
+//        model.addAttribute("reservationList", reservationList);
 
         model.addAttribute("menuIdx", 3);
 
