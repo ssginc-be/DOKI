@@ -2,7 +2,9 @@ package com.ssginc.commonservice.store.controller;
 
 import com.ssginc.commonservice.store.dto.StoreSaveRequestDto;
 import com.ssginc.commonservice.store.service.StoreService;
+import com.ssginc.commonservice.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,7 @@ import java.util.List;
  * @author Queue-ri
  */
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/store")
@@ -31,10 +34,12 @@ public class StoreRestControllerV1 {
         [관리자] 팝업스토어 등록
     */
     /*
-        [운영자] 예약 승인 / 거절 / 취소
+        [운영자] 예약 내역 목록 조회,
+        [운영자] 예약 현황 카운터 조회 (메트릭 영역)
     */
     
     private final StoreService storeService;
+    private final JwtUtil jwtUtil;
 
     
     /* 팝업스토어 목록 조회 */
@@ -91,4 +96,36 @@ public class StoreRestControllerV1 {
     ) {
         return storeService.registerStore(dto, mfiles);
     }
+
+
+    /*
+        [운영자] 예약 내역 목록 조회
+    */
+    @GetMapping("/reserve")
+    public ResponseEntity<?> getStoreReservation(
+            @CookieValue(value="accessToken", required=false) String accessToken
+    ) {
+        // temp: API Gateway 임시 대체
+        // role은 반드시 MANAGER여야 함
+        Long code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+        log.info("requested code: {}", code);
+
+        return storeService.getStoreReservationList(code);
+    }
+
+    /*
+        [운영자] 예약 현황 카운터 조회 (메트릭 영역)
+    */
+    @GetMapping("/reserve/counter")
+    public ResponseEntity<?> getStoreReservationCounter(
+            @CookieValue(value="accessToken", required=false) String accessToken
+    ) {
+        // temp: API Gateway 임시 대체
+        // role은 반드시 MANAGER여야 함
+        Long code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+        log.info("requested code: {}", code);
+
+        return storeService.getStoreReservationCounter(code);
+    }
+
 }

@@ -2,12 +2,11 @@ package com.ssginc.commonservice.store.service;
 
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
+import com.ssginc.commonservice.member.model.Member;
+import com.ssginc.commonservice.member.model.MemberRepository;
 import com.ssginc.commonservice.notification.service.NotificationService;
 import com.ssginc.commonservice.reserve.model.*;
-import com.ssginc.commonservice.store.dto.CategoryNoDescDto;
-import com.ssginc.commonservice.store.dto.ReservationEntryResponseDto;
-import com.ssginc.commonservice.store.dto.StoreMetaDto;
-import com.ssginc.commonservice.store.dto.StoreSaveRequestDto;
+import com.ssginc.commonservice.store.dto.*;
 import com.ssginc.commonservice.store.model.*;
 import com.ssginc.commonservice.util.PageResponse;
 import com.ssginc.commonservice.util.S3Uploader;
@@ -43,6 +42,11 @@ public class StoreService {
     /*
         팝업스토어 목록 조회, 팝업스토어 카테고리 목록 조회, 예약 승인/거절/취소, 예약 엔트리 조회, 팝업스토어 등록
     */
+    /*
+        [운영자] 예약 내역 목록 조회,
+        [운영자] 예약 현황 카운터 조회 (메트릭 영역)
+    */
+    private final MemberRepository mRepo;
     private final StoreRepository sRepo;
     private final CategoryRepository cRepo;
     private final StoreImageRepository siRepo;
@@ -399,5 +403,62 @@ public class StoreService {
         storeIndexService.save(store);
 
         return ResponseEntity.ok().build();
+    }
+    
+    
+    /* [운영자] 예약 내역 목록 조회 */
+    public ResponseEntity<?> getStoreReservationList(Long code) {
+        Member member = null;
+        try {
+            member = mRepo.findByMemberCode(code).get();
+        } catch (Exception e) {
+            log.error("해당 code의 회원 조회 결과 없음.");
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        Store store = member.getStore();
+        List<Reservation> reservationList = rRepo.findAllByStore_StoreId(store.getStoreId());
+
+        // entity -> dto 변환
+        List<StoreReservationResponseDto> dtoList = new ArrayList<>();
+        for (Reservation reservation : reservationList) {
+            StoreReservationResponseDto dto = StoreReservationResponseDto.builder()
+                    .reservationId(reservation.getReservationId())
+                    .reservedDate(reservation.getReservedDateTime().toLocalDate())
+                    .reservedTime(reservation.getReservedDateTime().toLocalTime())
+                    .memberName(reservation.getMember().getMemberName())
+                    .memberPhone(reservation.getMember().getMemberPhone())
+                    .reservationStatus(reservation.getReservationStatus().toString())
+                    .build();
+
+            dtoList.add(dto);
+        }
+
+        return ResponseEntity.ok(dtoList);
+    }
+
+    /* [운영자] 예약 현황 카운터 조회 (메트릭 영역) */
+    public ResponseEntity<?> getStoreReservationCounter(Long code) {
+        Member member = null;
+        try {
+            member = mRepo.findByMemberCode(code).get();
+        } catch (Exception e) {
+            log.error("해당 code의 회원 조회 결과 없음.");
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        Store store = member.getStore();
+        Long confirmedCount = rRepo.countByStore_StoreIdAndReservationStatus(store.getStoreId(), Reservation.ReservationStatus.CONFIRMED);
+        Long refusedCount = rRepo.countByStore_StoreIdAndReservationStatus(store.getStoreId(), Reservation.ReservationStatus.REFUSED);
+        Long canceledCount = rRepo.countByStore_StoreIdAndReservationStatus(store.getStoreId(), Reservation.ReservationStatus.CANCELED);
+        log.info("confirmed: {} | refused: {} | canceled: {}", confirmedCount, refusedCount, canceledCount);
+
+        StoreReservationCounterResponseDto dto = StoreReservationCounterResponseDto.builder()
+                .confirmed(confirmedCount)
+                .refused(refusedCount)
+                .canceled(canceledCount)
+                .build();
+
+        return ResponseEntity.ok(dto);
     }
 }

@@ -5,7 +5,7 @@
       layout:decorate="~{layout/layout-manager}">
 <head>
     <meta charset="UTF-8">
-    <title>예약 / 예약 취소 승인</title>
+    <title>예약 승인 / 예약 취소</title>
     <link href="/css/manager_store_reservation.css" rel="stylesheet"/>
     <script src="/js/manager_store_reservation.js"></script>
 </head>
@@ -19,29 +19,29 @@
     <div class="content-wrapper">
         <div class="sidebar" layout:fragment="sidebar"></div>
         <div class="content" layout:fragment="content">
-            <div class="content-title">예약 내역 관리&nbsp;&nbsp;/<hl>&nbsp;&nbsp;예약 / 예약 취소 승인</hl></div>
+            <div class="content-title">예약 내역 관리&nbsp;&nbsp;/<hl>&nbsp;&nbsp;예약 승인 / 예약 취소</hl></div>
             <div class="content-subtitle">예약 현황</div>
             <div class="metric-area">
                 <div class="metric-box">
                     <img th:src="@{/icon/manager/metric-1.svg}">
                     <div class="metric-title">전체 예약 승인</div>
-                    <div class="metric-data">6건</div>
+                    <div class="metric-data" id="metric-confirmed">6건</div>
                 </div>
                 <div class="metric-box">
                     <img th:src="@{/icon/manager/metric-2.svg}">
                     <div class="metric-title">전체 예약 거절</div>
-                    <div class="metric-data">1건</div>
+                    <div class="metric-data" id="metric-refused">1건</div>
                 </div>
                 <div class="metric-box">
                     <img th:src="@{/icon/manager/metric-3.svg}">
                     <div class="metric-title">전체 예약 취소</div>
-                    <div class="metric-data">1건</div>
+                    <div class="metric-data" id="metric-canceled">1건</div>
                 </div>
             </div>
 
             <div class="table-area">
                 <div class="table-meta">
-                    <div class="table-meta-size">전체 <hl th:text="${reservationList.size()}"></hl>건</div>
+                    <div class="table-meta-size" id="table-meta-size">전체 <hl>8</hl>건</div>
                     <div class="table-meta-pagination">1 / 1</div>
                     <div class="table-pagination-button-area">
                         <div class="table-pagination-button">
@@ -56,13 +56,14 @@
                         </div>
                     </div>
                 </div>
-                <table>
+                <table id="store-reservation-table">
                     <tr> <!-- table header -->
                         <th>예약 ID</th>
                         <th>예약일</th>
                         <th>예약 시간</th>
                         <th>예약자 성함</th>
                         <th>예약자 연락처</th>
+                        <th>예약 상태</th>
                         <th>예약 승인</th>
                         <th>예약 거절</th>
                         <th>예약 취소</th>
@@ -75,6 +76,7 @@
                             <td>10:00</td>
                             <td>안규리</td>
                             <td>010-1234-5678</td>
+                            <td>예약 승인 대기</td>
                             <td><button class="reserve-confirm-button" onclick="confirmReservation(1)">예약승인</button></td>
                             <td><button class="reserve-refuse-button" onclick="refuseReservation(1)">예약거절</button></td>
                             <td><button class="reserve-cancel-button" onclick="cancelReservation(1)">예약취소</button></td>
@@ -85,39 +87,43 @@
             </div>
 
             <!----------------------- 38선 --------------------------->
-            <div th:text="|전체 ${reservationList.size()}건의 예약이 있습니다.|"></div>
+<!--            <div th:text="|전체 ${reservationList.size()}건의 예약이 있습니다.|"></div>-->
 
-            <th:block th:each="r : ${reservationList}">
-                <div class="r-table-row">
-                    <div th:text="${r.getMember().getMemberName()}"></div>
-                    <div th:text="${r.getMember().getMemberPhone()}"></div>
-                    <div th:text="${r.getReservedDateTime()}"></div>
-                    <div th:text="${r.getReservationStatus()}"></div>
-                    <!-- RESERVE_PENDING 상태에서의 버튼 -->
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}">예약 승인</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}">예약 거절</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}" disabled>예약 취소</button>
-                    <!-- CONFIRMED 상태에서의 버튼 -->
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}" disabled>승인 완료</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}" disabled>예약 거절</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}">예약 취소</button>
-                    <!-- REFUSED 상태에서의 버튼 -->
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>예약 승인</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>거절 완료</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>예약 취소</button>
-                    <!-- CANCEL_PENDING 상태에서의 버튼 -->
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 승인</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 거절</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}">예약 취소</button>
-                    <!-- CANCELED 상태에서의 버튼 -->
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>예약 승인</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>예약 거절</button>
-                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>취소 완료</button>
-                </div>
-            </th:block>
+<!--            <th:block th:each="r : ${reservationList}">-->
+<!--                <div class="r-table-row">-->
+<!--                    <div th:text="${r.getMember().getMemberName()}"></div>-->
+<!--                    <div th:text="${r.getMember().getMemberPhone()}"></div>-->
+<!--                    <div th:text="${r.getReservedDateTime()}"></div>-->
+<!--                    <div th:text="${r.getReservationStatus()}"></div>-->
+<!--                    &lt;!&ndash; RESERVE_PENDING 상태에서의 버튼 &ndash;&gt;-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}">예약 승인</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}">예약 거절</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'RESERVE_PENDING')}" disabled>예약 취소</button>-->
+<!--                    &lt;!&ndash; CONFIRMED 상태에서의 버튼 &ndash;&gt;-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}" disabled>승인 완료</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}" disabled>예약 거절</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CONFIRMED')}">예약 취소</button>-->
+<!--                    &lt;!&ndash; REFUSED 상태에서의 버튼 &ndash;&gt;-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>예약 승인</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>거절 완료</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'REFUSED')}" disabled>예약 취소</button>-->
+<!--                    &lt;!&ndash; CANCEL_PENDING 상태에서의 버튼 &ndash;&gt;-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 승인</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}" disabled>예약 거절</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCEL_PENDING')}">예약 취소</button>-->
+<!--                    &lt;!&ndash; CANCELED 상태에서의 버튼 &ndash;&gt;-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>예약 승인</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>예약 거절</button>-->
+<!--                    <button th:if="${#strings.equals(r.getReservationStatus(), 'CANCELED')}" disabled>취소 완료</button>-->
+<!--                </div>-->
+<!--            </th:block>-->
         </div>
     </div>
 </div>
+
+<script layout:fragment="script">
+    updateView();
+</script>
 
 </body>
 </html>

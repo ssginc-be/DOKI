@@ -70,6 +70,12 @@
     font-size: 16px;
     margin: auto auto auto 0;
 }
+.table-meta-size hl {
+    font-family: "Pretendard", sans-serif;
+    color: #F8434E;
+    font-weight: 600;
+    font-size: 16px;
+}
 .table-meta-pagination {
     font-family: "Pretendard", sans-serif;
     color: #000000;
@@ -102,9 +108,14 @@ table {
     border-collapse: collapse;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
-    margin-bottom: 48px;
+    /*margin-bottom: 48px;*/
 }
 /* end of table css reset */
+
+tr:hover {
+    background-color: #feffda;
+    transition: 0.15s linear;
+}
 
 tr:not(:first-child) { /* 헤더만 제외 */
     border-bottom: 1px solid #E2E2E9;
@@ -144,10 +155,16 @@ td {
 td:first-child {
     width: 83px;
 }
-td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+td:nth-child(2) {
     width: 153px;
 }
-td:nth-child(6), td:nth-child(7), td:nth-child(8) {
+td:nth-child(3), td:nth-child(4) {
+    width: 123px;
+}
+td:nth-child(5) {
+    width: 163px;
+}
+td:nth-child(7), td:nth-child(8), td:nth-child(9) {
     width: 169px;
     text-align: center;
 }
@@ -169,6 +186,13 @@ td:not(:last-child) {
 
     cursor: pointer;
 }
+.reserve-confirm-button.disable {
+    background-color: #F3F3F5;
+    color: #AEAEBA;
+    font-weight: 600;
+    border: 1px solid #F3F3F5;
+    cursor: not-allowed;
+}
 .reserve-refuse-button {
     width: 113px;
     padding: 8px 0;
@@ -183,6 +207,13 @@ td:not(:last-child) {
 
     cursor: pointer;
 }
+.reserve-refuse-button.disable {
+    background-color: #F3F3F5;
+    color: #AEAEBA;
+    font-weight: 600;
+    border: 1px solid #F3F3F5;
+    cursor: not-allowed;
+}
 .reserve-cancel-button {
     width: 113px;
     padding: 8px 0;
@@ -196,4 +227,11 @@ td:not(:last-child) {
     font-size: 14px;
 
     cursor: pointer;
+}
+.reserve-cancel-button.disable {
+    background-color: #F3F3F5;
+    color: #AEAEBA;
+    font-weight: 600;
+    border: 1px solid #F3F3F5;
+    cursor: not-allowed;
 }
