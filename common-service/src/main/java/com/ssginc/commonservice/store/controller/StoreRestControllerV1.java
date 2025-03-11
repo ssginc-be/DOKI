@@ -37,6 +37,9 @@ public class StoreRestControllerV1 {
         [운영자] 예약 내역 목록 조회,
         [운영자] 예약 현황 카운터 조회 (메트릭 영역)
     */
+    /*
+        [운영자] 특정 예약에 대한 예약 상태 변경 로그 조회
+    */
     
     private final StoreService storeService;
     private final JwtUtil jwtUtil;
@@ -98,9 +101,7 @@ public class StoreRestControllerV1 {
     }
 
 
-    /*
-        [운영자] 예약 내역 목록 조회
-    */
+    /* [운영자] 예약 내역 목록 조회 */
     @GetMapping("/reserve")
     public ResponseEntity<?> getStoreReservation(
             @CookieValue(value="accessToken", required=false) String accessToken
@@ -113,9 +114,7 @@ public class StoreRestControllerV1 {
         return storeService.getStoreReservationList(code);
     }
 
-    /*
-        [운영자] 예약 현황 카운터 조회 (메트릭 영역)
-    */
+    /* [운영자] 예약 현황 카운터 조회 (메트릭 영역) */
     @GetMapping("/reserve/counter")
     public ResponseEntity<?> getStoreReservationCounter(
             @CookieValue(value="accessToken", required=false) String accessToken
@@ -128,4 +127,17 @@ public class StoreRestControllerV1 {
         return storeService.getStoreReservationCounter(code);
     }
 
+    /* [운영자] 특정 예약에 대한 예약 상태 변경 로그 조회 */
+    @GetMapping("/reserve/log")
+    public ResponseEntity<?> getStoreReservationLog(
+            @CookieValue(value="accessToken", required=false) String accessToken,
+            @RequestParam("id") Long reservationId
+    ) {
+        // temp: API Gateway 임시 대체
+        // role은 반드시 MANAGER여야 함
+        Long code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+        log.info("requested code: {}", code);
+
+        return storeService.getStoreReservationLog(reservationId);
+    }
 }
