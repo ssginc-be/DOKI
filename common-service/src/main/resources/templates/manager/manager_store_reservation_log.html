@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout-manager}">
+<head>
+    <meta charset="UTF-8">
+    <title>예약 관리 이력</title>
+    <link href="/css/manager_store_reservation_log.css" rel="stylesheet"/>
+    <script src="/js/manager_store_reservation_log.js"></script>
+</head>
+<body>
+<!-- navbar -->
+<div class="navbar" layout:fragment="navbar">
+
+</div>
+
+<div class="wrapper">
+    <div class="content-wrapper">
+        <div class="sidebar" layout:fragment="sidebar"></div>
+        <div class="content" layout:fragment="content">
+            <div class="content-title">예약 내역 관리&nbsp;&nbsp;/<hl>&nbsp;&nbsp;예약 관리 이력</hl></div>
+
+            <!-- 예약 내역 (reservation) 테이블 -->
+            <div class="table-area">
+                <div class="table-meta">
+                    <div class="table-meta-size" id="table-meta-size">전체 <hl>8</hl>건의 예약이 조회되었습니다.</div>
+                    <div class="table-meta-pagination">1 / 1</div>
+                    <div class="table-pagination-button-area">
+                        <div class="table-pagination-button">
+                            <svg width="11" height="18" viewBox="0 0 11 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.05737 9.94247C0.807413 9.69244 0.666992 9.35336 0.666992 8.99981C0.666992 8.64625 0.807413 8.30718 1.05737 8.05714L8.60004 0.514473C8.72304 0.387126 8.87016 0.28555 9.03283 0.215671C9.19551 0.145792 9.37047 0.109011 9.54751 0.107472C9.72454 0.105934 9.90012 0.13967 10.064 0.206711C10.2278 0.273752 10.3767 0.372756 10.5019 0.497947C10.6271 0.623137 10.7261 0.772006 10.7931 0.935867C10.8602 1.09973 10.8939 1.2753 10.8924 1.45234C10.8908 1.62938 10.8541 1.80434 10.7842 1.96701C10.7143 2.12968 10.6127 2.27681 10.4854 2.39981L3.88537 8.99981L10.4854 15.5998C10.7283 15.8513 10.8626 16.1881 10.8596 16.5377C10.8566 16.8873 10.7163 17.2217 10.4691 17.4689C10.2219 17.7161 9.8875 17.8563 9.53791 17.8594C9.18831 17.8624 8.85151 17.728 8.60004 17.4851L1.05737 9.94247Z" fill="#131313"/>
+                            </svg>
+                        </div>
+                        <div class="table-pagination-button">
+                            <svg width="11" height="18" viewBox="0 0 11 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.94272 8.05757C10.1927 8.30761 10.3331 8.64669 10.3331 9.00024C10.3331 9.35379 10.1927 9.69287 9.94272 9.94291L2.40005 17.4856C2.27705 17.6129 2.12993 17.7145 1.96726 17.7844C1.80458 17.8543 1.62962 17.891 1.45259 17.8926C1.27555 17.8941 1.09997 17.8604 0.936112 17.7933C0.77225 17.7263 0.62338 17.6273 0.49819 17.5021C0.373 17.3769 0.273996 17.228 0.206954 17.0642C0.139913 16.9003 0.106178 16.7247 0.107716 16.5477C0.109255 16.3707 0.146036 16.1957 0.215915 16.033C0.285794 15.8704 0.38737 15.7232 0.514717 15.6002L7.11472 9.00024L0.514717 2.40024C0.271839 2.14877 0.137447 1.81197 0.140485 1.46237C0.143522 1.11278 0.283747 0.77836 0.530958 0.531149C0.778169 0.283938 1.11259 0.143713 1.46218 0.140675C1.81178 0.137638 2.14858 0.27203 2.40005 0.514907L9.94272 8.05757Z" fill="#131313"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <table id="store-reservation-table">
+                    <tr> <!-- table header -->
+                        <th>예약 ID</th>
+                        <th>예약일</th>
+                        <th>예약 시간</th>
+                        <th>예약자 성함</th>
+                        <th>예약자 연락처</th>
+                        <th>예약 상태</th>
+                        <th>예약 내역 조회</th>
+                    </tr> <!-- end of table header -->
+
+                    <th:block th:each="n : ${#numbers.sequence(1, 8)}">
+                        <tr>
+                            <td>1</td>
+                            <td>2025-02-25</td>
+                            <td>10:00</td>
+                            <td>안규리</td>
+                            <td>010-1234-5678</td>
+                            <td>예약 승인 대기</td>
+                            <td><button class="reserve-log-button" onclick="handleLogButtonClicked(1)">내역조회</button></td>
+                        </tr>
+                    </th:block>
+
+                </table>
+            </div>
+
+            <!-- 예약 관리 이력 (reservation log) 테이블 -->
+            <div class="table-area">
+                <div class="table-meta">
+                    <div class="table-meta-label" id="table-meta-label">조회하고자 하는 예약을 선택해주세요.</div>
+                </div>
+                <table id="store-reservation-log-table">
+                    <tr> <!-- table header -->
+                        <th>로그 ID</th>
+                        <th>API 버전</th>
+                        <th>예약 방식</th>
+                        <th>예약 상태</th>
+                        <th>관리 일시</th>
+                        <th>관리자</th>
+                    </tr> <!-- end of table header -->
+
+<!--                    <th:block th:each="n : ${#numbers.sequence(1, 4)}">-->
+<!--                        <tr>-->
+<!--                            <td class="no-button">10</td>-->
+<!--                            <td class="no-button">v1</td>-->
+<!--                            <td class="no-button">직접승인</td>-->
+<!--                            <td class="no-button">예약 승인 대기</td>-->
+<!--                            <td class="no-button">2025-02-22 22:04:44</td>-->
+<!--                            <td class="no-button">manager</td>-->
+<!--                        </tr>-->
+<!--                    </th:block>-->
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script">
+    updateReservationTableView();
+</script>
+
+</body>
+</html>

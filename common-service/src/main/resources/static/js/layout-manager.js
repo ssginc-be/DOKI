@@ -42,7 +42,7 @@ function gotoPage(idx) {
         case 2: location.href = "http://localhost:9093"; break;
         case 3: location.href = "http://localhost:9093/store/reserve"; break;
         case 4: location.href = "http://localhost:9093"; break;
-        case 5: location.href = "http://localhost:9093"; break;
+        case 5: location.href = "http://localhost:9093/store/reserve/log"; break;
         case 6: location.href = "http://localhost:9093"; break;
         case 7: location.href = "http://localhost:9093"; break;
         default: alert("잘못된 접근입니다."); break;
