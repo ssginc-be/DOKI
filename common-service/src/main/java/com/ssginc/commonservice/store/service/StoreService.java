@@ -46,6 +46,9 @@ public class StoreService {
         [운영자] 예약 내역 목록 조회,
         [운영자] 예약 현황 카운터 조회 (메트릭 영역)
     */
+    /*
+        [운영자] 특정 예약에 대한 예약 상태 변경 로그 조회
+    */
     private final MemberRepository mRepo;
     private final StoreRepository sRepo;
     private final CategoryRepository cRepo;
@@ -460,5 +463,31 @@ public class StoreService {
                 .build();
 
         return ResponseEntity.ok(dto);
+    }
+
+
+    /* [운영자] 특정 예약에 대한 예약 상태 변경 로그 조회 */
+    public ResponseEntity<?> getStoreReservationLog (Long rid) {
+        List<ReservationLog> rlList = rlRepo.findAllByReservation_ReservationId(rid); // 추후 보완 필요 (WHERE 절에 store id도 들어가야 함.)
+        List<ReservationLogResponseDto> dtoList = new ArrayList<>();
+        // entity -> dto 변환s
+        for (ReservationLog rl : rlList) {
+            String method = rl.getReserveMethod().toString();
+            // status까지 백 단에서 가공하기엔 너무 server에 부담을 줌.
+            // 보안적 문제 없는 선에서 웬만하면 client가 처리하는게 나은 듯.
+            String methodName = method.equals("V1") ? "직접승인" : "자동승인";
+            ReservationLogResponseDto dto = ReservationLogResponseDto.builder()
+                    .reservationLogId(rl.getReservationLogId())
+                    .reservationId(rl.getReservation().getReservationId())
+                    .reserveMethodCode(method.toLowerCase())
+                    .reserveMethod(methodName)
+                    .reservationStatus(rl.getReservationStatus().toString())
+                    .timestamp(rl.getReservationStatusTimestamp())
+                    .build();
+
+            dtoList.add(dto);
+        }
+
+        return ResponseEntity.ok(dtoList);
     }
 }

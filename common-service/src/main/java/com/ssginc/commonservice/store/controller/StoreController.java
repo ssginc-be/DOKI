@@ -30,7 +30,7 @@ import java.util.List;
 @RequestMapping("/") // root 경로가 곧 팝업스토어 목록 조회 페이지
 public class StoreController {
     /*
-        store list, store info, store reservation page
+        store list, store info, store reservation, store reservation log page
     */
     private final JwtUtil jwtUtil;
     private final StoreService storeService;
@@ -104,7 +104,7 @@ public class StoreController {
         return "store/store_info";
     }
 
-
+    /* [운영자] 예약 승인 / 예약 거절 페이지 */
     @GetMapping("/store/reserve")
     public String viewStoreReservationPage(
             @RequestHeader(value="x-gateway-member-role", required=false) String memberRole,
@@ -122,11 +122,33 @@ public class StoreController {
         Store store = memberService.getMemberInfo(code).getStore();
         model.addAttribute("storeName", store.getStoreName());
 
-//        List<Reservation> reservationList = reserveService.getStoreReservations(store.getStoreId());
-//        model.addAttribute("reservationList", reservationList);
-
         model.addAttribute("menuIdx", 3);
 
         return "manager/manager_store_reservation";
+    }
+
+    /* [운영자] 예약 관리 이력 페이지 */
+    @GetMapping("/store/reserve/log")
+    public String viewStoreReservationLogPage(
+            @RequestHeader(value="x-gateway-member-role", required=false) String memberRole,
+            @CookieValue(value="accessToken", required=false) String accessToken,
+            Model model
+    ) {
+        //  temp: API Gateway 임시 대체
+        // 운영자 페이지이므로 role은 무조건 MANAGER여야 함
+        String role = jwtUtil.getClaims(accessToken).get("role").toString();
+        Long code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+
+        log.info("requested role: {}", role);
+        model.addAttribute("memberRole", role);
+
+        Store store = memberService.getMemberInfo(code).getStore();
+        model.addAttribute("storeName", store.getStoreName());
+        // 해당 페이지는 테이블에서 보여줄 memberName도 필요
+        model.addAttribute("memberName", store.getMember().getMemberName());
+
+        model.addAttribute("menuIdx", 5);
+
+        return "manager/manager_store_reservation_log";
     }
 }
