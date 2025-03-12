@@ -44,6 +44,7 @@ public enum ErrorCode {
     CANNOT_SEND_EMAIL(HttpStatus.BAD_GATEWAY, "DOKI-013", "이메일 발송에 실패했습니다."),
 
     // 500 INTERNAL_SERVER_ERROR
+    THUMBNAIL_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "DOKI-014", "등록된 메인 썸네일이 없습니다."),
     SOMETHING_WENT_WRONG(HttpStatus.INTERNAL_SERVER_ERROR, "DOKI-099", "알 수 없는 오류가 발생했습니다.");
 
 
