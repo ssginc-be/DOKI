@@ -32,7 +32,7 @@ public enum ErrorCode {
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "DOKI-008", "예약 이력을 찾을 수 없습니다."),
 
     // 409 CONFLICT
-    HAS_EMAIL(HttpStatus.CONFLICT, "DOKI-002", "존재하는 이메일입니다."),
+    HAS_EMAIL(HttpStatus.CONFLICT, "DOKI-002", "이미 가입된 이메일입니다."),
 
 
     /*
