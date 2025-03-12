@@ -35,7 +35,7 @@ body {
 .signup-title {
     font-family: "Pretendard", sans-serif;
     font-weight: 600;
-    font-size: 24px;
+    font-size: 26px;
     color: #000000;
     margin: auto auto 64px auto;
 }
@@ -71,7 +71,7 @@ body {
     color: #000000;
     margin: auto 0; /* auto 0 auto 0 */
 }
-.pw-check-default {
+.pw-check {
     width: 132px;
     padding: 12px 0;
     margin-left: 18px;
@@ -84,8 +84,10 @@ body {
     font-weight: 600;
     font-size: 14px;
     color: #FA6F77;
+
+    transition: 0.15s linear;
 }
-.pw-check-ok {
+.pw-check.ok {
     width: 132px;
     padding: 12px 0;
     margin-left: 18px;
@@ -129,14 +131,32 @@ body {
     width: 132px;
     margin-left: 18px;
     background-color: #131313;
+    border: 1.5px solid #131313;
     border-radius: 6px;
 
     font-family: "Pretendard", sans-serif;
     font-weight: 600;
     font-size: 14px;
     color: #FFFFFF;
+    transition: 0.15s linear;
 
     cursor: pointer;
+}
+.signup-check-button.disable {
+    border: 1.5px solid #C6C6C6;
+    background-color: #C6C6C6;
+    color: #FFFFFF;
+    cursor: unset;
+}
+.signup-check-button.active {
+    border: 1.5px solid #131313;
+    background-color: #FFFFFF;
+    color: #131313;
+    cursor: pointer;
+}
+
+input[readonly] {
+    color: #C6C6C6;
 }
 
 .gender-button {
@@ -145,13 +165,32 @@ body {
     border: 1px solid #131313;
     border-radius: 6px;
     background-color: #FFFFFF;
+    color: #131313;
     margin-right: 10px;
 
     font-family: "Pretendard", sans-serif;
     font-weight: 500;
     font-size: 14px;
 
+    transition: 0.15s linear;
+
     cursor: pointer;
+}
+.gender-button.active {
+    border: 1px solid #131313;
+    background-color: #131313;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+#birth-input[readonly] {
+    color: #131313 !important;
+}
+
+/* flatpickr styling */
+.flatpickr-calendar {
+    font-family: "Pretendard", sans-serif;
+    box-shadow: none !important;
 }
 
 .signup-bottom {
@@ -161,9 +200,9 @@ body {
     margin-bottom: 48px;
 }
 .signup-confirm-button {
-    border: 1px solid #000000;
+    border: 1px solid #C6C6C6;
     border-radius: 6px;
-    background-color: #000000;
+    background-color: #C6C6C6;
     margin-left: auto;
     padding: 12px 48px;
     box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
@@ -173,6 +212,13 @@ body {
     font-size: 16px;
     color: #FFFFFF;
 
+    transition: 0.15s linear;
+
+    cursor: not-allowed;
+}
+.signup-confirm-button.active {
+    border: 1px solid #000000;
+    background-color: #000000;
     cursor: pointer;
 }
 .signup-cancel-button {

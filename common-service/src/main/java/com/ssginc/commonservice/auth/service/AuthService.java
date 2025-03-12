@@ -314,6 +314,12 @@ public class AuthService {
 
     /* [이용자] 회원가입 이메일 인증코드 발송 */
     public ResponseEntity<?> sendEmailValidationCode(String email) {
+        // 이미 가입되어 있는 회원이면 409
+        Optional<Member> optMember = mRepo.findByMemberID(email); // 회원 id가 email임.
+        if (optMember.isPresent()) {
+            throw new CustomException(ErrorCode.HAS_EMAIL);
+        }
+
         // 인증번호 생성
         String generatedKey = emailUtil.createEmailAuthKey();
 
