@@ -73,6 +73,12 @@ public class Store {
     @Enumerated(EnumType.STRING)
     private StoreReserveMethod storeReserveMethod;
 
+    @Column(nullable = false)
+    private Integer storeReserveGap;
+
+    @Column(nullable = false)
+    private Integer storeCapacity;
+
     // 팝업스토어 이미지
     @JsonManagedReference
     @Column(nullable = false)

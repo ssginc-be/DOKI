@@ -122,15 +122,15 @@
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">예약 시간 단위</div>
-                            <button class="reserve-gap-button selected">30분</button>
-                            <button class="reserve-gap-button">1시간</button>
+                            <button class="reserve-gap-button" th:classappend="${store.getStoreReserveGap() == 30} ? 'selected'">30분</button>
+                            <button class="reserve-gap-button" th:classappend="${store.getStoreReserveGap() == 60} ? 'selected'">1시간</button>
                         </div>
                     </div>
                     <!------- 예약 시간 설정 오른쪽 ------->
                     <div class="store-info-content-right">
                         <div class="store-info-element">
                             <div class="store-info-label">시간별 최대 정원</div>
-                            <input type="number" readonly>
+                            <input type="number" th:value="${store.getStoreCapacity()}" readonly>
                         </div>
                     </div>
                 </div>
