@@ -296,6 +296,8 @@ public class StoreService {
                 .storeStartTime(dto.getStoreStartTime())
                 .storeEndTime(dto.getStoreEndTime())
                 .storeReserveMethod(Store.StoreReserveMethod.valueOf(dto.getReserveMethod()))
+                .storeReserveGap(dto.getReserveGap())
+                .storeCapacity(dto.getCapacity())
                 .storeStatus(Store.StoreStatus.valueOf("ACTIVE"))
                 //.storeImageList(storeImageList) // 하단에서 setter로 주입
                 .build();
