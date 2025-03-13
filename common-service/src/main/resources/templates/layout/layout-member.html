@@ -21,6 +21,7 @@
     <!-- global js (pre) -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:inline="javascript">
         const memberCode = [[${memberCode}]];
     </script>
@@ -121,13 +122,13 @@
         <div class="signin-right">
             <div class="signin-row">
                 <div class="signin-input-title">아이디</div>
-                <div class="signin-input-box"><input type="text" id="signin_id" placeholder="이메일" /></div>
+                <div class="signin-input-box"><input type="text" id="signin_id" placeholder="이메일" oninput="checkLoginAvailable()" /></div>
             </div>
             <div class="signin-row">
                 <div class="signin-input-title">패스워드</div>
-                <div class="signin-input-box"><input type="password" id="signin_pw" placeholder="비밀번호" /></div>
+                <div class="signin-input-box"><input type="password" id="signin_pw" placeholder="비밀번호" oninput="checkLoginAvailable()" /></div>
             </div>
-            <div class="signin-button" onclick="signIn()">로그인</div>
+            <div id="signin-button" class="signin-button">로그인</div>
             <div class="reset-password">비밀번호를 잊어버리셨나요?</div>
         </div>
     </div>

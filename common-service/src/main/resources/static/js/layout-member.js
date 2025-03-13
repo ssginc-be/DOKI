@@ -26,7 +26,7 @@ function signOut() {
         axios.delete("http://localhost:9093/v2/auth/sign-out"
         ).then(function (response) {
             console.log(response);
-            location.reload();
+            location.href = '/';
         }).catch(function (error) {
             console.log(error);
             alert("서버와의 통신에 실패했습니다.");
@@ -40,9 +40,21 @@ function signUp() {
 
 function showOverlay() {
     // 로그인 오버레이
-    const overlay = document.getElementById('signin-overlay');
+    // const overlay = document.getElementById('signin-overlay');
+    const box = document.getElementById('signin-box');
+    box.style.opacity = 0;
+    $("#signin-overlay")
+        .css("display", "flex")
+        .hide()
+        .fadeIn('fast');
 
-    overlay.style.visibility = "visible";
+    setTimeout(() => {
+        box.style.opacity = 100;
+        $("#signin-box")
+            .css("display", "flex")
+            .hide()
+            .fadeIn(450);
+    }, 120);
 }
 
 window.addEventListener('mouseup',function(event){
@@ -51,9 +63,24 @@ window.addEventListener('mouseup',function(event){
 
     // signin-box 외부 클릭 시 overlay 숨기기
     if(!(event.target.closest("#signin-box"))){
-        overlay.style.visibility = "hidden";
+        $("#signin-overlay").fadeOut(400);
     }
 });
+
+function checkLoginAvailable() {
+    const idValue = document.getElementById('signin_id').value;
+    const pwValue = document.getElementById('signin_pw').value;
+    const button = document.getElementById('signin-button');
+
+    if (idValue.length > 0 && pwValue.length > 0) {
+        button.classList.add('active');
+        button.onclick = signIn;
+    }
+    else {
+        button.classList.remove('active');
+        button.onclick = null;
+    }
+}
 
 
 function gotoRoot() {

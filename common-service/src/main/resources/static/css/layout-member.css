@@ -254,7 +254,7 @@ body {
 
 /* signin overlay */
 .signin-overlay {
-    display: flex;
+    display: none;
     width: 100vw;
     height: 100vh;
     background-color: rgba(255, 255, 255, 0.5);
@@ -267,20 +267,20 @@ body {
     /*transition: 1s;*/
     /*visibility: hidden;*/
     /*opacity: 0;*/
-    visibility: hidden;
+    /*visibility: hidden;*/
 }
 /*.signin-overlay .show {*/
 /*    visibility: visible;*/
 /*    opacity: 1;*/
 /*}*/
 .signin-box {
-    display: flex;
+    display: none;
     flex-direction: row;
     padding: 36px 48px;
     background-color: #FFFFFF;
     margin: auto auto;
     border-radius: 3px;
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    box-shadow: rgb(0 0 0 / 23%) 0 48px 100px 0;
 }
 .signin-left {
     display: flex;
@@ -338,16 +338,25 @@ body {
 }
 .signin-button {
     width: 100%;
-    border: 1px solid #000000;
+    border: 1px solid #C6C6C6;
+    color: #C6C6C6;
+    background-color: #FFFFFF;
     padding: 12px 0;
     text-align: center;
     border-radius: 6px;
     margin-top: 24px;
     margin-bottom: 14px;
+    transition: 0.2s linear;
 
     font-family: "Pretendard", sans-serif;
     font-weight: 400;
     font-size: 16px;
+}
+.signin-button.active {
+    border: 1px solid #131313;
+    background-color: #131313;
+    font-weight: 500;
+    color: #FFFFFF;
 
     cursor: pointer;
 }
