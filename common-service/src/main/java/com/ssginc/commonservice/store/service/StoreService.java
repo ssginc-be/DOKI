@@ -52,6 +52,7 @@ public class StoreService {
     private final MemberRepository mRepo;
     private final StoreRepository sRepo;
     private final CategoryRepository cRepo;
+    private final StoreCategoryRepository scRepo;
     private final StoreImageRepository siRepo;
     private final ReservationRepository rRepo;
     private final ReservationLogRepository rlRepo;
@@ -376,6 +377,7 @@ public class StoreService {
             );
         }
         store.setStoreCategoryList(storeCategoryList); // setter 주입
+        scRepo.saveAll(storeCategoryList);
 
         // 5. ReservationEntry 생성
         List<ReservationEntry> reList = new ArrayList<>();

@@ -78,6 +78,19 @@
     margin: auto 0;
 }
 
+.store-info-element select {
+    width: 379px;
+    padding: 12px 20px;
+    border: 0.5px solid #959595;
+    border-radius: 6px;
+
+    font-family: "Pretendard", sans-serif;
+    color: #131313;
+    font-weight: 400;
+    font-size: 14px;
+    margin: auto 0;
+}
+
 .store-info-element textarea {
     width: 379px;
     height: 155px;
@@ -102,6 +115,7 @@
     border-radius: 100px;
     padding: 8px 20px;
     margin-bottom: 8px;
+    transition: 0.15s linear;
     cursor: pointer;
 }
 .category-chip-button.selected {
@@ -119,6 +133,7 @@
     border-radius: 6px;
     padding: 12px 32px;
     margin-right: 12px;
+    transition: 0.15s linear;
     cursor: pointer
 }
 .reserve-method-button.selected {
@@ -137,6 +152,7 @@
     border-radius: 6px;
     padding: 12px 32px;
     margin-right: 12px;
+    transition: 0.15s linear;
     cursor: pointer
 }
 .reserve-gap-button.selected {
@@ -166,10 +182,32 @@
 
 /* store image style */
 .store-image-box {
+    position: relative;
+    display: flex;
     width: 240px;
     height: 240px;
     border: 1px solid #E2E2E9;
 }
+.store-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.store-image-box.selected {
+    border: 2px solid #F8434E;
+}
+.main-selected-chip {
+    position: absolute;
+    font-family: "Pretendard", sans-serif;
+    color: #FFFFFF;
+    font-weight: 500;
+    font-size: 13px;
+    background-color: #F8434E;
+    border-bottom-right-radius: 6px;
+    padding: 5px 11px;
+    margin: 0 auto auto 0;
+}
+
 .content-subtitle.topleft {
     margin: 0 auto auto 0;
 }
@@ -202,10 +240,18 @@
     color: #FFFFFF;
     font-weight: 600;
     font-size: 16px;
-    background-color: #000000;
+    background-color: #C6C6C6;
     padding: 12px 52px;
-    border: 0.5px solid #000000;
+    border: 0.5px solid #C6C6C6;
     border-radius: 6px;
+    transition: 0.15s linear;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+    cursor: not-allowed;
+}
+.register-button.active {
+    color: #FFFFFF;
+    background-color: #000000;
+    border: 0.5px solid #000000;
     cursor: pointer;
 }
 .reset-button {
@@ -217,5 +263,12 @@
     padding: 12px 48px;
     border: 0.5px solid #000000;
     border-radius: 6px;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
     cursor: pointer;
+}
+
+/* flatpickr styling */
+.flatpickr-calendar {
+    font-family: "Pretendard", sans-serif;
+    box-shadow: none !important;
 }
