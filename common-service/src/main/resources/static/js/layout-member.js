@@ -88,6 +88,10 @@ function gotoRoot() {
 }
 
 function gotoMyReservationPage() {
+    if (memberRole !== 'MEMBER') {
+        alert("미리보기 모드입니다.");
+        return;
+    }
     location.href = "http://localhost:9093/member/reserve";
 }
 
@@ -95,7 +99,7 @@ function gotoMyReservationPage() {
 /*
     SSE 알림
 */
-if (memberCode != null) { // 로그인 상태에서만 SSE 수신
+if (memberRole === "MEMBER" && memberCode != null) { // 이용자 로그인 상태에서만 SSE 수신
     const eventSource = new EventSource('http://localhost:9093/noti/subscribe');
 
     // SSE 최초 연결시
@@ -153,5 +157,7 @@ if (memberCode != null) { // 로그인 상태에서만 SSE 수신
     }
 }
 else {
-    console.warn("memberCode를 가져올 수 없습니다.");
+    console.warn("memberRole 또는 memberCode를 가져올 수 없습니다.");
+    console.warn("memberRole:", memberRole);
+    console.warn("memberCode:", memberCode);
 }

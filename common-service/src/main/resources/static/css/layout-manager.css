@@ -34,6 +34,7 @@ body {
     height: 80px;
     background-color: #FFFFFF;
     border-bottom: 1px solid #E1E0E1;
+    z-index: 999;
 }
 .navbar-wrapper {
     display: flex;

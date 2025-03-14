@@ -133,6 +133,14 @@ public class StoreController {
 
         Store store = storeService.getStoreInfo(storeId);
         model.addAttribute("store", store);
+        model.addAttribute("formatter", DateTimeFormatter.ofPattern("MM.dd(E)"));
+
+        // 팝업스토어 상세 이미지 가져오기
+        List<StoreImage> contentDetailList = store.getStoreImageList().stream()
+                .filter(img -> "CONTENT_DETAIL".equals(img.getStoreImageTag()))
+                .toList();
+
+        model.addAttribute("contentDetailList", contentDetailList);
 
         return "store/store_info";
     }
