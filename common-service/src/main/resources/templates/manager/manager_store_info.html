@@ -61,6 +61,7 @@
                                 <button class="category-chip-button" th:classappend="${categoryNameList.contains('아티스트')} ? 'selected'">아티스트</button>
                                 <button class="category-chip-button" th:classappend="${categoryNameList.contains('패션')} ? 'selected'">패션</button>
                                 <button class="category-chip-button" th:classappend="${categoryNameList.contains('뷰티')} ? 'selected'">뷰티</button>
+                                <button class="category-chip-button" th:classappend="${categoryNameList.contains('캐릭터')} ? 'selected'">캐릭터</button>
                                 <button class="category-chip-button" th:classappend="${categoryNameList.contains('키덜트')} ? 'selected'">키덜트</button>
                                 <button class="category-chip-button" th:classappend="${categoryNameList.contains('푸드')} ? 'selected'">푸드</button>
                                 <button class="category-chip-button" th:classappend="${categoryNameList.contains('비건')} ? 'selected'">비건</button>
@@ -118,7 +119,7 @@
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">운영 종료 시간</div>
-                            <input type="time" th:value="${store.getStoreEndTime()}" readonly>
+                            <input id="end-time-input" type="time" th:value="${store.getStoreEndTime()}" readonly>
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">예약 시간 단위</div>
