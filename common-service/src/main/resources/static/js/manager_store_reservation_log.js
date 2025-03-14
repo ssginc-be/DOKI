@@ -1,3 +1,5 @@
+// layout-manager.js에 API_GATEWAY_HOST 이미 선언되어 있음.
+
 /* 예약 관리 이력 페이지는 테이블이 2개이기 때문에, updateView 함수도 2개로 나뉨 */
 
 /*
@@ -135,14 +137,14 @@ async function updateReservationLogTableView(rid) {
 
 // 데이터 가져오는 함수
 async function getStoreReservation() { // 예약
-    const response = await getRequest("http://localhost:9093/v1/store/reserve");
+    const response = await getRequest(API_GATEWAY_HOST + "/v1/store/reserve");
     console.log(response);
 
     return response.data; // dto list
 }
 
 async function getStoreReservationLog(rid) { // 예약 관리 이력
-    const response = await getRequest("http://localhost:9093/v1/store/reserve/log?id=" + rid);
+    const response = await getRequest(API_GATEWAY_HOST + "/v1/store/reserve/log?id=" + rid);
     console.log(response);
 
     return response.data; // dto list

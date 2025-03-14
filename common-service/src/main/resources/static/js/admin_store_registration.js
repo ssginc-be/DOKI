@@ -1,4 +1,4 @@
-const API_GATEWAY_HOST = "http://localhost:9093";
+// layout-admin.js에 API_GATEWAY_HOST 이미 선언되어 있음.
 
 /* 등록시 체크하는 유효성 검사 필드 */
 let CHECK_NAME = false;

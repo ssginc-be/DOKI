@@ -1,4 +1,6 @@
-/*  */
+// layout-manager.js에 API_GATEWAY_HOST 이미 선언되어 있음.
+
+
 const MIN_ROW = 8; // 데이터가 8개보다 적어도, row가 최소 8개 렌더링되도록 함
 async function updateView() {
     console.log("update view");
@@ -100,13 +102,13 @@ async function updateView() {
 }
 
 async function getStoreReservation() {
-    const response = await getRequest("http://localhost:9093/v1/store/reserve");
+    const response = await getRequest(API_GATEWAY_HOST + "/v1/store/reserve");
     console.log(response);
 
     return response.data; // dto list
 }
 async function getStoreMetric() {
-    const response = await getRequest("http://localhost:9093/v1/store/reserve/counter");
+    const response = await getRequest(API_GATEWAY_HOST + "/v1/store/reserve/counter");
     console.log(response);
 
     return response.data; // dto
@@ -117,7 +119,7 @@ async function getStoreMetric() {
 async function confirmReservation(rid) { // rid: reservation id
     const ok = confirm("예약을 승인하시겠습니까?");
     if (ok) {
-        await putRequest("http://localhost:9093/v1/store/reserve/confirm?id=" + rid);
+        await putRequest(API_GATEWAY_HOST + "/v1/store/reserve/confirm?id=" + rid);
     }
     await updateView();
 }
@@ -126,7 +128,7 @@ async function confirmReservation(rid) { // rid: reservation id
 async function refuseReservation(rid) {  // rid: reservation id
     const ok = confirm("예약을 거절하시겠습니까?");
     if (ok) {
-        await putRequest("http://localhost:9093/v1/store/reserve/refuse?id=" + rid);
+        await putRequest(API_GATEWAY_HOST + "/v1/store/reserve/refuse?id=" + rid);
     }
     await updateView();
 }
@@ -135,7 +137,7 @@ async function refuseReservation(rid) {  // rid: reservation id
 async function cancelReservation(rid) {  // rid: reservation id
     const ok = confirm("예약을 취소하시겠습니까?");
     if (ok) {
-        await putRequest("http://localhost:9093/v1/store/reserve/cancel?id=" + rid);
+        await putRequest(API_GATEWAY_HOST + "/v1/store/reserve/cancel?id=" + rid);
     }
     await updateView();
 }

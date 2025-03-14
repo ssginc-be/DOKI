@@ -1,3 +1,6 @@
+// 예약은 서비스가 분리되어 있어서 API Gateway 없이 테스트 불가 (CORS 터짐)
+const API_GATEWAY_HOST = "http://localhost:9000"
+
 function signIn() {
     // 로그인 오버레이
     const overlay = document.getElementById('signin-overlay');
@@ -6,7 +9,7 @@ function signIn() {
     const memberId = document.getElementById('signin_id').value;
     const memberPw = document.getElementById('signin_pw').value;
 
-    axios.post("http://localhost:9093/v2/auth/sign-in", {
+    axios.post(`${API_GATEWAY_HOST}/v2/auth/sign-in`, {
         member_id: memberId,
         member_pw: memberPw
     }).then(function (response) {
@@ -23,7 +26,7 @@ function signIn() {
 function signOut() {
     const ok = confirm("로그아웃 하시겠습니까?");
     if (ok) {
-        axios.delete("http://localhost:9093/v2/auth/sign-out"
+        axios.delete(`${API_GATEWAY_HOST}/v2/auth/sign-out`
         ).then(function (response) {
             console.log(response);
             location.href = '/';
@@ -35,7 +38,7 @@ function signOut() {
 }
 
 function signUp() {
-    location.href = "http://localhost:9093/auth/sign-up";
+    location.href = `${API_GATEWAY_HOST}/auth/sign-up`;
 }
 
 function showOverlay() {
@@ -92,7 +95,7 @@ function gotoMyReservationPage() {
         alert("미리보기 모드입니다.");
         return;
     }
-    location.href = "http://localhost:9093/member/reserve";
+    location.href = `${API_GATEWAY_HOST}/member/reserve`;
 }
 
 
@@ -100,7 +103,7 @@ function gotoMyReservationPage() {
     SSE 알림
 */
 if (memberRole === "MEMBER" && memberCode != null) { // 이용자 로그인 상태에서만 SSE 수신
-    const eventSource = new EventSource('http://localhost:9093/noti/subscribe');
+    const eventSource = new EventSource(`${API_GATEWAY_HOST}/noti/subscribe`);
 
     // SSE 최초 연결시
     eventSource.onopen = function () {
@@ -113,6 +116,12 @@ if (memberRole === "MEMBER" && memberCode != null) { // 이용자 로그인 상�
     eventSource.addEventListener("RESERVE_RESULT", (event) => {
         // const message = event.data;
         console.log('Received message:', event.data); // logging
+
+        // 현재의 URL에 따른 동적 뷰 처리
+        if (window.location.href === `${API_GATEWAY_HOST}/member/reserve`) { // 1. 나의 예약 페이지면
+            console.log('이벤트 수신 -> 나의 예약 테이블 업데이트');
+            updateView();
+        }
 
         // 토스트 뷰 처리
         const message = event.data;

@@ -1,3 +1,5 @@
+// layout-member.js에 API_GATEWAY_HOST 선언되어 있음.
+
 const MIN_ROW = 8; // 데이터가 8개보다 적어도, row가 최소 8개 렌더링되도록 함
 async function updateView() {
     console.log("update view");
@@ -47,7 +49,7 @@ async function updateView() {
                 isUpcoming = true; ++upcomingRowsCount;
                 break;
             case 'CONFIRMED': // 예약 확정
-                statusHtml = `<td>예약 확정</td>`;
+                statusHtml = `<td style="color: #325BFF;">예약 확정</td>`;
                 buttonHtml = `<button class="reserve-cancel-button" onclick="cancelReservation(${dto.reservationId})">예약취소</button>`;
                 isUpcoming = true; ++upcomingRowsCount;
                 break;
@@ -102,7 +104,7 @@ async function updateView() {
 }
 
 async function getMyReservation() {
-    const response = await getRequest("http://localhost:9093/v1/member/reserve");
+    const response = await getRequest(`${API_GATEWAY_HOST}/v1/member/reserve`);
     console.log(response);
 
     return response.data; // dto list
@@ -112,7 +114,7 @@ async function getMyReservation() {
 async function cancelReservation(rid) {  // rid: reservation id
     const ok = confirm("예약을 취소하시겠습니까?");
     if (ok) {
-        await getRequest("http://localhost:9093/v1/member/reserve/cancel?id=" + rid);
+        await getRequest(`${API_GATEWAY_HOST}/v1/member/reserve/cancel?id=${rid}`);
     }
     // await으로 응답 기다린 후 view 업데이트
     updateView();
