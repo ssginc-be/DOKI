@@ -1,4 +1,4 @@
-const API_GATEWAY = "http://localhost:9093";
+// layout-member.js에 API_GATEWAY_HOST 이미 선언되어 있음.
 
 // 접속한 사용자의 memberCode 확인
 console.log('memberCode:', memberCode);
@@ -22,7 +22,7 @@ function goBack() {
 
 /* [이용자] '예약하기' 버튼 클릭시 작동하는 함수 */
 function gotoReservationPage(storeId) {
-    location.href = API_GATEWAY + "/reserve?id=" + storeId;
+    location.href = API_GATEWAY_HOST + "/reserve?id=" + storeId;
 }
 
 /* 비로그인 상태에서 예약하기 버튼 클릭시 작동하는 함수 */

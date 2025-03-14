@@ -1,4 +1,6 @@
-const AUTH_SERVICE = "http://localhost:9093/v2/auth"
+// layout-member.js에 API_GATEWAY_HOST 이미 선언되어 있음.
+
+const AUTH_SERVICE = API_GATEWAY_HOST + "/v2/auth"
 
 async function sign_in(memberId, memberPw) {
     try {
@@ -20,15 +22,15 @@ async function sign_out() {
 }
 
 function load_page(pageIdx) {
-    location.href = `http://localhost:9093?page=${pageIdx}`;
+    location.href = `${API_GATEWAY_HOST}?page=${pageIdx}`;
 }
 
 function remove_filter() {
-    location.href = `http://localhost:9093`;
+    location.href = API_GATEWAY_HOST;
 }
 
 function goto_store_info(id) {
-    location.href = `http://localhost:9093/store?id=${id}`;
+    location.href = `${API_GATEWAY_HOST}/store?id=${id}`;
 }
 
 
@@ -85,7 +87,7 @@ async function updateCategoryView(categoryName, categoryId, pageIdx) {
 
 /* 팝업스토어 카테고리 목록 조회 */
 async function getStoreListByCategory(categoryId, pageIdx) {
-    let endpoint = `http://localhost:9093/v1/store/category?id=${categoryId}`;
+    let endpoint = `${API_GATEWAY_HOST}/v1/store/category?id=${categoryId}`;
     if (pageIdx != null) endpoint += `&page=${pageIdx}`;
 
     const response = await getRequest(endpoint); // 데이터 가져오기
@@ -112,6 +114,6 @@ function clearUrlAddress() {
 
     // 주소창 조작
     // const nextURL = `http://localhost:9093/category?id=${categoryId}&page=${pageIdx}`;
-    const nextURL = `http://localhost:9093`; // 새로고침시
+    const nextURL = API_GATEWAY_HOST; // 새로고침시
     window.history.replaceState({}, '신세계백화점 팝업스토어 행사', nextURL);
 }
