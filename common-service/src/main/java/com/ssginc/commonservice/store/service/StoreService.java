@@ -4,6 +4,7 @@ import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.member.model.MemberRepository;
+import com.ssginc.commonservice.member.service.MemberService;
 import com.ssginc.commonservice.notification.service.NotificationService;
 import com.ssginc.commonservice.reserve.model.*;
 import com.ssginc.commonservice.store.dto.*;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,6 +66,7 @@ public class StoreService {
     private final S3Uploader s3Uploader;
 
     private final EntityManager entityManager;
+    private final PasswordEncoder passwordEncoder;  // BCrypt 인코더 사용
 
     @Value("${cloud.aws.cloudfront.domain}")
     private String cloudFrontDomain;
@@ -408,6 +411,16 @@ public class StoreService {
 
         // 6. Elasticsearch 인덱스에 추가
         storeIndexService.save(store);
+
+        // 7. 등록하려는 팝업스토어에 대한 운영자 계정 생성
+        mRepo.save(Member.builder()
+                .memberId("manager_" + String.format("%03d", store.getStoreId()))
+                .memberPw(passwordEncoder.encode("Abcd123!"))
+                .memberRole(Member.MemberRole.MANAGER)
+                .memberName("운영자_" + String.format("%03d", store.getStoreId()))
+                .store(store) // 팝업스토어 FK
+                .build()
+        );
 
         return ResponseEntity.ok().build();
     }

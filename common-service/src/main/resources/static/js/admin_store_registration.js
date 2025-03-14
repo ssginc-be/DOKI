@@ -44,7 +44,11 @@ flatpickrTimeConfig = {
     minuteIncrement: 30, // 시간 단위 (30분)
     time_24hr: true,
     local: 'ko', // 언어 설정
-    inline: false
+    inline: false,
+    onChange: (selectedDates, dateStr, instance) => {
+        // 선택되면 인스턴스 종료
+        instance.close();
+    }
 };
 
 
@@ -187,7 +191,7 @@ function checkAvailableTime() {
         console.log('date1, date2:', date1, date2);
 
         if (date1 >= date2) {
-            alert("종료 시간은 시작 시간보다 이전이거나 동일할 수 없습니다.")
+            alert("종료 시간은 시작 시간보다 이전이거나 동일할 수 없습니다.");
             endTimeInput.value = '';
         }
     }

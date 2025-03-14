@@ -25,11 +25,11 @@ VALUES
 INSERT INTO member(store_store_id, member_id, member_pw, member_name, member_phone, member_birth, member_gender, member_role, created_at, last_modified_at)
 VALUES
     (null, 'admin', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '관리자', '01098765432', '1990-05-21', 'MALE', 'ADMIN', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
-    (1, 'manager001', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자1',  null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
-    (2, 'manager002', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자2',  null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
-    (3, 'manager003', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자3', null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
-    (4, 'manager004', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자4', null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
-    (5, 'manager005', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자5', null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
+    (1, 'manager_001', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자_001',  null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
+    (2, 'manager_002', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자_002',  null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
+    (3, 'manager_003', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자_003', null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
+    (4, 'manager_004', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자_004', null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
+    (5, 'manager_005', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '운영자_005', null, null, null, 'MANAGER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
     (null, 'qriositylog@gmail.com', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '큐리', '01012345678', '1998-07-24', 'FEMALE', 'MEMBER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
     (null, 'qriositylog+1@gmail.com', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '큐리1', '01012345678', '1998-07-24', 'FEMALE', 'MEMBER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
     (null, 'qriositylog+2@gmail.com', '$2a$10$sz8Mcqadio/vMdOe5CD5UuUWzhHPV7RWzzovhj8vLUN5b3I0NCIfW', '큐리2', '01012345678', '1998-07-24', 'FEMALE', 'MEMBER', '2025-02-22T22:04:44', '2025-02-22T22:04:44'),
@@ -182,18 +182,18 @@ VALUES
 -- v1 테스트용
 INSERT INTO reservation(member_member_code, store_store_id, reservation_entry_reservation_entry_id, reserved_date_time, headcount, reservation_status, created_at)
 VALUES
-    (3, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
-    (4, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
-    (5, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
-    (6, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
     (7, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
     (8, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
     (9, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
-    (10, 1, 5, '2025-02-26T17:00:00', 1, 'CONFIRMED', '2025-02-22T22:04:44'),
-    (11, 1, 5, '2025-02-26T17:00:00', 1, 'CANCEL_PENDING', '2025-02-22T22:04:44'),
-    (12, 1, 5, '2025-02-26T17:00:00', 1, 'CANCELED', '2025-02-22T22:04:44'),
+    (10, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
+    (11, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
+    (12, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
+    (13, 1, 5, '2025-02-26T17:00:00', 1, 'RESERVE_PENDING', '2025-02-22T22:04:44'),
+    (14, 1, 5, '2025-02-26T17:00:00', 1, 'CONFIRMED', '2025-02-22T22:04:44'),
+    (15, 1, 5, '2025-02-26T17:00:00', 1, 'CANCEL_PENDING', '2025-02-22T22:04:44'),
+    (16, 1, 5, '2025-02-26T17:00:00', 1, 'CANCELED', '2025-02-22T22:04:44'),
 
-    (12, 1, 5, '2025-02-26T17:00:00', 1, 'CANCELED', '2025-02-23T22:04:44')
+    (16, 1, 5, '2025-02-26T17:00:00', 1, 'CANCELED', '2025-02-23T22:04:44')
 ;
 
 

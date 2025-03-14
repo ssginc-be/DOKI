@@ -23,7 +23,8 @@ body {
     display: flex;
     flex-direction: column;
     padding: calc(80px + 32px) 48px 0 calc(300px + 48px);
-    width: 100%
+    width: 100%;
+    min-height: 100vh;
 }
 
 /* navbar */
