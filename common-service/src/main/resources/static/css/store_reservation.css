@@ -52,6 +52,8 @@ body {
     display: flex;
     width: 174px;
     height: 174px;
+    min-width: 174px;
+    max-width: 174px;
     background-color: #c4c4c4;
     overflow: hidden;
 }
@@ -75,11 +77,13 @@ body {
     font-family: "Pretendard", sans-serif;
     font-weight: 600;
     font-size: 24px;
+    max-width: 570px;
+    /*word-break: keep-all;*/
 }
 .store-category-box {
     display: flex;
     flex-direction: row;
-    margin: auto auto auto 0;
+    margin: 2px auto auto 0;
 }
 .category-chip {
     font-family: "Pretendard", sans-serif;
@@ -95,6 +99,7 @@ body {
     font-family: "Pretendard", sans-serif;
     font-weight: 300;
     font-size: 15px;
+    word-break: keep-all;
 }
 .store-period {
     font-family: "Pretendard", sans-serif;
