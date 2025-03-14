@@ -1,3 +1,51 @@
+// 예약은 서비스가 분리되어 있어서 API Gateway 없이 테스트 불가 (CORS 터짐)
+const API_GATEWAY_HOST = "http://localhost:9000"
+
+console.info('예약 방식:', reserveMethod);
+
+/*
+    예약 폼 유효성 검사 함수
+*/
+function checkReserveAvailable() {
+    const name = document.getElementById('check-data-name').innerText;
+    const phone = document.getElementById('check-data-phone').innerText;
+    const date = document.getElementById('check-data-date').innerText;
+    const time = document.getElementById('check-data-time').innerText;
+    const headcount = document.getElementById('check-data-headcount').innerText.replace('명', '');
+
+    const phoneRegex = /^\d{11}$/;
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    const timeRegex = /^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$/;
+
+    const NAME_CHECK = name.length > 0;
+    const PHONE_CHECK = phoneRegex.test(phone);
+    const DATE_CHECK = dateRegex.test(date);
+    const TIME_CHECK = timeRegex.test(time);
+    const HEADCOUNT_CHECK = headcount > 0;
+
+    // logging
+    console.log('name:', name, ' / NAME_CHECK:', NAME_CHECK);
+    console.log('phone:', phone, ' / PHONE_CHECK:', PHONE_CHECK);
+    console.log('date:', date, ' / DATE_CHECK:', DATE_CHECK);
+    console.log('time:', time, ' / TIME_CHECK:', TIME_CHECK);
+    console.log('headcount:', headcount, ' / HEADCOUNT_CHECK:', HEADCOUNT_CHECK);
+
+    return NAME_CHECK && PHONE_CHECK && DATE_CHECK && TIME_CHECK && HEADCOUNT_CHECK;
+}
+
+function controlReserveButton() {
+    const button = document.getElementById('reserve-button');
+
+    if (checkReserveAvailable()) {
+        button.classList.add('active');
+        button.onclick = reserve;
+    }
+    else {
+        button.classList.remove('active');
+        button.onclick = null;
+    }
+}
+
 /*
     date picker 설정 코드: 예약 날짜를 입력받기 위해 date picker 사용
 */
@@ -21,16 +69,23 @@ function showEntryDates(event) {
     const checkDiv = document.getElementById("check-data-date");
     checkDiv.innerText = selectedDate;
 
+    // 기존에 선택한 예약 시간이 있다면 초기화
+    const prevCheckTimeDiv = document.getElementById('check-data-time');
+    prevCheckTimeDiv.innerText = '-';
+
     // 해당 일자에 대한 예약 가능 시간 버튼 표시
     showEntryTimes(storeId, selectedDate);
 
     console.log('selected date:', selectedDate); // logging
+
+    // 예약 버튼 활성화 여부 판단
+    controlReserveButton();
 }
 
 // 특정 예약 가능 일자 선택 시 하단에 예약 가능 시간 버튼 표시하는 함수
 async function showEntryTimes(storeId, selectedDate) {
     // 선택한 일자에 대한 예약 가능 시간 조회
-    const entryTimeList = await getRequest(`http://localhost:9093/v1/store/entry?id=${storeId}&date=${selectedDate}`);
+    const entryTimeList = await getRequest(`${API_GATEWAY_HOST}/v1/store/entry?id=${storeId}&date=${selectedDate}`);
     console.log(entryTimeList);
 
     // 기존의 '예약 일자를 선택해주세요.' or '예약 가능한 시간이 없습니다.' 텍스트 div 제거
@@ -63,7 +118,7 @@ async function showEntryTimes(storeId, selectedDate) {
         let buttonHTML = '';
         entryTimeList.forEach(entry => {
             let newButtonDiv = entry.entryStatus === 'OPEN' ?
-                `<div class="reserve-time-button" data-value="${entry.entryTime}" onclick="setReservationTime(this)"><span>${entry.entryTime}</span></div>`
+                `<div id="${entry.reservationEntryId}" class="reserve-time-button" data-value="${entry.entryTime}" onclick="setReservationTime(this)"><span>${entry.entryTime}</span></div>`
                 :
                 `<div class="reserve-time-button closed"><span>${entry.entryTime}</span></div>`;
             buttonHTML += newButtonDiv;
@@ -107,6 +162,9 @@ function setReservationTime(event) {
     checkDiv.innerText = selectedTime;
 
     console.log('selected time:', selectedTime); // logging
+
+    // 예약 버튼 활성화 여부 판단
+    controlReserveButton();
 }
 
 function setHeadCount(event) {
@@ -115,29 +173,62 @@ function setHeadCount(event) {
 
     // 확인창에 기입한 인원 수 띄우기
     const checkDiv = document.getElementById("check-data-headcount");
-    checkDiv.innerText = `${headCount}명`;
+    checkDiv.innerText = headCount > 0 ? `${headCount}명` : '-';
 
     // headCount 로그는 스킵
+
+    // 예약 버튼 활성화 여부 판단
+    controlReserveButton();
 }
 
-function reserve() {
-    // getElementById로 예약 데이터 가져와서 body 구성
-    //
+/***************************************************************************
+    예약 요청 함수: V1, V2 방식 구분하여 request
+        1. V1 예약 성공하면 결과를 alert하고 나의 예약으로 이동
+        2. V1 예약 실패하면 alert만 하고 페이지 이동은 없음.
+        3. V2 예약은 alert 없이 바로 나의 예약으로 이동
+*/
+async function reserve() {
+    // 유효성 검사
+    if (!checkReserveAvailable()) {
+        alert('기입 정보가 유효하지 않아 예약할 수 없습니다.');
+        return;
+    }
 
+    // request body 생성
+    const date = document.getElementById('check-data-date').innerText;
+    const time = document.getElementById('check-data-time').innerText;
+    const headcount = document.getElementById('check-data-headcount').innerText.replace('명', '');
+
+    // string -> number 변환 안해도 됨.
+    const body = {
+        entryId: document.querySelector('.reserve-time-button.selected').id,
+        memberCode: memberCode,
+        storeId: storeId,
+        reservedDateTime: date + ' ' + time,
+        headcount: headcount
+    };
+
+    // 예약 방식은 Thymeleaf에서 초기화 함.
+    // 지정된 방식으로 예약 API request
     const ok = confirm("예약하시겠습니까?");
     if (ok) {
-        // axios 호출
-        axios.post("http://localhost:9091/v2/reserve", {
-            member_id: memberId,
-            member_pw: memberPw
-        }).then(function (response) {
-            console.log(response);
-            alert("예약 신청이 완료되었습니다. 신청 결과는 '나의 예약'에서 확인 가능합니다.");
-            location.reload();
-        }).catch(function (error) {
-            console.log(error);
+        try {
+            if (reserveMethod === 'V1') { // 직접승인
+                await postRequest(`${API_GATEWAY_HOST}/v2/reserve`, body);
+                location.href = `${API_GATEWAY_HOST}/member/reserve`;
+            }
+            else if (reserveMethod === 'V2') { // 자동승인
+                await postRequest(`${API_GATEWAY_HOST}/v2/reserve`, body);
+                location.href = `${API_GATEWAY_HOST}/member/reserve`;
+            }
+            else { // reserveMethod 값이 없거나 이상함.
+                console.warn('reserveMethod 값이 유효하지 않습니다.');
+            }
+
+        } catch (error) { // API 호출 오류
             alert("서버와의 통신에 실패했습니다.");
-        });
+            console.error(error);
+        }
     }
 }
 
@@ -153,8 +244,21 @@ async function getRequest(endpoint) {
         const response = await axios.get(endpoint);
         console.log(response);
         return response.data;
-    } catch(error) {
+    } catch (error) {
         console.error(error);
-        alert("서버와의 통신에 실패했습니다.");
+        // alert("서버와의 통신에 실패했습니다.");
+        throw error;
+    }
+}
+
+async function postRequest(endpoint, requestBody) {
+    try {
+        const response = await axios.post(endpoint, requestBody);
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        // alert("서버와의 통신에 실패했습니다.");
+        throw error;
     }
 }
