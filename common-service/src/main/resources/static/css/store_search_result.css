@@ -1,0 +1,143 @@
+.content {
+    display: flex;
+}
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 1280px;
+    margin: 0 auto;
+}
+
+.search-title-area {
+    display: flex;
+    flex-direction: row;
+    margin: calc(80px + 72px) auto 115px 0;
+}
+.search-title {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 46px;
+    margin-right: 18px;
+}
+.search-subtitle {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    letter-spacing: -1.3px;
+    margin: auto auto 4px 0;
+}
+
+.store-box-top {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.store-count {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: auto auto auto 0;
+}
+.store-count hl {
+    color: #FF0019;
+}
+.reset-button {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    margin: auto 0 auto auto;
+    cursor: pointer;
+}
+
+.store-box-bottom {
+    width: 100%;
+    margin-bottom: 90px;
+}
+.store-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /*grid-template-rows: repeat(3, minmax(540px, auto));*/
+    gap: 60px 40px;
+}
+.store-meta {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: 0.28s linear;
+}
+.store-meta:hover {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+}
+.store-thumbnail {
+    width: 400px;
+    height: 400px;
+    background-color: #ACACAC;
+    margin-bottom: 24px;
+}
+.store-thumbnail img {
+    display: flex;
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+}
+.store-text-box {
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 20px 20px;
+}
+.store-name {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0 auto 12px 0;
+}
+.store-desc {
+    height: 40px;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 20px;
+    word-break: break-word;
+    margin: 0 auto 19px 0;
+}
+.store-period {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin: 0 0 0 auto;
+    color: #323232;
+}
+
+.pagination-box {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin: 0 auto 48px auto;
+}
+.pagination-left {
+    margin: auto 0 auto auto;
+    cursor: pointer;
+}
+.pagination-right {
+    margin: auto auto auto 0;
+    cursor: pointer;
+}
+.page-button-box {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+.page-button {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 8px 8px;
+    cursor: pointer;
+}
+.page-button-selected {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #A09F9F;
+    padding: 8px 8px;
+}

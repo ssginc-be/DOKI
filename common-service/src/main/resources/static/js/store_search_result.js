@@ -1,18 +1,15 @@
 // layout-member.js에 API_GATEWAY_HOST 이미 선언되어 있음.
 
-const AUTH_SERVICE = API_GATEWAY_HOST + "/v2/auth"
 
-
-function load_page(pageIdx) {
-    location.href = `${API_GATEWAY_HOST}?page=${pageIdx}`;
+function loadPage(event) {
+    // keyword is a global variable
+    const pageIdx = event.innerText;
+    location.href = `${API_GATEWAY_HOST}/search?q=${keyword}&page=${pageIdx}`;
 }
 
-function remove_filter() {
-    location.href = API_GATEWAY_HOST;
-}
 
-function goto_store_info(id) {
-    location.href = `${API_GATEWAY_HOST}/store?id=${id}`;
+function gotoStoreInfo(storeId) {
+    location.href = `${API_GATEWAY_HOST}/store?id=${storeId}`;
 }
 
 
@@ -40,7 +37,7 @@ async function updateCategoryView(categoryName, categoryId, pageIdx) {
     let newStoreMetaDivHtml = '';
     storeList.forEach(store => {
         let storeDiv = `
-<div class="store-meta" onclick="goto_store_info(${store.storeId})">
+<div class="store-meta" onclick="gotoStoreInfo(${store.storeId})">
     <div class="store-thumbnail"><img src="${store.storeMainThumbnail}"></div>
     <div class="store-text-box">
         <div class="store-name">${store.storeName}</div>

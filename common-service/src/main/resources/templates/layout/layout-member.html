@@ -31,10 +31,10 @@
 <body>
 <div class="navbar">
     <div class="navbar-wrapper">
-        <div class="navbar-logo" th:onclick="gotoRoot()">DOKI</div>
+        <div class="navbar-logo" onclick="gotoRoot()">DOKI</div>
         <div class="navbar-searchbar" th:style="${memberRole == null ? 'width: 480px;' : 'width: 400px;'}">
-            <input type="text" placeholder="검색어를 입력해주세요." />
-            <div class="searchbar-button"><img th:src="@{/icon/layout/search.svg}"></div>
+            <input id="searchbar-input" type="text" placeholder="검색어를 입력해주세요." />
+            <div class="searchbar-button" onclick="search()"><img th:src="@{/icon/layout/search.svg}"></div>
         </div>
         <div class="navbar-menu">
             <div class="menu-button" th:if="${memberRole != null}" th:onclick="|gotoMyReservationPage()|">나의 예약</div>
