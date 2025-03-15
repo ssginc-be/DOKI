@@ -70,7 +70,8 @@ public class NotificationService {
 
 
     /* [INTERNAL] 예약 결과 알림 - 운영자 to 이용자 */
-    // rid: 운영자가 승인/거절/취소한 예약의 id
+    // rid -> 이용자가 예약 요청하여 승인 대기중이거나
+    //     -> 운영자가 승인/거절/취소한 예약의 id
     // 팝업스토어 id가 아닌 예약 id를 받는 것이 맞음
     public void notifyReserveResultToMember(Long rid, String resultStatus) {
         // 추후에 에러핸들링 필요
@@ -83,7 +84,8 @@ public class NotificationService {
                 String storeName = reservation.getStore().getStoreName(); // 이용자가 예약 관련 요청을 보낸 팝업스토어명
 
                 String resultStr = ""; // 예약 결과 알림 메시지 내용
-                if (resultStatus.equals("CONFIRMED")) resultStr = "예약이 승인되었습니다.";
+                if (resultStatus.equals("RESERVE_PENDING")) resultStr = "예약이 신청되었습니다.";
+                else if (resultStatus.equals("CONFIRMED")) resultStr = "예약이 승인되었습니다.";
                 else if (resultStatus.equals("REFUSED")) resultStr = "예약이 거절되었습니다.";
                 else if (resultStatus.equals("CANCELED")) resultStr = "예약이 취소되었습니다.";
                 else resultStr = "ERROR: 관리자에게 문의 바랍니다.";

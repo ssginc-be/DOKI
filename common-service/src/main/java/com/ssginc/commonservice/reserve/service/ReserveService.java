@@ -15,6 +15,7 @@ import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +41,11 @@ public class ReserveService {
 
     private final NotificationService notificationService;
 
-    /* 내부 예약 등록 서비스 - API로 구현하지 않음 */
+    /************************************************************************************
+        [V2 자동승인] 내부 예약 등록 서비스
+            1. API로 구현하지 않음
+            2. Kafka Listener
+    */
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE) // 다른 트랜잭션에서 읽기, 쓰기, 삭제 방지
     @KafkaListener(topics = "doki-reserve", groupId = "doki")
@@ -56,33 +61,20 @@ public class ReserveService {
             throw new CustomException(ErrorCode.SOMETHING_WENT_WRONG);
         }
 
-        // check 1: 신청한 예약 엔트리의 정원 확인
-        ReservationEntry entry = reRepo.findById(dto.getEntryId()).get(); // global하게 고유한 엔트리 id로 접근해서 처리해야 가장 빠를듯
-        int capacity = entry.getCapacity();
-        int reservedCount = entry.getReservedCount();
-        int headcount = dto.getHeadcount();
-
-        if (reservedCount + headcount > capacity) {
-            log.warn("예약이 마감되었습니다.");
-            // throw new CustomException(ErrorCode.RESERVATION_ALREADY_END); // V2라서 200 뜸
-            // 이용자에게 예약 결과 전송
-            notificationService.notifyFailureToMember(dto.getMemberCode(), dto.getStoreId());
-            return;
-        };
-        
         // check 2: 해당 엔트리에 예약한 이력이 없을 시
         // 예약 이력은 DELETE 하지 않으므로 RESERVE_PENDING, CONFIRMED에 대해서만 조회
         // RESERVE_PENDING까지 포함하는 이유는, V1으로 예약했을 수도 있기 때문임.
         // +) List라서 Optional.isPresent()는 무조건 true -> !List.isEmpty()로 판단해야 함.
-        if (!rRepo.findPreviousReservation(dto.getEntryId(), dto.getMemberCode(), dto.getStoreId()).get().isEmpty()) {
-            log.warn("예약 이력이 존재합니다.");
-            // throw new CustomException(ErrorCode.RESERVATION_EXISTS); // V2라서 200 뜸
-            return;
-        }
+        checkIfReservationExists(dto);
+
+        // check 1: 신청한 예약 엔트리의 정원 확인
+        // entry -> 신청한 예약 엔트리 데이터
+        ReservationEntry entry = checkEntryCapacityAndUpdateStatus(dto);
 
         // 모든 check를 통과했을 시 - 추후에 예외 처리 필요
         Store store = sRepo.findById(dto.getStoreId()).get();
         Member member = mRepo.findByMemberCode(dto.getMemberCode()).get();
+        int headcount = dto.getHeadcount();
 
         Reservation reservation = Reservation.builder()
                 .store(store)
@@ -123,6 +115,104 @@ public class ReserveService {
         // 이용자 -> 운영자에게 예약 자동 승인 알림
         // 예약 V2는 자동 승인됨.
         notificationService.notifyReserveRequestToManager(store.getMember().getMemberCode(), dto.getReservedDateTime(), "AUTO_CONFIRMED");
+    }
+
+
+    /************************************************************************************
+        [V1 직접승인] 예약 요청 시 승인 대기 상태의 예약을 생성하는 함수
+            1. API로 연결되어 있음.
+            2. 해당 Reservation의 status는 RESERVE_PENDING
+    */
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE) // 다른 트랜잭션에서 읽기, 쓰기, 삭제 방지
+    public ResponseEntity<?> createPendingReservation(ReserveRequestDto dto) {
+        // 상세 로직 설명은 V2 자동승인(consumeAndReserve)의 주석 참고
+
+        // check 2: 해당 엔트리에 예약한 이력이 없을 시
+        checkIfReservationExists(dto);
+
+        // check 1: 신청한 예약 엔트리의 정원 확인
+        ReservationEntry entry = checkEntryCapacityAndUpdateStatus(dto);
+
+        // 모든 check를 통과했을 시 - 추후에 예외 처리 필요
+        Store store = sRepo.findById(dto.getStoreId()).get();
+        Member member = mRepo.findByMemberCode(dto.getMemberCode()).get();
+        int headcount = dto.getHeadcount();
+
+        Reservation reservation = Reservation.builder()
+                .store(store)
+                .member(member)
+                .reservationEntry(entry)
+                .reservedDateTime(dto.getReservedDateTime())
+                .headcount(headcount)
+                .reservationStatus(Reservation.ReservationStatus.RESERVE_PENDING) // v1은 신청하면 승인 대기 처리
+                .build();
+
+        // INSERT시 생성되는 auto_increment id 값을 알아야 하므로, save 대신 entity manager의 persist를 사용
+        entityManager.persist(reservation); // 이 statement 이후부터 id 값 알 수 있음
+
+        // reservation log 생성 및 등록
+        ReservationLog rlog = ReservationLog.builder()
+                .reservation(reservation)
+                .reserveMethod(ReservationLog.ReserveMethod.V1) // v1 API로 예약함
+                .reservationStatus(ReservationLog.ReservationStatus.RESERVE_PENDING) // 예약 승인 대기
+                .build();
+
+        rlRepo.save(rlog);
+
+        // 추후에 예외처리 필요
+        // headcount만큼 예약한 엔트리의 예약자 수 업데이트
+        entry.setReservedCount(entry.getReservedCount() + dto.getHeadcount());
+        reRepo.save(entry);
+
+        // 운영자 -> 이용자에게 예약 신청 완료 알림
+        // 예약 성공했으므로 reservation 엔티티가 생성되었고, 따라서 sid가 아닌 rid를 넘겨주는 것이 맞음.
+        notificationService.notifyReserveResultToMember(reservation.getReservationId(), "RESERVE_PENDING");
+
+        // 이용자 -> 운영자에게 예약 승인 요청 알림
+        notificationService.notifyReserveRequestToManager(store.getMember().getMemberCode(), dto.getReservedDateTime(), "CONFIRM_REQUEST");
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    /************************************************************************************
+        [V1 / V2 공통] check 1 함수
+            1. 예약 요청한 엔트리의 정원 확인
+            2. 예약 요청한 엔트리의 상태 업데이트 (OPEN, CLOSED)
+    */
+    public ReservationEntry checkEntryCapacityAndUpdateStatus(ReserveRequestDto dto) {
+        ReservationEntry entry = reRepo.findById(dto.getEntryId()).get(); // global하게 고유한 엔트리 id로 접근해서 처리해야 가장 빠를듯
+        int capacity = entry.getCapacity();
+        int reservedCount = entry.getReservedCount();
+        int headcount = dto.getHeadcount();
+
+        if (reservedCount + headcount > capacity) {
+            log.warn("예약이 마감되었습니다.");
+            // 이용자에게 예약 결과 전송
+            notificationService.notifyFailureToMember(dto.getMemberCode(), dto.getStoreId());
+            // 참고: V2는 CustomException 적용되지 않고 예약 요청 단에서 200 OK 반환됨.
+            throw new CustomException(ErrorCode.RESERVATION_ALREADY_END);
+        }
+        else if (reservedCount + headcount == capacity) {
+            // 정원 한도에 도달했으므로 예약 엔트리 status를 CLOSED로 업데이트해야 함.
+            entry.setEntryStatus(ReservationEntry.EntryStatus.CLOSED);
+        }
+
+        return entry;
+    }
+
+
+    /************************************************************************************
+        [V1 / V2 공통] check 2 함수
+            1. 예약 요청한 엔트리에 이전의 예약 이력 존재하는지 검사
+    */
+    public void checkIfReservationExists(ReserveRequestDto dto) {
+        if (!rRepo.findPreviousReservation(dto.getEntryId(), dto.getMemberCode(), dto.getStoreId()).get().isEmpty()) {
+            log.warn("예약 이력이 존재합니다.");
+            // 참고: V2는 CustomException 적용되지 않고 예약 요청 단에서 200 OK 반환됨.
+            throw new CustomException(ErrorCode.RESERVATION_EXISTS);
+        }
     }
 
 
