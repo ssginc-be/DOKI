@@ -66,7 +66,7 @@ async function updateView() {
                 break;
             case 'CANCEL_PENDING': // 취소 대기
                 buttonHtml = `
-                    <td><button class="reserve-confirm-button disable">예약승인</button></td>
+                    <td><button class="reserve-confirm-button" onclick="confirmReservation(${dto.reservationId})">예약확정</button></td>
                     <td><button class="reserve-refuse-button disable">예약거절</button></td>
                     <td><button class="reserve-cancel-button" onclick="cancelReservation(${dto.reservationId})">예약취소</button></td>
                 `;

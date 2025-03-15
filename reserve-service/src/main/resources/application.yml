@@ -48,7 +48,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+      defaultZone: http://43.203.83.252:8761/eureka
     registry-fetch-interval-seconds: 1800 # 로그 때문에 30분으로 설정
 
 ##### log setting

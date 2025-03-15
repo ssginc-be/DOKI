@@ -14,14 +14,16 @@ import java.util.Optional;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     /* 이전에 해당 엔트리로 예약 이력 있었는지 검사하는 용도 */
-    @Query(
-            "SELECT r " +
-            "FROM Reservation r " +
-            "WHERE r.reservationEntry.reservationEntryId = :entryId AND " +
-            "r.member.memberCode = :memberCode AND " +
-            "r.store.storeId = :storeId AND " +
-            "(r.reservationStatus = 'RESERVE_PENDING' OR r.reservationStatus = 'CONFIRMED')"
-    )
+    @Query("""
+        
+        SELECT r
+        FROM Reservation r
+        WHERE r.reservationEntry.reservationEntryId = :entryId AND
+        r.member.memberCode = :memberCode AND
+        r.store.storeId = :storeId AND
+        (r.reservationStatus = 'RESERVE_PENDING' OR r.reservationStatus = 'CONFIRMED' OR r.reservationStatus = 'CANCEL_PENDING')
+            
+    """)
     Optional<List<Reservation>> findPreviousReservation(@Param("entryId") Long entryId, @Param("memberCode") Long memberCode, @Param("storeId")Long storeId);
 
     List<Reservation> findByMember_MemberCode(Long memberCode); // Internal

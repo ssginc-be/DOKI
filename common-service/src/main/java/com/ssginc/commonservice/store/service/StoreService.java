@@ -172,16 +172,22 @@ public class StoreService {
 
         // 예약 정원 check
         Reservation reservation = optReservation.get();
-        int capacity = reservation.getReservationEntry().getCapacity();
-        int reservedCount = reservation.getReservationEntry().getReservedCount();
+        ReservationEntry entry = reservation.getReservationEntry();
+        int capacity = entry.getCapacity();
+        int reservedCount = entry.getReservedCount();
         int headcount = reservation.getHeadcount();
+
         if (reservedCount + headcount > capacity) {
             log.warn("정원을 초과하여 승인할 수 없음");
             throw new CustomException(ErrorCode.EXCEED_RESERVATION_CAPACITY);
         }
+        else if (reservedCount + headcount == capacity) {
+            // 정원 한도에 도달했으므로 예약 엔트리 status를 CLOSED로 업데이트해야 함.
+            entry.setEntryStatus(ReservationEntry.EntryStatus.CLOSED);
+        }
 
         // 정원 내면 reservedCount 업데이트
-        reservation.getReservationEntry().setReservedCount(reservedCount + headcount);
+        entry.setReservedCount(reservedCount + headcount);
 
         // 예약 내역 상태 업데이트
         reservation.setReservationStatus(Reservation.ReservationStatus.CONFIRMED); // UPDATE
@@ -239,11 +245,17 @@ public class StoreService {
             throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
         }
 
-        // 정원 내면 reservedCount 업데이트
+        // 정원 내면 entryStatus(조건부) 및 reservedCount(필수) 업데이트
         Reservation reservation = optReservation.get();
-        int reservedCount = reservation.getReservationEntry().getReservedCount();
+        ReservationEntry entry = reservation.getReservationEntry();
+        int reservedCount = entry.getReservedCount();
         int headcount = reservation.getHeadcount();
-        reservation.getReservationEntry().setReservedCount(reservedCount - headcount);
+        // 엔트리 status가 CLOSED면 OPEN으로 돌려놓기
+        if (entry.getEntryStatus() == ReservationEntry.EntryStatus.CLOSED) {
+            entry.setEntryStatus(ReservationEntry.EntryStatus.OPEN);
+        }
+        // 카운터 업데이트
+        entry.setReservedCount(reservedCount - headcount);
 
         // 예약 내역 상태 업데이트
         reservation.setReservationStatus(Reservation.ReservationStatus.CANCELED); // UPDATE

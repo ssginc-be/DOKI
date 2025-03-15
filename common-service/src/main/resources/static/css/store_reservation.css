@@ -345,16 +345,20 @@ body {
     width: 184px;
     padding: 13px 0;
     text-align: center;
-    background: linear-gradient(93.73deg, #E73A3A 0%, #FF5151 100%);
+    background-color: #C6C6C6;
     border: 1px solid #FFFFFF;
-    box-shadow: 0px 0px 8px 1px rgba(230, 0, 0, 0.08);
+    box-shadow: 0px 0px 8px 1px rgb(0 0 0 / 8%);
     border-radius: 6px;
+    transition: 0.15s linear;
 
     font-family: "Pretendard", sans-serif;
     font-weight: 700;
     font-size: 16px;
     color: #FFFFFF;
-
+}
+.reserve-button.active {
+    background-color: #FF5151;
+    box-shadow: 0px 0px 8px 1px rgba(230, 0, 0, 0.08);
     cursor: pointer;
 }
 .back-button {

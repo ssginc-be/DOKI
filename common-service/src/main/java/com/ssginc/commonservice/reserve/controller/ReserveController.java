@@ -46,6 +46,8 @@ public class ReserveController {
 
         log.info("requested role: {}", role);
         model.addAttribute("memberRole", role);
+        log.info("requested code: {}", code);
+        model.addAttribute("memberCode", code);
 
         /* store info, store reservation setting, member 데이터 가져오기 */
         Store store = storeService.getStoreInfo(storeId);

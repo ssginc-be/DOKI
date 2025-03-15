@@ -21,6 +21,7 @@ public class ReserveService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
+    /* [V2 자동승인] 예약 요청 시 Kafka 메시지 발행하는 함수 */
     public ResponseEntity<?> sendMessage(ReserveRequestDto dto) {
         String message = null;
         try {

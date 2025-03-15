@@ -20,6 +20,8 @@
         const storeId = [[${store.getStoreId()}]];
         const storeStartDate = [[${store.getStoreStartDate()}]];
         const storeEndDate = [[${store.getStoreEndDate()}]];
+        const reserveMethod = [[${store.getStoreReserveMethod()}]];
+        const memberCode = [[${memberCode}]];
     </script>
 
     <script src="/js/store_reservation.js"></script>
@@ -142,11 +144,11 @@
                     <div class="info-check-subtitle">예약자 기본 정보</div>
                     <div class="info-check-element">
                         <div class="check-label">예약자명</div>
-                        <div class="check-data" th:text="${member.getMemberName()}"></div>
+                        <div id="check-data-name" class="check-data" th:text="${member.getMemberName()}"></div>
                     </div>
                     <div class="info-check-element">
                         <div class="check-label">연락처</div>
-                        <div class="check-data" th:text="${member.getMemberPhone()}"></div>
+                        <div id="check-data-phone" class="check-data" th:text="${member.getMemberPhone()}"></div>
                     </div>
                 </div>
                 <!---------------------- 예약 일정 ---------------------->
@@ -172,7 +174,7 @@
             </div>
 
             <div class="info-check-box-bottom">
-                <div class="reserve-button" th:onclick="reserve()">예약하기</div>
+                <div id="reserve-button" class="reserve-button">예약하기</div>
                 <div class="back-button" th:onclick="goBack()">작성 취소</div>
             </div>
         </div>
