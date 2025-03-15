@@ -1,6 +1,18 @@
 // 예약은 서비스가 분리되어 있어서 API Gateway 없이 테스트 불가 (CORS 터짐)
 const API_GATEWAY_HOST = "http://localhost:9000"
 
+/*
+    검색 컨트롤 함수
+        1. search: 검색 API request - 검색 버튼과 연결되어 있음.
+        2. keypress event listener: 엔터 입력 시 검색 API request
+*/
+function search() {
+    const keyword = document.getElementById('searchbar-input').value;
+    location.href = `${API_GATEWAY_HOST}/search?q=${keyword}`;
+}
+
+
+/* 로그인 함수 */
 function signIn() {
     // 로그인 오버레이
     const overlay = document.getElementById('signin-overlay');
@@ -23,6 +35,25 @@ function signIn() {
     });
 }
 
+window.onload = () => { // document 렌더링 후 enter key 이벤트 연결
+    // 하나의 onload 콜백 함수에 다 몰아서 작성해야 함.
+    document.getElementById('searchbar-input').addEventListener('keypress', event => {
+        if (event.key === 'Enter') {
+            search();
+        }
+    });
+    document.getElementById('signin_id').addEventListener('keypress', event => {
+        if (event.key === 'Enter') {
+            signIn();
+        }
+    });
+    document.getElementById('signin_pw').addEventListener('keypress', event => {
+        if (event.key === 'Enter') {
+            signIn();
+        }
+    });
+}
+
 function signOut() {
     const ok = confirm("로그아웃 하시겠습니까?");
     if (ok) {
@@ -37,10 +68,16 @@ function signOut() {
     }
 }
 
+/* 로그아웃 함수 */
 function signUp() {
     location.href = `${API_GATEWAY_HOST}/auth/sign-up`;
 }
 
+/*
+    로그인 오버레이 컨트롤
+        1. showOverlay: 오버레이 보여주는 함수
+        2. mouseup event listener: 오버레이 숨기는 함수
+*/
 function showOverlay() {
     // 로그인 오버레이
     // const overlay = document.getElementById('signin-overlay');
@@ -70,6 +107,7 @@ window.addEventListener('mouseup',function(event){
     }
 });
 
+/* 로그인 창 입력값 유효성 검사 함수 */
 function checkLoginAvailable() {
     const idValue = document.getElementById('signin_id').value;
     const pwValue = document.getElementById('signin_pw').value;
@@ -85,11 +123,12 @@ function checkLoginAvailable() {
     }
 }
 
-
+/* 좌측 서비스 로고 버튼 클릭시 작동하는 함수 */
 function gotoRoot() {
     location.href = "/";
 }
 
+/* '나의 예약' 버튼 클릭시 작동하는 함수 */
 function gotoMyReservationPage() {
     if (memberRole !== 'MEMBER') {
         alert("미리보기 모드입니다.");

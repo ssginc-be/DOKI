@@ -36,7 +36,7 @@ spring:
         - id: common-service
           uri: http://localhost:9093
           predicates:
-            - Path=/, /auth/**, /member/**, /store/**, /reserve/**, /noti/**
+            - Path=/, /auth/**, /search, /member/**, /store/**, /reserve/**, /noti/**
         ###### [common-service] REST APIs #####
         - id: common-service
           uri: http://localhost:9093

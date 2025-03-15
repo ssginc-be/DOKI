@@ -32,10 +32,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/") // root 경로가 곧 팝업스토어 목록 조회 페이지
+@RequestMapping // root 경로가 곧 팝업스토어 목록 조회 페이지
 public class StoreController {
     /*
-        store list, store info, store reservation, store reservation log page
+        store list(main page), store search result, store info,
+        store reservation, store reservation log page
     */
     private final JwtUtil jwtUtil;
     private final StoreService storeService;
@@ -43,6 +44,7 @@ public class StoreController {
     private final StoreIndexService storeIndexService; // Elasticsearch
     private final MemberService memberService;
 
+    /* 메인 페이지 */
     @GetMapping
     public String viewStoreList(
             @RequestHeader(value="x-gateway-member-role", required=false) String memberRole,
@@ -64,7 +66,7 @@ public class StoreController {
         if (role == null || role.equals("MEMBER")) { // 비회원이거나 로그인한 이용자 (null 체크가 맨 위에 있어야 함)
             // role.equals("MEMBER")
             if (pageIdx == null) pageIdx = 0; // 루트 경로에서 호출 시 첫 페이지 조회
-            PageResponse page = storeIndexService.getStoreListInternal(pageIdx); // v2 팝업스토어 조회
+            PageResponse page = storeIndexService.getStoreListInternal("", pageIdx); // v2 팝업스토어 조회
 
             model.addAttribute("page", page);
             List<StoreMetaDocument> storeList = (List<StoreMetaDocument>) page.getData(); // downcast
@@ -112,6 +114,40 @@ public class StoreController {
         }
     }
 
+    /* 팝업스토어 검색 결과 페이지 */
+    @GetMapping("/search")
+    public String viewSearchResultPage(
+            @RequestHeader(value="x-gateway-member-role", required=false) String memberRole,
+            @CookieValue(value="accessToken", required=false) String accessToken,
+            @RequestParam("q") String keyword,
+            @RequestParam(value="page", required = false) Integer pageIdx,
+            Model model
+    ) {
+        // temp: API Gateway 임시 대체
+        String role = null;
+        if (accessToken != null) role = jwtUtil.getClaims(accessToken).get("role").toString();
+        log.info("requested role: {}", role);
+        model.addAttribute("memberRole", role); // null 또는 MEMBER
+
+        Long code = null;
+        if (accessToken != null) code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+        log.info("requested code: {}", code);
+        model.addAttribute("memberCode", code);
+
+        model.addAttribute("keyword", keyword);
+
+        if (pageIdx == null) pageIdx = 0; // 별도의 pageIdx가 주어지지 않으면 기본값으로 첫 페이지 조회
+        PageResponse page = storeIndexService.getStoreListInternal(keyword, pageIdx); // v2 팝업스토어 조회
+
+        model.addAttribute("page", page);
+        List<StoreMetaDocument> storeList = (List<StoreMetaDocument>) page.getData(); // downcast
+        model.addAttribute("storeList", storeList);
+        model.addAttribute("formatter", DateTimeFormatter.ofPattern("MM.dd(E)"));
+
+        return "store/store_search_result";
+    }
+
+    /* 팝업스토어 상세 조회 페이지 */
     @GetMapping("/store")
     public String viewStoreInfo(
             @RequestHeader(value="x-gateway-member-role", required=false) String memberRole,
@@ -121,15 +157,20 @@ public class StoreController {
     ) {
         //  temp: API Gateway 임시 대체
         String role = null;
-        if (accessToken != null) role = jwtUtil.getClaims(accessToken).get("role").toString();
+        boolean isPreview = false; // 미리보기 모드 플래그
+        if (accessToken != null) {
+            role = jwtUtil.getClaims(accessToken).get("role").toString();
+            isPreview = role.equals("MANAGER");
+        }
 
         log.info("requested role: {}", role);
         model.addAttribute("memberRole", role); // null 또는 MEMBER 또는 MANAGER(미리보기)
-
-        // 미리보기 모드 플래그
-        boolean isPreview = false;
-        if (role != null) isPreview = role.equals("MANAGER");
         model.addAttribute("isPreview", isPreview);
+
+        Long code = null;
+        if (accessToken != null) code = Long.parseLong(jwtUtil.getClaims(accessToken).getSubject());
+        log.info("requested code: {}", code);
+        model.addAttribute("memberCode", code);
 
         Store store = storeService.getStoreInfo(storeId);
         model.addAttribute("store", store);
