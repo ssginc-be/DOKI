@@ -22,7 +22,7 @@ axios.get(API_GATEWAY_HOST + "/noti/all"
 function signOut() {
     const ok = confirm("로그아웃 하시겠습니까?");
     if (ok) {
-        axios.delete(API_GATEWAY_HOST + "/v2/auth/sign-out"
+        axios.delete(API_GATEWAY_HOST + "/v1/auth/sign-out"
         ).then(function (response) {
             console.log(response);
             location.replace(API_GATEWAY_HOST); // 팝업스토어 목록 조회 페이지로 이동

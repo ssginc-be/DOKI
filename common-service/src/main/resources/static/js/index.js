@@ -1,6 +1,6 @@
 // layout-member.js에 API_GATEWAY_HOST 이미 선언되어 있음.
 
-const AUTH_SERVICE = API_GATEWAY_HOST + "/v2/auth"
+const AUTH_SERVICE = API_GATEWAY_HOST + "/v1/auth"
 
 
 function load_page(pageIdx) {

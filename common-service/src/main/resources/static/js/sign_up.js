@@ -52,7 +52,7 @@ async function signUp() {
         };
 
         try {
-            await postRequest(API_GATEWAY_HOST + "/v2/auth/sign-up", requestBody);
+            await postRequest(API_GATEWAY_HOST + "/v1/auth/sign-up", requestBody);
             alert("가입이 완료되었습니다.");
             location.href = '/'; // 메인 화면으로 이동
         } catch (error) {
@@ -103,7 +103,7 @@ async function handleEmailCodeButtonClicked() {
 // API 호출해서 인증 코드 보내보고, 실패하면 view 되돌리는 함수
 async function sendEmailCode(email) {
     try {
-        await getRequest(API_GATEWAY_HOST + "/v2/auth/email/code?to=" + email);
+        await getRequest(API_GATEWAY_HOST + "/v1/auth/email/code?to=" + email);
     } catch (error) {
         // error는 getRequest 안에서 logging 되었음.
         const errorResponse = error.response.data;
@@ -141,7 +141,7 @@ async function validateEmailCode() {
 
     // 인증 확인
     try {
-        await getRequest(API_GATEWAY_HOST + "/v2/auth/email/validation?email=" + email + "&code=" + code);
+        await getRequest(API_GATEWAY_HOST + "/v1/auth/email/validation?email=" + email + "&code=" + code);
         let button = document.getElementById('email-code-check-button');
         button.innerText = "인증 완료";
         button.classList.add("disable");
@@ -210,7 +210,7 @@ async function handlePhoneCodeButtonClicked() {
 // API 호출해서 인증 코드 보내보고, 실패하면 view 되돌리는 함수
 async function sendPhoneCode(phone) {
     try {
-        await getRequest(API_GATEWAY_HOST + "/v2/auth/phone/code?to=" + phone);
+        await getRequest(API_GATEWAY_HOST + "/v1/auth/phone/code?to=" + phone);
     } catch (error) {
         // error는 getRequest 안에서 logging 되었음.
         const errorResponse = error.response.data;
@@ -233,7 +233,7 @@ async function validatePhoneCode() {
     const code = document.getElementById('phone-code-input').value;
 
     try {
-        await getRequest(API_GATEWAY_HOST + "/v2/auth/phone/validation?phone=" + phone + "&code=" + code);
+        await getRequest(API_GATEWAY_HOST + "/v1/auth/phone/validation?phone=" + phone + "&code=" + code);
         let button = document.getElementById('phone-code-check-button');
         button.innerText = "인증 완료";
         button.classList.add("disable");
