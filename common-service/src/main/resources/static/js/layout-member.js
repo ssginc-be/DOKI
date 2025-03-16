@@ -1,6 +1,12 @@
 // 예약은 서비스가 분리되어 있어서 API Gateway 없이 테스트 불가 (CORS 터짐)
 const API_GATEWAY_HOST = "http://localhost:9000"
 
+/* 접속중인 이용자 정보 logging */
+console.warn("memberRole:", memberRole);
+console.warn("memberCode:", memberCode);
+console.warn("requestUuid:", requestUuid);
+
+
 /*
     검색 컨트롤 함수
         1. search: 검색 API request - 검색 버튼과 연결되어 있음.
@@ -21,7 +27,7 @@ function signIn() {
     const memberId = document.getElementById('signin_id').value;
     const memberPw = document.getElementById('signin_pw').value;
 
-    axios.post(`${API_GATEWAY_HOST}/v2/auth/sign-in`, {
+    axios.post(`${API_GATEWAY_HOST}/v1/auth/sign-in`, {
         member_id: memberId,
         member_pw: memberPw
     }).then(function (response) {
@@ -57,7 +63,7 @@ window.onload = () => { // document 렌더링 후 enter key 이벤트 연결
 function signOut() {
     const ok = confirm("로그아웃 하시겠습니까?");
     if (ok) {
-        axios.delete(`${API_GATEWAY_HOST}/v2/auth/sign-out`
+        axios.delete(`${API_GATEWAY_HOST}/v1/auth/sign-out`
         ).then(function (response) {
             console.log(response);
             location.href = '/';
@@ -203,9 +209,4 @@ if (memberRole === "MEMBER" && memberCode != null) { // 이용자 로그인 상�
             notiToastBoxDiv.classList.remove("active");
         }, 5000)
     }
-}
-else {
-    console.warn("memberRole 또는 memberCode를 가져올 수 없습니다.");
-    console.warn("memberRole:", memberRole);
-    console.warn("memberCode:", memberCode);
 }
