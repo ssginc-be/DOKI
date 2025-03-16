@@ -4,12 +4,11 @@ import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.member.model.MemberRepository;
-import com.ssginc.commonservice.member.service.MemberService;
 import com.ssginc.commonservice.notification.service.NotificationService;
 import com.ssginc.commonservice.reserve.model.*;
 import com.ssginc.commonservice.store.dto.*;
 import com.ssginc.commonservice.store.model.*;
-import com.ssginc.commonservice.util.PageResponse;
+import com.ssginc.commonservice.util.PageResponseDto;
 import com.ssginc.commonservice.util.S3Uploader;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
@@ -84,7 +83,7 @@ public class StoreService {
         // 테이블에서 조회
         Page<Store> storePage = sRepo.findAll(pageRequest);
         // 조회 결과를 response dto로 변환
-        PageResponse<?> page = convertStorePageToMetaDtoPage(storePage);
+        PageResponseDto<?> page = convertStorePageToMetaDtoPage(storePage);
 
         return ResponseEntity.ok().body(page);
     }
@@ -101,13 +100,13 @@ public class StoreService {
         // 테이블에서 조회
         Page<Store> storePage = sRepo.findAllByStoreCategoryList_Category_CategoryId(categoryId, pageRequest);
         // 조회 결과를 response dto로 변환
-        PageResponse<?> page = convertStorePageToMetaDtoPage(storePage);
+        PageResponseDto<?> page = convertStorePageToMetaDtoPage(storePage);
 
         return ResponseEntity.ok().body(page);
     }
 
     /* 팝업스토어 테이블 조회 결과를 목록 조회용 dto response로 변환하는 함수 */
-    private PageResponse<?> convertStorePageToMetaDtoPage(Page<Store> storePage) {
+    private PageResponseDto<?> convertStorePageToMetaDtoPage(Page<Store> storePage) {
         // store -> dto 및 category -> dto 변환
         List<StoreMetaDto> data = new ArrayList<>();
         for (Store store : storePage.getContent()) {
@@ -130,7 +129,7 @@ public class StoreService {
         }
 
         // 반환할 page 객체 작성
-        PageResponse<?> page = PageResponse.builder()
+        PageResponseDto<?> page = PageResponseDto.builder()
                 .data(data)
                 .first(storePage.isFirst())
                 .last(storePage.isLast())

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PageResponse<T> {
+public class PageResponseDto<T> {
     /*
         페이징 결과와 페이지 데이터를 response로 반환하고자 할 때 사용하는 객체
     */
