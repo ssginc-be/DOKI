@@ -14,6 +14,11 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     //***************************************************************
+    //  Spring Cloud - Feign Client
+    //***************************************************************
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //***************************************************************
     //  JWT
     //***************************************************************
     // io.jsonwebtoken:jjwt 외 나머지 디펜던시는 LocalDate 호환을 위함
