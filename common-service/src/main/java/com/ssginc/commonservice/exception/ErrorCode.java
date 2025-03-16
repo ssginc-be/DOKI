@@ -20,11 +20,13 @@ public enum ErrorCode {
     // 401 UNAUTHORIZED
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "DOKI-003", "유효하지 않은 토큰입니다."), // 잘못된 토큰 or 만료된 토큰
     INVALID_CODE(HttpStatus.UNAUTHORIZED, "DOKI-012", "유효하지 않은 인증 코드입니다."), // 잘못된 인증 코드 or 만료된 인증 코드
+    ROLE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "DOKI-016", "권한 정보가 없습니다."), // 토큰이 필요한데 주어지지 않았을 때
 
     // 403 FORBIDDEN
     RESERVATION_ALREADY_END(HttpStatus.FORBIDDEN, "DOKI-006", "예약이 마감되었습니다."),
     RESERVATION_EXISTS(HttpStatus.FORBIDDEN, "DOKI-007", "해당 일시의 예약 이력이 있습니다."),
     EXCEED_RESERVATION_CAPACITY(HttpStatus.FORBIDDEN, "DOKI-009", "예약 정원을 초과하여 승인할 수 없습니다."),
+    INVALID_ROLE(HttpStatus.FORBIDDEN, "DOKI-015", "접근 권한이 없습니다."),
 
     // 404 NOT_FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "DOKI-001", "사용자를 찾을 수 없습니다."),
