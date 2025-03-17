@@ -77,6 +77,7 @@ public class NotificationService {
     public void notifyReserveResultToMember(Long rid, String resultStatus) {
         // 추후에 에러핸들링 필요
         Reservation reservation = rRepo.findById(rid).get();
+        String prevStatus = reservation.getReservationStatus().toString();
         Long memberCode = reservation.getMember().getMemberCode(); // 해당 예약의 이용자
 
         if (NotificationController.sseEmitters.containsKey(memberCode)) {
@@ -86,7 +87,11 @@ public class NotificationService {
 
                 String resultStr = ""; // 예약 결과 알림 메시지 내용
                 if (resultStatus.equals("RESERVE_PENDING")) resultStr = "예약이 신청되었습니다.";
-                else if (resultStatus.equals("CONFIRMED")) resultStr = "예약이 승인되었습니다.";
+                else if (resultStatus.equals("CONFIRMED")) {
+                    // RESERVE_PENDING -> CONFIRMED 는 예약 신청 승인(=예약 확정)이지만,
+                    // CANCEL_PENDING -> CONFIRMED 는 예약 취소 요청에 대한 거절임.
+                    resultStr = prevStatus.equals("RESERVE_PENDING") ? "예약이 승인되었습니다." : "예약 취소가 거절되었습니다.";
+                }
                 else if (resultStatus.equals("REFUSED")) resultStr = "예약이 거절되었습니다.";
                 else if (resultStatus.equals("CANCELED")) resultStr = "예약이 취소되었습니다.";
                 else resultStr = "ERROR: 관리자에게 문의 바랍니다.";
