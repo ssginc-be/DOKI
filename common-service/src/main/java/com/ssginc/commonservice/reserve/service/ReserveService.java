@@ -69,7 +69,7 @@ public class ReserveService {
 
         // check 1: 신청한 예약 엔트리의 정원 확인
         // entry -> 신청한 예약 엔트리 데이터
-        ReservationEntry entry = checkEntryCapacityAndUpdateStatus(dto);
+        ReservationEntry entry = checkEntryCapacityAndUpdateStatus(dto, true);
 
         // 모든 check를 통과했을 시 - 추후에 예외 처리 필요
         Store store = sRepo.findById(dto.getStoreId()).get();
@@ -132,7 +132,7 @@ public class ReserveService {
         checkIfReservationExists(dto);
 
         // check 1: 신청한 예약 엔트리의 정원 확인
-        ReservationEntry entry = checkEntryCapacityAndUpdateStatus(dto);
+        ReservationEntry entry = checkEntryCapacityAndUpdateStatus(dto, false);
 
         // 모든 check를 통과했을 시 - 추후에 예외 처리 필요
         Store store = sRepo.findById(dto.getStoreId()).get();
@@ -161,8 +161,7 @@ public class ReserveService {
         rlRepo.save(rlog);
 
         // 추후에 예외처리 필요
-        // headcount만큼 예약한 엔트리의 예약자 수 업데이트
-        entry.setReservedCount(entry.getReservedCount() + dto.getHeadcount());
+        // v1 예약은 바로 확정되지 않기에, reserved_count가 영향받지 않음.
         reRepo.save(entry);
 
         // 운영자 -> 이용자에게 예약 신청 완료 알림
@@ -181,7 +180,7 @@ public class ReserveService {
             1. 예약 요청한 엔트리의 정원 확인
             2. 예약 요청한 엔트리의 상태 업데이트 (OPEN, CLOSED)
     */
-    public ReservationEntry checkEntryCapacityAndUpdateStatus(ReserveRequestDto dto) {
+    public ReservationEntry checkEntryCapacityAndUpdateStatus(ReserveRequestDto dto, boolean updateStatus) {
         ReservationEntry entry = reRepo.findById(dto.getEntryId()).get(); // global하게 고유한 엔트리 id로 접근해서 처리해야 가장 빠를듯
         int capacity = entry.getCapacity();
         int reservedCount = entry.getReservedCount();
@@ -194,7 +193,7 @@ public class ReserveService {
             // 참고: V2는 CustomException 적용되지 않고 예약 요청 단에서 200 OK 반환됨.
             throw new CustomException(ErrorCode.RESERVATION_ALREADY_END);
         }
-        else if (reservedCount + headcount == capacity) {
+        else if (updateStatus && (reservedCount + headcount == capacity)) {
             // 정원 한도에 도달했으므로 예약 엔트리 status를 CLOSED로 업데이트해야 함.
             entry.setEntryStatus(ReservationEntry.EntryStatus.CLOSED);
         }
