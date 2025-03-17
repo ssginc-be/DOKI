@@ -214,7 +214,7 @@ async function reserve() {
     if (ok) {
         try {
             if (reserveMethod === 'V1') { // 직접승인
-                await postRequest(`${API_GATEWAY_HOST}/v2/reserve`, body);
+                await postRequest(`${API_GATEWAY_HOST}/v1/reserve`, body);
                 location.href = `${API_GATEWAY_HOST}/member/reserve`;
             }
             else if (reserveMethod === 'V2') { // 자동승인
