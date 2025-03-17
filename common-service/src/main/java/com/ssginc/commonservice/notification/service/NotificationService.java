@@ -73,6 +73,7 @@ public class NotificationService {
     // rid -> 이용자가 예약 요청하여 승인 대기중이거나
     //     -> 운영자가 승인/거절/취소한 예약의 id
     // 팝업스토어 id가 아닌 예약 id를 받는 것이 맞음
+    @Transactional
     public void notifyReserveResultToMember(Long rid, String resultStatus) {
         // 추후에 에러핸들링 필요
         Reservation reservation = rRepo.findById(rid).get();
@@ -122,6 +123,7 @@ public class NotificationService {
 
     /* [INTERNAL] 예약 실패 알림 - '나의 예약'에 조회되지 않고, 알림만 감 */
     // 왜냐하면, 실패한 예약 트랜잭션은 reservation 테이블에 등록되지 않기 때문
+    @Transactional
     public void notifyFailureToMember(Long memberCode, Long sid) { // sid: 알림을 받을 이용자가 예약에 실패한 팝업스토어 id
         // 추후에 에러핸들링 필요
         Store store = sRepo.findById(sid).get();
@@ -162,6 +164,7 @@ public class NotificationService {
 
 
     /* [INTERNAL] 예약 요청 알림 - 이용자 to 운영자 */
+    @Transactional
     public void notifyReserveRequestToManager(Long memberCode, LocalDateTime dateTime, String requestType) {
         // view 구현 방향 상 당장은 reservation id가 여기에 필요하지 않을 듯
         // 허전하다 싶으면 rid 추가될 수도 있음

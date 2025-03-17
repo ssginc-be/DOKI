@@ -7,6 +7,35 @@ console.warn("memberCode:", memberCode);
 console.warn("requestUuid:", requestUuid);
 
 
+/* 페이지 로딩시마다 알림 내역 가져오는 함수 */
+if (memberCode != null) { // 로그인 상태일때만 가져오기
+    axios.get(API_GATEWAY_HOST + "/noti/all"
+    ).then(function (response) {
+        console.log(response);
+        let notiList = response.data;
+        let notiCount = response.data.length;
+        if (notiCount > 0) {
+            let firstUnreadNoti = notiList[0]; // 가장 오래된 알림을 하나 읽어옴.
+            // 토스트 뷰 처리
+            const message = firstUnreadNoti.data;
+            const dateTime = moment(firstUnreadNoti.dateTime).format('YYYY-MM-DD HH:mm:ss'); // moment는 cdn으로 로드됨
+
+            showAlarmToast(message, dateTime);
+            deleteReadAlarm(firstUnreadNoti.notificationId);
+        }
+    }).catch(function (error) {
+        console.log(error);
+        alert("알림을 가져오는데 실패했습니다.");
+    });
+}
+
+// id가 nid인 알림 삭제
+async function deleteReadAlarm(nid) {
+    await deleteRequest(`${API_GATEWAY_HOST}/noti?id=${nid}`);
+    console.log(`${nid}번 알림 삭제 완료`);
+}
+
+
 /*
     검색 컨트롤 함수
         1. search: 검색 API request - 검색 버튼과 연결되어 있음.
@@ -208,5 +237,19 @@ if (memberRole === "MEMBER" && memberCode != null) { // 이용자 로그인 상�
             console.log('hide toast'); // logging
             notiToastBoxDiv.classList.remove("active");
         }, 5000)
+    }
+}
+
+
+/* axios request */
+async function deleteRequest(endpoint) {
+    try {
+        const response = await axios.delete(endpoint);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error(error);
+        // alert("서버와의 통신에 실패했습니다.");
+        throw error;
     }
 }
