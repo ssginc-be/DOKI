@@ -29,7 +29,7 @@ spring:
         - id: reserve-service
           uri: http://localhost:9091 # 2) localhost:9000 말고 여기로 보내줌
           predicates: # 1) 여기로 접속 시도하면
-            - Path=/v1/reserve/**, /v2/reserve/**
+            - Path=/v2/reserve/**
 
         ############## COMMON-SERVICE ###############
         ##### [common-service] Public Endpoints #####
@@ -43,7 +43,7 @@ spring:
         - id: common-service
           uri: http://localhost:9093
           predicates:
-            - Path=/member/**, /reserve/**, /v1/member/**
+            - Path=/member/**, /reserve/**, /v1/member/**, /v1/reserve/**
           filters:
             - MemberAuthFilter
         ###### [common-service] Manager Endpoints #####
