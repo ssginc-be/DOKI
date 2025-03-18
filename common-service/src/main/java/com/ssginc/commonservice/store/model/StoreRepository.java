@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Queue-ri
@@ -12,4 +12,6 @@ import java.util.List;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
     Page<Store> findAllByStoreCategoryList_Category_CategoryId(Long categoryId, PageRequest pageRequest);
+
+    Optional<Store> findByStoreName(String storeName);
 }
