@@ -24,9 +24,11 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         (r.reservationStatus = 'RESERVE_PENDING' OR r.reservationStatus = 'CONFIRMED' OR r.reservationStatus = 'CANCEL_PENDING')
             
     """)
-    Optional<List<Reservation>> findPreviousReservation(@Param("entryId") Long entryId, @Param("memberCode") Long memberCode, @Param("storeId")Long storeId);
+    List<Reservation> findPreviousReservation(@Param("entryId") Long entryId, @Param("memberCode") Long memberCode, @Param("storeId") Long storeId);
 
     List<Reservation> findByMember_MemberCode(Long memberCode); // Internal
+
+    List<Reservation> findByReservationEntry_ReservationEntryId(Long reservationEntryId); // Internal test
 
     /* 나의 예약 최근 예약 순 목록 조회 */
     List<Reservation> findByMember_MemberCodeOrderByCreatedAtDesc(Long memberCode);
