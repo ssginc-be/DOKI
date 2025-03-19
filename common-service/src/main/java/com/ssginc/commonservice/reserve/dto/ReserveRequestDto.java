@@ -1,5 +1,6 @@
 package com.ssginc.commonservice.reserve.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,9 +17,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ReserveRequestDto {
+
     private Long entryId;
+
     private Long memberCode;
+
     private Long storeId;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime reservedDateTime;
+
     private Integer headcount;
 }

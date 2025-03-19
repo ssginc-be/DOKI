@@ -1,5 +1,6 @@
 package com.ssginc.commonservice.auth.service;
 
+import com.ssginc.commonservice.auth.dto.RequestMemberInfoDto;
 import com.ssginc.commonservice.auth.dto.SignInRequestDto;
 import com.ssginc.commonservice.auth.dto.SignUpRequestDto;
 import com.ssginc.commonservice.auth.model.*;
@@ -201,7 +202,15 @@ public class AuthService {
         try {
             String memberCodeStr = claims.getSubject();
             Member member = mRepo.findByMemberCode(Long.parseLong(memberCodeStr)).get();
-            return new ResponseEntity<>(member, HttpStatus.OK); // 내부 통신이라 굳이 dto 필요없을 듯
+
+            RequestMemberInfoDto dto = RequestMemberInfoDto.builder()
+                    .memberCode(member.getMemberCode())
+                    .memberId(member.getMemberId())
+                    .memberName(member.getMemberName())
+                    .memberRole(member.getMemberRole().toString())
+                    .build();
+
+            return new ResponseEntity<>(dto, HttpStatus.OK); // 내부 통신이라 굳이 dto 필요없을 듯 했으나 결국은 필요함.
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -314,6 +323,12 @@ public class AuthService {
 
     /* [이용자] 회원가입 이메일 인증코드 발송 */
     public ResponseEntity<?> sendEmailValidationCode(String email) {
+        // 이미 가입되어 있는 회원이면 409
+        Optional<Member> optMember = mRepo.findByMemberID(email); // 회원 id가 email임.
+        if (optMember.isPresent()) {
+            throw new CustomException(ErrorCode.HAS_EMAIL);
+        }
+
         // 인증번호 생성
         String generatedKey = emailUtil.createEmailAuthKey();
 

@@ -7,6 +7,14 @@
     <meta charset="UTF-8">
     <title>팝업스토어 등록</title>
     <link href="/css/admin_store_registration.css" rel="stylesheet"/>
+
+    <!-- flatpickr: date picker script -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script> <!-- 언어 설정 -->
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_red.css"> <!-- 테마 설정 -->
+    <!-- end of date picker -->
+
     <script src="/js/admin_store_registration.js"></script>
 </head>
 <body>
@@ -29,33 +37,49 @@
                     <div class="store-info-content-left">
                         <div class="store-info-element">
                             <div class="store-info-label">팝업스토어 이름</div>
-                            <input type="text">
+                            <input id="store-name-input" type="text" oninput="checkStoreName(this)">
                         </div>
                         <div class="store-info-element">
-                            <div class="store-info-label">카테고리</div>
+                            <div class="store-info-label align-top">카테고리</div>
                             <div class="category-chip-button-box">
-                                <button class="category-chip-button" onclick="setCategory(this)">아티스트</button>
-                                <button class="category-chip-button" onclick="setCategory(this)">패션</button>
-                                <button class="category-chip-button" onclick="setCategory(this)">뷰티</button>
-                                <button class="category-chip-button" onclick="setCategory(this)">키덜트</button>
-                                <button class="category-chip-button" onclick="setCategory(this)">푸드</button>
-                                <button class="category-chip-button" onclick="setCategory(this)">비건</button>
-                                <button class="category-chip-button" onclick="setCategory(this)">브랜드</button>
-                                <button class="category-chip-button" onclick="setCategory(this)">기타</button>
+                                <button class="category-chip-button" value="1" onclick="setCategory(this)">아티스트</button>
+                                <button class="category-chip-button" value="2" onclick="setCategory(this)">패션</button>
+                                <button class="category-chip-button" value="3" onclick="setCategory(this)">뷰티</button>
+                                <button class="category-chip-button" value="4" onclick="setCategory(this)">캐릭터</button>
+                                <button class="category-chip-button" value="5" onclick="setCategory(this)">키덜트</button>
+                                <button class="category-chip-button" value="6" onclick="setCategory(this)">푸드</button>
+                                <button class="category-chip-button" value="7" onclick="setCategory(this)">비건</button>
+                                <button class="category-chip-button" value="8" onclick="setCategory(this)">브랜드</button>
+                                <button class="category-chip-button" value="9" onclick="setCategory(this)">기타</button>
                             </div>
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">지점</div>
-                            <input type="text">
+                            <select name="branch-select" id="branch" oninput="checkBranch(this)">
+                                <option value="선택" selected>선택</option>
+                                <option value="신세계백화점 강남점">강남점</option>
+                                <option value="광주신세계">광주신세계</option>
+                                <option value="신세계백화점 김해점">김해점</option>
+                                <option value="대구신세계">대구신세계</option>
+                                <option value="대전신세계 Art & Science">대전신세계 Art & Science</option>
+                                <option value="신세계백화점 마산점">마산점</option>
+                                <option value="신세계백화점 본점">본점</option>
+                                <option value="센텀시티">센텀시티</option>
+                                <option value="신세계백화점 스타필드 하남점">스타필드 하남점</option>
+                                <option value="신세계 사우스시티">신세계 사우스시티</option>
+                                <option value="신세계백화점 의정부점">의정부점</option>
+                                <option value="신세계백화점 천안아산점">천안아산점</option>
+                                <option value="신세계백화점 타임스퀘어점">타임스퀘어점</option>
+                            </select>
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">장소</div>
-                            <input type="text">
+                            <input id="store-at-input" type="text" oninput="checkStoreAt(this)">
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">예약 방식</div>
-                            <button class="reserve-method-button" onclick="setMethod(this)">직접승인</button>
-                            <button class="reserve-method-button" onclick="setMethod(this)">자동승인</button>
+                            <button class="reserve-method-button" value="V1" onclick="setMethod(this)">직접승인</button>
+                            <button class="reserve-method-button" value="V2" onclick="setMethod(this)">자동승인</button>
                         </div>
 
                     </div>
@@ -63,19 +87,19 @@
                     <div class="store-info-content-right">
                         <div class="store-info-element">
                             <div class="store-info-label">팝업스토어 한줄 설명</div>
-                            <input type="text">
+                            <input id="short-desc-input" type="text" oninput="checkStoreShortDesc(this)">
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label align-top">팝업스토어 상세 설명</div>
-                            <textarea></textarea>
+                            <textarea id="long-desc-input" oninput="checkStoreLongDesc(this)"></textarea>
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">시작일</div>
-                            <input type="date">
+                            <input id="start-date-input" type="date" oninput="checkStartDate(this)">
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">종료일</div>
-                            <input type="date">
+                            <input id="end-date-input" type="date" oninput="checkEndDate(this)">
                         </div>
 
                     </div>
@@ -90,23 +114,23 @@
                     <div class="store-info-content-left">
                         <div class="store-info-element">
                             <div class="store-info-label">운영 시작 시간</div>
-                            <input type="time">
+                            <input id="start-time-input" type="time" oninput="checkStartTime(this)">
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">운영 종료 시간</div>
-                            <input type="time">
+                            <input id="end-time-input" type="time" oninput="checkEndTime(this)">
                         </div>
                         <div class="store-info-element">
                             <div class="store-info-label">예약 시간 단위</div>
-                            <button class="reserve-gap-button" onclick="setGap(this)">30분</button>
-                            <button class="reserve-gap-button" onclick="setGap(this)">1시간</button>
+                            <button class="reserve-gap-button" value="30" onclick="setGap(this)">30분</button>
+                            <button class="reserve-gap-button" value="60" onclick="setGap(this)">1시간</button>
                         </div>
                     </div>
                     <!------- 예약 시간 설정 오른쪽 ------->
                     <div class="store-info-content-right">
                         <div class="store-info-element">
                             <div class="store-info-label">시간별 최대 정원</div>
-                            <input type="number">
+                            <input id="capacity-input" type="number" oninput="checkCapacity(this)">
                         </div>
                     </div>
                 </div>
@@ -115,13 +139,13 @@
             <!---------------------- 팝업스토어 이미지 ---------------------->
             <div class="store-image-group">
                 <div class="store-image-top">
-                    <div class="content-subtitle topleft">예약 시간 설정</div>
+                    <div class="content-subtitle topleft">등록 이미지</div>
                     <label for="upload-input">
-                        <div class="upload-button">이미지 업로드</div>
+                        <div id="upload-button" class="upload-button">이미지 업로드</div>
                     </label>
-                    <input type="file" name="upload-input" id="upload-input">
+                    <input id="upload-input" class="upload-input" type="file" name="upload-input" accept="image/png, image/jpeg" multiple>
                 </div>
-                <div class="store-image-bottom">
+                <div class="store-image-bottom" id="store-image-bottom">
                     <div class="store-image-box"></div>
                     <div class="store-image-box"></div>
                     <div class="store-image-box"></div>
@@ -132,12 +156,38 @@
 
             <!-------------------- 등록하기 / 취소 버튼 --------------------->
             <div class="button-box">
-                <div class="register-button">등록하기</div>
-                <div class="reset-button">작성 취소</div>
+                <div id="register-button" class="register-button">등록하기</div>
+                <div class="reset-button" onclick="resetForm()">폼 초기화</div>
             </div>
         </div>
     </div>
 </div>
+
+<script layout:fragment="script">
+    const realBtn = document.getElementById('upload-input');
+    realBtn.addEventListener('change', showPreview);
+
+    /* 등록 가능 여부 유효성 검사 */
+    window.addEventListener('click', checkConfirmAvailable);
+    window.addEventListener('input', checkConfirmAvailable);
+    window.addEventListener('change', checkConfirmAvailable);
+
+    /* 시작일시 값 유효성 검사 */
+    //window.addEventListener('click', checkAvailableDate);
+    window.addEventListener('change', checkAvailableDate);
+    //window.addEventListener('click', checkAvailableTime);
+    window.addEventListener('change', checkAvailableTime);
+
+    /* 예약 시간별 최대 정원 유효성 검사 */
+    window.addEventListener('click', checkAvailableCapacity);
+    window.addEventListener('input', checkAvailableCapacity);
+
+    <!-- DOM 노드가 존재해야 instantiating이 가능하므로, 하단의 스크립트는 header에 들어가면 안됨 -->
+    flatpickr("#start-date-input", flatpickrDateConfig);
+    flatpickr("#end-date-input", flatpickrDateConfig);
+    flatpickr("#start-time-input", flatpickrTimeConfig);
+    flatpickr("#end-time-input", flatpickrTimeConfig);
+</script>
 
 </body>
 </html>

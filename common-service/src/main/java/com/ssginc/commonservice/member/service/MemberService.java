@@ -2,6 +2,7 @@ package com.ssginc.commonservice.member.service;
 
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
+import com.ssginc.commonservice.member.dto.MyReservationResponseDto;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.member.model.MemberRepository;
 import com.ssginc.commonservice.notification.service.NotificationService;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,7 +28,7 @@ import java.util.Optional;
 @Service
 public class MemberService {
     /*
-        회원 정보 조회, 예약 취소 요청
+        회원 정보 조회, 나의 예약 조회, 예약 취소 요청
     */
     private final MemberRepository mRepo;
     private final ReservationRepository rRepo;
@@ -43,6 +46,27 @@ public class MemberService {
         }
 
         return optMember.get();
+    }
+
+    /* 나의 예약 조회 */
+    public ResponseEntity<?> getMyReservationList(Long code) {
+        List<Reservation> reservationList = rRepo.findByMember_MemberCodeOrderByCreatedAtDesc(code);
+
+        // entity -> dto 변환
+        List<MyReservationResponseDto> dtoList = new ArrayList<>();
+        for (Reservation reservation : reservationList) {
+            MyReservationResponseDto dto = MyReservationResponseDto.builder()
+                    .reservationId(reservation.getReservationId())
+                    .storeName(reservation.getStore().getStoreName())
+                    .reservedDate(reservation.getReservedDateTime().toLocalDate())
+                    .reservedTime(reservation.getReservedDateTime().toLocalTime())
+                    .reservationStatus(reservation.getReservationStatus().toString())
+                    .build();
+            
+            dtoList.add(dto);
+        }
+
+        return ResponseEntity.ok(dtoList);
     }
 
     /* 팝업스토어 예약 취소 요청 */

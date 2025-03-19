@@ -22,17 +22,20 @@ body {
 .content {
     display: flex;
     flex-direction: column;
-    padding: 32px 48px 0 48px;
-    width: 100%
+    padding: calc(80px + 32px) 48px 0 calc(300px + 48px);
+    width: 100%;
+    min-height: 100vh;
 }
 
 /* navbar */
 .navbar {
+    position: fixed;
     display: flex;
     width: 100%;
     height: 80px;
     background-color: #FFFFFF;
     border-bottom: 1px solid #E1E0E1;
+    z-index: 999;
 }
 .navbar-wrapper {
     display: flex;
@@ -93,6 +96,7 @@ body {
     border: 1px solid #E1E0E1;
     border-top: none;
     visibility: hidden;
+    z-index: 99;
 }
 .navbar-alert-element {
     display: flex;
@@ -144,22 +148,23 @@ body {
     background-color: #232323;
     margin-right: 0;
 }
-.branch-text {
+.store-name-text {
     font-family: "Pretendard", sans-serif;
     color: #FFFFFF;
     font-weight: 600;
     font-size: 18px;
     margin: auto auto
 }
-.branch-icon {
+.store-name-icon {
     margin: auto 0 auto 32px;
 }
-.branch-icon img {
+.store-name-icon img {
     margin: auto auto;
 }
 
 /* sidebar */
 .sidebar {
+    position: fixed;
     display: flex;
     flex-direction: column;
     width: 300px;
@@ -167,6 +172,8 @@ body {
     height: calc(100vh - 81px);
     padding: 32px 0;
     border-right: 1px solid #E1E0E1;
+    background-color: #FFFFFF;
+    top: 80px;
 }
 .menu-group {
     display: flex;
@@ -187,6 +194,7 @@ body {
     /*height: 35px;*/
     padding: 14px 0 14px 32px;
     /*margin: 4px auto 4px 0;*/
+    transition: 0.15s ease-out;
     cursor: pointer;
 }
 .menu-button:hover {
@@ -205,6 +213,9 @@ body {
 }
 /* end of selected menu-button css */
 
+.menu-button svg {
+    transition: 0.1s ease-out;
+}
 .menu-button:hover svg {
     color: #F8434E;
 }
@@ -224,4 +235,5 @@ body {
     font-weight: 600;
     font-size: 16px;
     margin: auto auto auto 0;
+    transition: 0.1s ease-out;
 }

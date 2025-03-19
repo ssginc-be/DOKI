@@ -4,7 +4,7 @@ import com.ssginc.commonservice.store.document.StoreMetaDocument;
 import com.ssginc.commonservice.store.document.StoreMetaDocumentRepository;
 import com.ssginc.commonservice.store.model.Store;
 import com.ssginc.commonservice.store.model.StoreRepository;
-import com.ssginc.commonservice.util.PageResponse;
+import com.ssginc.commonservice.util.PageResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -83,13 +83,14 @@ public class StoreIndexService {
         final int FETCH_SIZE = 9;
 
         // PageRequest 객체 생성
-        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStart").descending());
+        if (pageIdx > 0) pageIdx -= 1; // 사용자의 1페이지 == 서버의 0페이지
+        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStartDate").descending());
 
         // 인덱스에서 조회
         Page<StoreMetaDocument> docPage = smdRepo.findByStoreNameContainsIgnoreCase(keyword, pageRequest);
 
         // 반환할 page 객체 작성
-        PageResponse<?> page = PageResponse.builder()
+        PageResponseDto<?> page = PageResponseDto.builder()
                 .data(docPage.getContent())
                 .first(docPage.isFirst())
                 .last(docPage.isLast())
@@ -105,18 +106,19 @@ public class StoreIndexService {
     }
 
     /* 팝업스토어 메타 데이터 인덱스 조회 - 내부에서만 사용 */
-    public PageResponse getStoreListInternal(Integer pageIdx) {
+    public PageResponseDto getStoreListInternal(String keyword, Integer pageIdx) {
         // 페이징 크기
         final int FETCH_SIZE = 9;
 
         // PageRequest 객체 생성
-        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStart").descending());
+        if (pageIdx > 0) pageIdx -= 1; // 사용자의 1페이지 == 서버의 0페이지
+        PageRequest pageRequest = PageRequest.of(pageIdx, FETCH_SIZE, Sort.by("storeStartDate").descending());
 
         // 인덱스에서 조회 - 검색키워드 없음
-        Page<StoreMetaDocument> docPage = smdRepo.findByStoreNameContainsIgnoreCase("", pageRequest);
+        Page<StoreMetaDocument> docPage = smdRepo.findByStoreNameContainsIgnoreCase(keyword, pageRequest);
 
         // 반환할 page 객체 작성
-        PageResponse<?> page = PageResponse.builder()
+        PageResponseDto<?> page = PageResponseDto.builder()
                 .data(docPage.getContent())
                 .first(docPage.isFirst())
                 .last(docPage.isLast())

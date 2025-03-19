@@ -147,3 +147,11 @@ td:not(:last-child) {
 
     cursor: pointer;
 }
+.reserve-cancel-button.disable {
+    background-color: #F3F3F5;
+    color: #AEAEBA;
+    font-weight: 600;
+    border: 1px solid #F3F3F5;
+
+    cursor: not-allowed;
+}

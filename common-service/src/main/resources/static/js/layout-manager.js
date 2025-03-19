@@ -1,5 +1,8 @@
+// 예약은 서비스가 분리되어 있어서 API Gateway 없이 테스트 불가 (CORS 터짐)
+const API_GATEWAY_HOST = "http://localhost:9000"
+
 /* 페이지 로딩시마다 알림 내역 가져오는 함수 */
-axios.get("http://localhost:9093/noti/all"
+axios.get(API_GATEWAY_HOST + "/noti/all"
 ).then(function (response) {
     console.log(response);
     notiList = response.data
@@ -19,10 +22,10 @@ axios.get("http://localhost:9093/noti/all"
 function signOut() {
     const ok = confirm("로그아웃 하시겠습니까?");
     if (ok) {
-        axios.delete("http://localhost:9093/v2/auth/sign-out"
+        axios.delete(API_GATEWAY_HOST + "/v1/auth/sign-out"
         ).then(function (response) {
             console.log(response);
-            location.replace("http://localhost:9093"); // 팝업스토어 목록 조회 페이지로 이동
+            location.replace(API_GATEWAY_HOST); // 팝업스토어 목록 조회 페이지로 이동
         }).catch(function (error) {
             console.log(error);
             alert("서버와의 통신에 실패했습니다.");
@@ -37,14 +40,14 @@ function gotoRoot() {
 /* sidebar 메뉴 클릭시 페이지 이동하는 용도 */
 function gotoPage(idx) {
     switch (idx) {
-        case 0: location.href = "http://localhost:9093"; break;
-        case 1: location.href = "http://localhost:9093"; break;
-        case 2: location.href = "http://localhost:9093"; break;
-        case 3: location.href = "http://localhost:9093/store/reserve"; break;
-        case 4: location.href = "http://localhost:9093"; break;
-        case 5: location.href = "http://localhost:9093"; break;
-        case 6: location.href = "http://localhost:9093"; break;
-        case 7: location.href = "http://localhost:9093"; break;
+        case 0: location.href = API_GATEWAY_HOST; break;
+        case 1: location.href = API_GATEWAY_HOST; break;
+        case 2: location.href = API_GATEWAY_HOST; break;
+        case 3: location.href = API_GATEWAY_HOST + "/store/reserve"; break;
+        case 4: location.href = API_GATEWAY_HOST; break;
+        case 5: location.href = API_GATEWAY_HOST + "/store/reserve/log"; break;
+        case 6: location.href = API_GATEWAY_HOST; break;
+        case 7: location.href = API_GATEWAY_HOST; break;
         default: alert("잘못된 접근입니다."); break;
     }
 }
@@ -59,7 +62,7 @@ function toggleAlertListBox() {
         div.style.visibility = 'visible';
 
         // 모든 알림 읽음 처리 (삭제)
-        axios.delete("http://localhost:9093/noti/all"
+        axios.delete(API_GATEWAY_HOST + "/noti/all"
         ).then(function (response) {
             console.log(response);
         }).catch(function (error) {
@@ -74,7 +77,7 @@ function toggleAlertListBox() {
     SSE 알림
 */
 let notiCount = 0; // 최초 페이지 로딩 시 초기 알림 개수
-const eventSource = new EventSource('http://localhost:9093/noti/subscribe');
+const eventSource = new EventSource(API_GATEWAY_HOST + "/noti/subscribe");
 
 // SSE 최초 연결시
 eventSource.onopen = function() {

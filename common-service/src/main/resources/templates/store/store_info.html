@@ -1,18 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout-member}">
 <head>
     <meta charset="UTF-8">
-    <title>팝업스토어 상세</title>
+    <title th:text="${store.getStoreName()}"></title>
     <link href="/css/store_info.css" rel="stylesheet"/>
+
+    <!-- 페이지를 접속한 사용자는 MEMBER 또는 MANAGER -->
+    <!-- memberRole은 layout-member.html 에서 초기화함 -->
     <script src="/js/store_info.js"></script>
 </head>
 <body>
-<div th:text="|팝업스토어 ID: ${store.getStoreId()}|"></div>
-<div th:text="|팝업스토어명: ${store.getStoreName()}|"></div>
-<div th:text="|팝업스토어 설명: ${store.getStoreShortDesc()}|"></div>
-<div th:text="|오픈일: ${store.getStoreStartDate()}|"></div>
-<div th:text="|종료일: ${store.getStoreEndDate()}|"></div>
-<button th:if="${memberRole != null}" th:onclick="|goto_reservation_page(${store.getStoreId()})|">예약하기</button>
-<button th:if="${memberRole == null}" disabled>로그인 후 예약하기</button>
+<!-- navbar -->
+<div class="navbar" layout:fragment="navbar">
+
+</div>
+
+<div class="content" layout:fragment="content">
+    <div class="wrapper">
+        <div class="carousel-area">
+            <div class="carousel-container">
+                <div id="carousel-left-button" class="carousel-button"><img th:src="@{/icon/store/carousel_left.svg}"></div>
+                <div class="carousel-image-container">
+                    <th:block th:each="image : ${contentDetailList}">
+                        <div class="carousel-image-box" onclick="handleImageBoxClicked(this)"><img th:src="${image.getStoreImageLink()}" alt="상세 이미지"></div>
+                    </th:block>
+                </div>
+                <div id="carousel-right-button" class="carousel-button"><img th:src="@{/icon/store/carousel_right.svg}"></div>
+            </div>
+
+            <!----------------- 상단 영역 ------------------>
+            <div class="store-detail-top">
+                <div class="store-name" th:text="${store.getStoreName()}"></div>
+                <div class="store-short-desc" th:text="${store.getStoreShortDesc()}"></div>
+                <div class="store-top-last-area">
+                    <div class="store-date" th:text="${store.getStoreStartDate().format(formatter) + ' ~ ' + store.getStoreEndDate().format(formatter)}"></div>
+                    <div class="button-area">
+                        <button class="back-button" onclick="goBack()">목록으로</button>
+                        <button class="reserve-button" th:if="${!isPreview && memberRole != null}" th:onclick="|gotoReservationPage(${store.getStoreId()})|">예약하기</button>
+                        <button class="reserve-button disabled" th:if="${!isPreview && memberRole == null}" onclick="askSignIn()">로그인 후 예약하기</button>
+                        <button class="reserve-button" th:if="${isPreview}" onclick="alertPreview()">예약하기</button>
+                    </div>
+                </div>
+            </div>
+            <!----------------- 중앙 영역 ------------------>
+            <div class="store-detail-middle">
+                <div class="time-box">
+                    <img class="time-icon" th:src="@{/icon/store/time_clock.svg}">
+                    <div class="time-text-box">
+                        <div class="time-title">운영 시간</div>
+                        <div class="time-content" th:text="|매일: ${store.getStoreStartTime()} ~ ${store.getStoreEndTime()}|"></div>
+                    </div>
+                </div>
+                <div class="store-at-box">
+                    <img class="store-at-icon" th:src="@{/icon/store/place_pin.svg}">
+                    <div class="store-at-text-box">
+                        <div class="store-at-title">운영 장소</div>
+                        <div class="store-at-content">
+                            <div class="content-branch" th:text="${store.getStoreBranch()}"></div>
+                            <div class="content-store-at" th:text="${store.getStoreAt()}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!----------------- 하단 영역 ------------------>
+            <div class="store-detail-bottom">
+                <div class="bottom-subtitle">팝업스토어 소개</div>
+                <div class="store-long-desc-box">
+                    <span th:text="${store.getStoreLongDesc()}"></span>
+                </div>
+            </div>
+            <!----------------- 추천 영역 ------------------>
+            <div class="recommend-area"></div>
+        </div>
+    </div>
+</div>
+
+
+<!---------------------------- 38선 ------------------------------>
+<!--<div th:text="|팝업스토어 ID: ${store.getStoreId()}|"></div>-->
+<!--<div th:text="|팝업스토어명: ${store.getStoreName()}|"></div>-->
+<!--<div th:text="|팝업스토어 설명: ${store.getStoreShortDesc()}|"></div>-->
+<!--<div th:text="|오픈일: ${store.getStoreStartDate()}|"></div>-->
+<!--<div th:text="|종료일: ${store.getStoreEndDate()}|"></div>-->
+
+<!--<button th:if="${!isPreview && memberRole != null}" th:onclick="|goto_reservation_page(${store.getStoreId()})|">예약하기</button>-->
+<!--<button th:if="${!isPreview && memberRole == null}" disabled>로그인 후 예약하기</button>-->
+<!--<button th:if="${isPreview}" disabled>미리보기 페이지입니다.</button>-->
+
+
+<!-- footer -->
+<div class="footer" layout:fragment="footer">
+
+</div>
+
 </body>
 </html>

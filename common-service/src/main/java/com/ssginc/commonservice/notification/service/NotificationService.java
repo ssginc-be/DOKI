@@ -70,11 +70,14 @@ public class NotificationService {
 
 
     /* [INTERNAL] 예약 결과 알림 - 운영자 to 이용자 */
-    // rid: 운영자가 승인/거절/취소한 예약의 id
+    // rid -> 이용자가 예약 요청하여 승인 대기중이거나
+    //     -> 운영자가 승인/거절/취소한 예약의 id
     // 팝업스토어 id가 아닌 예약 id를 받는 것이 맞음
+    @Transactional
     public void notifyReserveResultToMember(Long rid, String resultStatus) {
         // 추후에 에러핸들링 필요
         Reservation reservation = rRepo.findById(rid).get();
+        String prevStatus = reservation.getReservationStatus().toString();
         Long memberCode = reservation.getMember().getMemberCode(); // 해당 예약의 이용자
 
         if (NotificationController.sseEmitters.containsKey(memberCode)) {
@@ -83,7 +86,12 @@ public class NotificationService {
                 String storeName = reservation.getStore().getStoreName(); // 이용자가 예약 관련 요청을 보낸 팝업스토어명
 
                 String resultStr = ""; // 예약 결과 알림 메시지 내용
-                if (resultStatus.equals("CONFIRMED")) resultStr = "예약이 승인되었습니다.";
+                if (resultStatus.equals("RESERVE_PENDING")) resultStr = "예약이 신청되었습니다.";
+                else if (resultStatus.equals("CONFIRMED")) {
+                    // RESERVE_PENDING -> CONFIRMED 는 예약 신청 승인(=예약 확정)이지만,
+                    // CANCEL_PENDING -> CONFIRMED 는 예약 취소 요청에 대한 거절임.
+                    resultStr = prevStatus.equals("RESERVE_PENDING") ? "예약이 승인되었습니다." : "예약 취소가 거절되었습니다.";
+                }
                 else if (resultStatus.equals("REFUSED")) resultStr = "예약이 거절되었습니다.";
                 else if (resultStatus.equals("CANCELED")) resultStr = "예약이 취소되었습니다.";
                 else resultStr = "ERROR: 관리자에게 문의 바랍니다.";
@@ -120,6 +128,7 @@ public class NotificationService {
 
     /* [INTERNAL] 예약 실패 알림 - '나의 예약'에 조회되지 않고, 알림만 감 */
     // 왜냐하면, 실패한 예약 트랜잭션은 reservation 테이블에 등록되지 않기 때문
+    @Transactional
     public void notifyFailureToMember(Long memberCode, Long sid) { // sid: 알림을 받을 이용자가 예약에 실패한 팝업스토어 id
         // 추후에 에러핸들링 필요
         Store store = sRepo.findById(sid).get();
@@ -160,6 +169,7 @@ public class NotificationService {
 
 
     /* [INTERNAL] 예약 요청 알림 - 이용자 to 운영자 */
+    @Transactional
     public void notifyReserveRequestToManager(Long memberCode, LocalDateTime dateTime, String requestType) {
         // view 구현 방향 상 당장은 reservation id가 여기에 필요하지 않을 듯
         // 허전하다 싶으면 rid 추가될 수도 있음

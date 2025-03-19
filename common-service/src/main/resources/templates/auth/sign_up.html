@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>DOKI 회원가입</title>
+
     <link href="/css/sign_up.css" rel="stylesheet"/>
+
+    <!-- flatpickr: date picker script -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script> <!-- 언어 설정 -->
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_red.css"> <!-- 테마 설정 -->
+    <!-- end of date picker -->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/sign_up.js"></script>
 </head>
 <body>
@@ -15,27 +25,26 @@
     <div class="signup-logo-area"><img th:src="@{/img/signup_logo.png}"></div>
     <div class="signup-title">회원가입</div>
 
-    <div class="signup-group">
+    <div class="signup-group" id="signup-group-top">
         <div class="group-title">로그인 정보</div>
         <div class="group-content-box">
             <div class="group-content-label">이메일</div>
-            <input type="text" placeholder="example@doki.com" />
-            <button class="signup-check-button">이메일 인증</button>
+            <input id="email-input" type="text" placeholder="example@doki.com" oninput="checkEmailValid(this)" />
+            <button id="email-check-button" class="signup-check-button disable">이메일 인증</button>
         </div>
         <div class="group-content-box">
             <div class="group-content-label">비밀번호</div>
-            <input type="password" placeholder="8~12자 내외의 영소문자 포함 어쩌고" />
+            <input id="pw-input" type="password" placeholder="8자 이상 숫자/대소문자/특수문자 모두 포함" oninput="checkPasswordValid(this)" />
         </div>
         <div class="group-content-box">
             <div class="group-content-label">비밀번호 확인</div>
-            <input type="password" placeholder="비밀번호 재입력" />
-            <div class="pw-check-default">비밀번호 불일치</div>
-            <div class="pw-check-ok">비밀번호 일치</div>
+            <input id="pw-re-input" type="password" placeholder="8자 이상 숫자/대소문자/특수문자를 모두 포함해야 합니다." readonly />
+            <div id="pw-check" class="pw-check" style="visibility: hidden;">비밀번호 불일치</div>
         </div>
 
     </div>
 
-    <div class="signup-group">
+    <div class="signup-group" id="signup-group-bottom">
         <div class="group-title">회원 기본 정보</div>
 
         <div class="group-content-box">
@@ -49,29 +58,34 @@
                 <option value="018">018</option>
                 <option value="019">019</option>
             </select>
-            <input type="text" placeholder="'-'를 제외한 8자리 숫자 입력" />
-            <button class="signup-check-button">휴대폰 인증</button>
+            <input id="phone-input" type="text" placeholder="'-'를 제외한 8자리 숫자 입력" oninput="checkPhoneValid(this)" />
+            <button id="phone-check-button" class="signup-check-button disable" onclick="">휴대폰 인증</button>
         </div>
         <div class="group-content-box">
             <div class="group-content-label">이름</div>
-            <input type="text" placeholder="이름은 예약자명에 사용됩니다." />
+            <input id="name-input" type="text" placeholder="이름은 예약자명에 사용됩니다." oninput="checkMemberNameValid(this)" />
         </div>
         <div class="group-content-box">
             <div class="group-content-label">성별</div>
-            <button class="gender-button">남자</button>
-            <button class="gender-button">여자</button>
+            <button class="gender-button" onclick="handleGenderButtonClicked(this)">남자</button>
+            <button class="gender-button" onclick="handleGenderButtonClicked(this)">여자</button>
         </div>
         <div class="group-content-box">
             <div class="group-content-label">생년월일</div>
-            <input type="date" />
+            <input id="birth-input" type="date" oninput="checkMemberBirthValid(this)" />
         </div>
     </div>
 
     <div class="signup-bottom">
-        <button class="signup-confirm-button">가입하기</button>
+        <button id="signup-confirm-button" class="signup-confirm-button">가입하기</button>
         <button class="signup-cancel-button" onclick="goBack()">작성 취소</button>
     </div>
 </div>
+
+<!-- DOM 노드가 존재해야 instantiating이 가능하므로, 하단의 스크립트는 header에 들어가면 안됨 -->
+<script>
+    flatpickr("#birth-input", flatpickrConfig);
+</script>
 
 </body>
 </html>

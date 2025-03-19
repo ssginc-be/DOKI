@@ -1,0 +1,178 @@
+.content-title {
+    font-family: "Pretendard", sans-serif;
+    color: #949494;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+.content-title hl{
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 700;
+    font-size: 14px;
+}
+.content-subtitle {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+/* table */
+.table-area {
+    margin-bottom: 64px;
+}
+.table-meta {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 16px;
+}
+.table-meta-size {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 16px;
+    margin: auto auto auto 0;
+}
+.table-meta-label {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 16px;
+    margin: auto auto auto 0;
+}
+.table-meta-size hl {
+    font-family: "Pretendard", sans-serif;
+    color: #F8434E;
+    font-weight: 600;
+    font-size: 16px;
+}
+.table-meta-label hl {
+    font-family: "Pretendard", sans-serif;
+    color: #F8434E;
+    font-weight: 600;
+    font-size: 16px;
+}
+.table-meta-pagination {
+    font-family: "Pretendard", sans-serif;
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px;
+    margin: auto 0 auto auto;
+}
+.table-pagination-button-area {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    margin: auto 16px auto 48px;
+}
+.table-pagination-button {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #E2E2E9;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+.table-pagination-button svg {
+    margin: auto auto;
+}
+
+/* table css reset */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    /*margin-bottom: 48px;*/
+}
+/* end of table css reset */
+
+tr:hover {
+    background-color: #feffda;
+    transition: 0.15s linear;
+}
+
+tr:not(:first-child) { /* 헤더만 제외 */
+    border-bottom: 1px solid #E2E2E9;
+}
+th {
+    font-family: "Pretendard", sans-serif;
+    color: #6C6C71;
+    background-color: #FCFCFC;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 13px 16px;
+    text-align: left;
+}
+th:first-child {
+    border-top-left-radius: 6px;
+    box-shadow: 0 0 0 1px #E2E2E9;
+}
+th:last-child {
+    border-top-right-radius: 6px;
+    box-shadow: 0 0 0 1px #E2E2E9;
+}
+th:not(:last-child) {
+    border-right: 1px solid #E2E2E9;
+}
+th:not(:first-child):not(:last-child) {
+    box-shadow: 0 -1px 0 #E2E2E9, 0 1px 0 #E2E2E9;
+}
+
+td {
+    font-family: "Pretendard", sans-serif;
+    color: #131313;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    padding: 8px 16px;
+}
+.no-button { /* td but there's no button */
+    font-family: "Pretendard", sans-serif;
+    color: #131313;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    padding: 15.5px 16px;
+}
+td:first-child {
+    width: 83px;
+}
+td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+    width: 153px;
+}
+td:nth-child(5) {
+    width: 243px;
+}
+td:nth-child(7) {
+    width: 169px;
+    text-align: center;
+}
+td:not(:last-child) {
+    border-right: 1px solid #E2E2E9;
+}
+
+.reserve-log-button {
+    width: 113px;
+    padding: 8px 0;
+    background-color: #E9FBFD;
+    border: 1px solid #3ABAC1;
+    border-radius: 4px;
+
+    font-family: "Pretendard", sans-serif;
+    color: #3ABAC1;
+    font-weight: 600;
+    font-size: 14px;
+
+    cursor: pointer;
+}
+.reserve-log-button.disable {
+    background-color: #F3F3F5;
+    color: #AEAEBA;
+    font-weight: 600;
+    border: 1px solid #F3F3F5;
+    cursor: not-allowed;
+}
