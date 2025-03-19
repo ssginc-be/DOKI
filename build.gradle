@@ -54,10 +54,16 @@ subprojects { // 모든 하위 모듈들에 이 설정을 적용
         //************************************************************************
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
     }
 
     tasks.named('test') {
         useJUnitPlatform()
+        minHeapSize = "1024m" // initial heap size
+        maxHeapSize = "8192m" // maximum heap size
+        jvmArgs '-XX:MaxMetaspaceSize=8192m' // mem argument for the test JVM. (for Java 8+)
     }
 
     tasks.register("prepareKotlinBuildScriptModel"){}
