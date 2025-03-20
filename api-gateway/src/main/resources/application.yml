@@ -27,42 +27,42 @@ spring:
         ############## RESERVE-SERVICE ##############
         ######## [reserve-service] REST APIs ########
         - id: reserve-service
-          uri: http://localhost:9091 # 2) localhost:9000 말고 여기로 보내줌
+          uri: lb://RESERVE-SERVICE # 2) localhost:9000 말고 여기로 보내줌
           predicates: # 1) 여기로 접속 시도하면
             - Path=/v2/reserve/**
 
         ############## COMMON-SERVICE ###############
         ##### [common-service] Public Endpoints #####
         - id: common-service
-          uri: http://localhost:9093
+          uri: lb://COMMON-SERVICE
           predicates:
             - Path=/, /auth/**, /search, /store, /noti/**, /v1/auth/**, /v1/auth/**, /v1/store/**
           filters:
             - PublicFilter
         ###### [common-service] Member Endpoints #####
         - id: common-service
-          uri: http://localhost:9093
+          uri: lb://COMMON-SERVICE
           predicates:
             - Path=/member/**, /reserve/**, /v1/member/**, /v1/reserve/**
           filters:
             - MemberAuthFilter
         ###### [common-service] Manager Endpoints #####
         - id: common-service
-          uri: http://localhost:9093
+          uri: lb://COMMON-SERVICE
           predicates:
             - Path=/store/reserve/**
           filters:
             - ManagerAuthFilter
         ###### [common-service] Admin Endpoints #####
         - id: common-service
-          uri: http://localhost:9093
+          uri: lb://COMMON-SERVICE
           predicates:
             - Path=/store/registration
           filters:
             - AdminAuthFilter
         ########### static files ##############
         - id: common-service
-          uri: http://localhost:9093
+          uri: lb://COMMON-SERVICE
           predicates:
             - Path=/css/**, /js/**, /icon/**, /img/**
 
@@ -75,4 +75,4 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://43.203.83.252:8761/eureka
+      defaultZone: http://localhost:8761/eureka

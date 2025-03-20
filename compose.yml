@@ -8,7 +8,7 @@ services:
   # Service Discovery 설정
   service-discovery:
     container_name: service-discovery
-    image: qriosity/doki_service-discovery:latest
+    image: qriosity/doki_service-discovery:1.0.0-beta.6
     ports:
       - 8761:8761
     networks:
@@ -17,20 +17,46 @@ services:
   # API Gateway 설정
   api-gateway:
     container_name: api-gateway
-    image: qriosity/doki_api-gateway:latest
+    image: qriosity/doki_api-gateway:1.0.0-beta.6
     ports:
       - 9000:9000
-    environment:
-      eureka.client.serviceUrl.defaultZone: http://service-discovery:8761/eureka
     depends_on: 
       - service-discovery
+      - common-service
+      - reserve-service
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://service-discovery:8761/eureka
+      # SPRING_CLOUD_GATEWAY_ROUTES[0]_URI: http://reserve-service:9091
+      # SPRING_CLOUD_GATEWAY_ROUTES[0]_PREDICATES[0]: Path=/v2/reserve/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[1]_URI: http://common-service:9093
+      # SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[0]: Path=/
+      # SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[1]: Path=/auth/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[2]: Path=/search
+      # SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[3]: Path=/store
+      # SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[4]: Path=/noti/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[5]: Path=/v1/auth/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[6]: Path=/v1/store/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[2]_URI: http://common-service:9093
+      # SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[0]: Path=/member/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[1]: Path=/reserve/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[2]: Path=/v1/member/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[3]: Path=/v1/reserve/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[3]_URI: http://common-service:9093
+      # SPRING_CLOUD_GATEWAY_ROUTES[3]_PREDICATES[0]: Path=/store/reserve/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[4]_URI: http://common-service:9093
+      # SPRING_CLOUD_GATEWAY_ROUTES[4]_PREDICATES[0]: Path=/store/registration
+      # SPRING_CLOUD_GATEWAY_ROUTES[5]_URI: http://common-service:9093
+      # SPRING_CLOUD_GATEWAY_ROUTES[5]_PREDICATES[0]: Path=/css/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[5]_PREDICATES[1]: Path=/js/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[5]_PREDICATES[2]: Path=/icon/**
+      # SPRING_CLOUD_GATEWAY_ROUTES[5]_PREDICATES[3]: Path=/img/**
     networks:
       - doki
 
   # Reserve Service 설정
   reserve-service:
     container_name: reserve-service
-    image: qriosity/doki_reserve-service:latest
+    image: qriosity/doki_reserve-service:1.0.0-beta.6
     ports: 
       - 9091:9091
     depends_on:
@@ -46,7 +72,7 @@ services:
   # Common Service 설정
   common-service:
     container_name: common-service
-    image: qriosity/doki_common-service:latest
+    image: qriosity/doki_common-service:1.0.0-beta.6
     ports: 
       - 9093:9093
     depends_on:

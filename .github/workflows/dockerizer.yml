@@ -55,6 +55,7 @@ jobs:
     needs: build-modules
     env:
       DOCKER_REPO: qriosity/doki
+      RELEASE_VERSION: 1.0.0-beta.6
     steps:
     - uses: actions/checkout@v4
 
@@ -69,17 +70,17 @@ jobs:
       
     - name: Build Docker Images
       run: |
-        docker build -t ${DOCKER_REPO}_api-gateway:latest -f api-gateway.Dockerfile .
-        docker build -t ${DOCKER_REPO}_service-discovery:latest -f service-discovery.Dockerfile .
-        docker build -t ${DOCKER_REPO}_reserve-service:latest -f reserve-service.Dockerfile .
-        docker build -t ${DOCKER_REPO}_common-service:latest -f common-service.Dockerfile .
+        docker build -t ${DOCKER_REPO}_api-gateway:${RELEASE_VERSION} -f api-gateway.Dockerfile .
+        docker build -t ${DOCKER_REPO}_service-discovery:${RELEASE_VERSION} -f service-discovery.Dockerfile .
+        docker build -t ${DOCKER_REPO}_reserve-service:${RELEASE_VERSION} -f reserve-service.Dockerfile .
+        docker build -t ${DOCKER_REPO}_common-service:${RELEASE_VERSION} -f common-service.Dockerfile .
       
     - name: Publish Docker Images
       run: |
-        docker push ${DOCKER_REPO}_api-gateway
-        docker push ${DOCKER_REPO}_service-discovery
-        docker push ${DOCKER_REPO}_reserve-service
-        docker push ${DOCKER_REPO}_common-service
+        docker push ${DOCKER_REPO}_api-gateway:${RELEASE_VERSION}
+        docker push ${DOCKER_REPO}_service-discovery:${RELEASE_VERSION}
+        docker push ${DOCKER_REPO}_reserve-service:${RELEASE_VERSION}
+        docker push ${DOCKER_REPO}_common-service:${RELEASE_VERSION}
 
   publish-gcr:
     name: Publish to GHCR
@@ -88,30 +89,31 @@ jobs:
     env:
       DOCKER_REPO: qriosity/doki
       GHCR_REPO: ssginc-be/doki
+      RELEASE_VERSION: 1.0.0-beta.6
     steps:
     - name: Get Docker Images
       run: |
-        docker pull ${DOCKER_REPO}_api-gateway:latest
-        docker pull ${DOCKER_REPO}_service-discovery:latest
-        docker pull ${DOCKER_REPO}_reserve-service:latest
-        docker pull ${DOCKER_REPO}_common-service:latest
+        docker pull ${DOCKER_REPO}_api-gateway:${RELEASE_VERSION}
+        docker pull ${DOCKER_REPO}_service-discovery:${RELEASE_VERSION}
+        docker pull ${DOCKER_REPO}_reserve-service:${RELEASE_VERSION}
+        docker pull ${DOCKER_REPO}_common-service:${RELEASE_VERSION}
 
     - name: GHCR Sign-in
       run: docker login ghcr.io -u Queue-ri -p ${{ secrets.GCR_PAT }}
 
     - name: Retag Images to GHCR format
       run: |
-        docker tag ${DOCKER_REPO}_api-gateway:latest ghcr.io/${GHCR_REPO}_api-gateway:latest
-        docker tag ${DOCKER_REPO}_service-discovery:latest ghcr.io/${GHCR_REPO}_service-discovery:latest
-        docker tag ${DOCKER_REPO}_reserve-service:latest ghcr.io/${GHCR_REPO}_reserve-service:latest
-        docker tag ${DOCKER_REPO}_common-service:latest ghcr.io/${GHCR_REPO}_common-service:latest
+        docker tag ${DOCKER_REPO}_api-gateway:${RELEASE_VERSION} ghcr.io/${GHCR_REPO}_api-gateway:${RELEASE_VERSION}
+        docker tag ${DOCKER_REPO}_service-discovery:${RELEASE_VERSION} ghcr.io/${GHCR_REPO}_service-discovery:${RELEASE_VERSION}
+        docker tag ${DOCKER_REPO}_reserve-service:${RELEASE_VERSION} ghcr.io/${GHCR_REPO}_reserve-service:${RELEASE_VERSION}
+        docker tag ${DOCKER_REPO}_common-service:${RELEASE_VERSION} ghcr.io/${GHCR_REPO}_common-service:${RELEASE_VERSION}
 
     - name: Publish to GHCR
       run: |
-        docker push ghcr.io/${GHCR_REPO}_api-gateway:latest
-        docker push ghcr.io/${GHCR_REPO}_service-discovery:latest
-        docker push ghcr.io/${GHCR_REPO}_reserve-service:latest
-        docker push ghcr.io/${GHCR_REPO}_common-service:latest
+        docker push ghcr.io/${GHCR_REPO}_api-gateway:${RELEASE_VERSION}
+        docker push ghcr.io/${GHCR_REPO}_service-discovery:${RELEASE_VERSION}
+        docker push ghcr.io/${GHCR_REPO}_reserve-service:${RELEASE_VERSION}
+        docker push ghcr.io/${GHCR_REPO}_common-service:${RELEASE_VERSION}
 
   deploy-ec2:
     name: Deploy Containers to EC2
