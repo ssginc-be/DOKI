@@ -36,7 +36,7 @@ spring:
         - id: common-service
           uri: http://localhost:9093
           predicates:
-            - Path=/, /auth/**, /search, /store, /noti/**, /v1/auth/**, /v1/auth/**, /v1/store/**
+            - Path=/, /backdoor/**, /auth/**, /search, /store, /noti/**, /v1/auth/**, /v1/auth/**, /v1/store/**
           filters:
             - PublicFilter
         ###### [common-service] Member Endpoints #####
