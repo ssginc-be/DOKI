@@ -1,4 +1,4 @@
-package com.ssginc.commonservice.backdoor;
+package com.ssginc.commonservice.backdoor.service;
 
 import com.ssginc.commonservice.exception.CustomException;
 import com.ssginc.commonservice.exception.ErrorCode;
