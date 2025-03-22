@@ -1,6 +1,6 @@
 package com.ssginc.commonservice;
 
-import com.ssginc.commonservice.backdoor.TestReserveService;
+import com.ssginc.commonservice.backdoor.service.TestReserveService;
 import com.ssginc.commonservice.member.model.Member;
 import com.ssginc.commonservice.member.model.MemberRepository;
 import com.ssginc.commonservice.reserve.dto.ReserveRequestDto;
