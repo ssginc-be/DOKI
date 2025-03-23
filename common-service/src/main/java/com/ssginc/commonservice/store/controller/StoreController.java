@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -68,7 +69,7 @@ public class StoreController {
             model.addAttribute("page", page);
             List<StoreMetaDocument> storeList = (List<StoreMetaDocument>) page.getData(); // downcast
             model.addAttribute("storeList", storeList);
-            model.addAttribute("formatter", DateTimeFormatter.ofPattern("MM.dd(E)"));
+            model.addAttribute("formatter", DateTimeFormatter.ofPattern("MM.dd(E)").withLocale(Locale.forLanguageTag("ko")));
 
             return "index"; // 팝업스토어 목록 페이지로 이동
         }
