@@ -58,6 +58,10 @@
     font-size: 32px;
 }
 
+.table-area {
+    margin-bottom: 64px;
+}
+
 .table-meta {
     display: flex;
     flex-direction: row;
