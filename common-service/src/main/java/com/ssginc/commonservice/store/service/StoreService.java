@@ -10,6 +10,7 @@ import com.ssginc.commonservice.store.dto.*;
 import com.ssginc.commonservice.store.model.*;
 import com.ssginc.commonservice.util.PageResponseDto;
 import com.ssginc.commonservice.util.S3Uploader;
+import com.ssginc.commonservice.util.SmsUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +67,7 @@ public class StoreService {
 
     private final EntityManager entityManager;
     private final PasswordEncoder passwordEncoder;  // BCrypt 인코더 사용
+    private final SmsUtil smsUtil;
 
     @Value("${cloud.aws.cloudfront.domain}")
     private String cloudFrontDomain;
@@ -198,6 +200,15 @@ public class StoreService {
                 .reservationStatus(ReservationLog.ReservationStatus.CONFIRMED)
                 .build();
         rlRepo.save(rlog);
+
+        // 이용자에게 문자 알림 발송
+        smsUtil.sendReserveConfirmedMessage(
+                reservation.getMember().getMemberPhone(),
+                reservation.getMember().getMemberName(),
+                reservation.getStore().getStoreName(),
+                entry.getEntryDate(),
+                entry.getEntryTime()
+        );
 
         // 운영자 -> 이용자에게 예약 확정 알림
         // 예약 성공했으므로 reservation 엔티티가 생성되었고, 따라서 sid가 아닌 rid를 넘겨주는 것이 맞음.
@@ -348,12 +359,13 @@ public class StoreService {
 
         // 3. StoreImage 엔티티 생성
         // 리스트에 CDN public url 추가 -> DB 저장용
-        String thumbFileName = thumbFile.getOriginalFilename();
+        // 변환된 파일명은 원본 파일명으로부터 extension을 분리한 후 .webp를 붙임
+        String thumbFileName = thumbFile.getOriginalFilename().split("\\.(?=[^\\.]+$)")[0] + ".webp";
         thumbUrlList.add(publicThumbUrl1 + thumbFileName);
         thumbUrlList.add(publicThumbUrl2 + thumbFileName);
 
         for (MultipartFile mfile : mfiles) {
-            contentUrlList.add(publicContentUrl + mfile.getOriginalFilename());
+            contentUrlList.add(publicContentUrl + mfile.getOriginalFilename().split("\\.(?=[^\\.]+$)")[0] + ".webp");
         }
         
         // 썸네일 2장

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  * @author Queue-ri
@@ -70,6 +72,29 @@ public class SmsUtil {
         message.setFrom(SMS_SENDER); // 발신 번호
         message.setTo(receiver); // 수신 번호
         message.setText("[DOKI] 인증번호: " + generatedKey + "를 입력하세요.");
+
+        log.info("Message to send: {}", message.getText());
+
+        // mock response
+        SingleMessageSentResponse response = new SingleMessageSentResponse(
+                "", receiver, SMS_SENDER, MessageType.SMS, "[DEBUG MODE] Message not sent.", "", "",  "200", ""
+        );
+        if (SMS_ENABLED) {
+            // 실제 발송 시 response를 교체
+            response = messageService.sendOne(new SingleMessageSendingRequest(message));
+            log.info("CoolSMS response: {}", response);
+        }
+
+        return response;
+    }
+
+    /* 회원가입 휴대폰 인증 함수 */
+    public SingleMessageSentResponse sendReserveConfirmedMessage(String receiver, String memberName, String storeName, LocalDate reservedDate, LocalTime reservedTime) {
+        Message message = new Message();
+        message.setFrom(SMS_SENDER); // 발신 번호
+        message.setTo(receiver); // 수신 번호
+        String content = "[DOKI 예약 알림]\n\n" + memberName + " 고객님의 예약이 확정되었습니다.\n\n■ 팝업스토어명: " + storeName + "\n■ 예약일: " + reservedDate + "\n■ 예약시간: "+ reservedTime;
+        message.setText(content);
 
         log.info("Message to send: {}", message.getText());
 

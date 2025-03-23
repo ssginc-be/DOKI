@@ -10,6 +10,7 @@ import com.ssginc.commonservice.reserve.dto.ReserveRequestDto;
 import com.ssginc.commonservice.reserve.model.*;
 import com.ssginc.commonservice.store.model.Store;
 import com.ssginc.commonservice.store.model.StoreRepository;
+import com.ssginc.commonservice.util.SmsUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class ReserveService {
     private final EntityManager entityManager;
 
     private final NotificationService notificationService;
+    private final SmsUtil smsUtil;
 
     /************************************************************************************
         [V2 자동승인] 내부 예약 등록 서비스
@@ -106,6 +108,15 @@ public class ReserveService {
         // headcount만큼 예약한 엔트리의 예약자 수 업데이트
         entry.setReservedCount(entry.getReservedCount() + dto.getHeadcount());
         reRepo.save(entry);
+
+        // 이용자에게 문자 알림 발송
+        smsUtil.sendReserveConfirmedMessage(
+                member.getMemberPhone(),
+                member.getMemberName(),
+                store.getStoreName(),
+                entry.getEntryDate(),
+                entry.getEntryTime()
+        );
 
         // 운영자 -> 이용자에게 예약 확정 알림
         // 예약 성공했으므로 reservation 엔티티가 생성되었고, 따라서 sid가 아닌 rid를 넘겨주는 것이 맞음.
